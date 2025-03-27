@@ -1,0 +1,107 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum CnhType {
+  A
+  B
+  C
+  D
+  E
+}
+
+enum CarStatus {
+  AVAILABLE
+  IN_USE
+  IN_MAINTENANCE
+}
+
+enum EventType {
+  ENTRY
+  EXIT
+}
+
+model Manager {
+  id        String   @id @unique @default(uuid())
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  Cars  Cars[]
+  Event Event[]
+
+  @@map("managers")
+}
+
+model Driver {
+  id        String   @id @unique @default(uuid())
+  firstName String   @map("first_name")
+  lastName  String   @map("last_name")
+  cnh       String   @unique
+  cnhType   CnhType
+  email     String   @unique
+  phone     String
+  street    String
+  number    Int
+  district  String
+  city      String
+  state     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  Event     Event[]
+
+  @@map("drivers")
+}
+
+model Cars {
+  id           String    @id @unique @default(uuid())
+  managerId    String    @map("manager_id")
+  brand        String
+  model        String
+  year         Int
+  color        String
+  licensePlate String    @unique @map("license_plate")
+  odometer     Int
+  status       CarStatus
+  renavam      String    @unique
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  manager Manager @relation(fields: [managerId], references: [id])
+  Event   Event[]
+
+  @@map("cars")
+}
+
+model Event {
+  id        String    @id @unique @default(uuid())
+  managerId String    @map("manager_id")
+  driverId  String    @map("driver_id")
+  carId     String    @map("car_id")
+  status    EventType
+  odometer  Int
+  start_at  DateTime  @map("start_at")
+  end_at    DateTime  @map("end_at")
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  driver  Driver  @relation(fields: [driverId], references: [id])
+  manager Manager @relation(fields: [managerId], references: [id])
+  car     Cars    @relation(fields: [carId], references: [id])
+
+  @@map("events")
+}
