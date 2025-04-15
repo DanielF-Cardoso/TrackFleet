@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    
+    <meta name="theme-name" content="quixlab" />
+  
+    <title>TrackFleet - Gerenciador de Rota</title>
+    <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
+    <link href="css/style.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="loader">
+            <svg class="circular" viewBox="25 25 50 50">
+                <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
+            </svg>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+
+        <div class="nav-header">
+            <div class="brand-logo">
+                <a href="index.html">
+                    <b class="logo-abbr"><img src="images/logo/logo.png" alt=""> </b>
+                    <span class="logo-compact"><img src="/images/logo/logo-compact.png" alt=""></span>
+                    <span class="brand-title text-white">
+                        TRACKFLEET
+                    </span>
+                </a>
+            </div>
+        </div>
+
+        <div class="header">    
+            <div class="header-content clearfix">
+                
+                <div class="nav-control">
+                    <div class="hamburger">
+                        <span class="toggle-icon"><i class="icon-menu"></i></span>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <ul class="clearfix">
+                        <li class="icons dropdown">
+                            <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
+                                <span class="activity active"></span>
+                                <img src="images/avatar/form-user.png" height="40" width="40" alt="">
+                            </div>
+                            <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
+                                <div class="dropdown-content-body">
+                                    <ul>
+                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Sair</span></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="icons d-none d-md-flex">
+                                <span>Seu Nome</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="nk-sidebar">           
+            <div class="nk-nav-scroll">
+                <ul class="metismenu" id="menu">
+                    <li>
+                        <a class="has-arrow" href="/" aria-expanded="false">
+                            <i class="fa fa-tachometer menu-icon"></i><span class="nav-text">Ínicio</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="gestor.html" aria-expanded="false">
+                            <i class="fa fa-user-circle-o menu-icon"></i><span class="nav-text">Gestor</span>
+                        </a>
+                    </li>          
+                    <li>
+                        <a class="has-arrow" href="motorista.html" aria-expanded="false">
+                            <i class="fa fa-id-card menu-icon"></i><span class="nav-text">Motorista</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a class="has-arrow" href="frota.html" aria-expanded="false">
+                            <i class="fa fa-car menu-icon"></i><span class="nav-text">Frotas</span>
+                        </a>
+                    </li>                    
+                    <li>
+                        <a class="has-arrow" href="evento.html" aria-expanded="false">
+                            <i class="fa fa-list-alt menu-icon"></i><span class="nav-text">Eventos</span>
+                        </a>
+                    </li>                                                          
+                </ul>
+            </div>
+        </div>
+
+        <div class="content-body">
+            <div class="container-fluid mt-3">
+                <div class="row">
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-1">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total de Motoristas</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">1</h2>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-id-card"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-2">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total de Frotas</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">2</h2>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-car"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-3">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total de Eventos</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">3</h2>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-list-alt"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-sm-6">
+                        <div class="card gradient-4">
+                            <div class="card-body">
+                                <h3 class="card-title text-white">Total de Gestor</h3>
+                                <div class="d-inline-block">
+                                    <h2 class="text-white">4</h2>
+                                </div>
+                                <span class="float-right display-5 opacity-5"><i class="fa fa-user"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="active-member">
+                                    <div class="table-responsive">
+                                        <table class="table table-xs mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th>Motorista</th>
+                                                    <th>Carro</th>
+                                                    <th>Odômetro</th>
+                                                    <th>Data Inicial</th>
+                                                    <th>Data Final</th>
+                                                    <th>Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td><img src="./images/avatar/1.jpg" class=" rounded-circle mr-3" alt="">Nome</td>
+                                                    <td>Honda</td>
+                                                    <td>
+                                                        <span>12</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>12/12/2000</span>
+                                                    </td>
+                                                    <td>
+                                                        <span>12/12/2000</span>
+                                                    </td>
+                                                    <td><i class="fa fa-circle-o text-success  mr-2"></i> Ativo</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="copyright">
+                <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="plugins/common/common.min.js"></script>
+    <script src="js/custom.min.js"></script>
+    <script src="js/settings.js"></script>
+    <script src="js/gleek.js"></script>
+    <script src="js/styleSwitcher.js"></script>
+
+    <script src="./js/dashboard/dashboard-1.js"></script>
+
+</body>
+
+</html>
