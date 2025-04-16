@@ -1,10 +1,10 @@
-import { Entity } from 'src/core/entities/entity'
-import { UniqueEntityID } from 'src/core/entities/unique-entity-id'
-import { Email } from 'src/core/value-objects/email.vo'
+import { Entity } from '@/core/entities/entity'
+import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Email } from '@/core/value-objects/email.vo'
+import { Name } from '@/core/value-objects/name.vo'
 
 export interface ManagerProps {
-  firstName: string
-  lastName: string
+  name: Name
   email: Email
   password: string
   createdAt: Date
@@ -25,16 +25,12 @@ export class Manager extends Entity<ManagerProps> {
     return manager
   }
 
-  get firstName() {
-    return this.props.firstName
-  }
-
-  get lastName() {
-    return this.props.lastName
+  get name() {
+    return this.props.name
   }
 
   get email() {
-    return this.props.email.toValue()
+    return this.props.email
   }
 
   get password() {
