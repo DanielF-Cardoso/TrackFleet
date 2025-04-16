@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import { Email } from './email.vo'
 import { Address } from './address.vo'
 
 describe('Address Value Object', () => {
@@ -21,7 +20,9 @@ describe('Address Value Object', () => {
 
   it('shoud throw error a missing values', () => {
     expect(() => new Address('', 1, 'District', 'CITY', 'STATE')).toThrow()
-    expect(() => new Address('Street', -1, 'District', 'CITY', 'STATE')).toThrow()
+    expect(
+      () => new Address('Street', -1, 'District', 'CITY', 'STATE'),
+    ).toThrow()
   })
 
   it('should consider two address with the same value as equal', () => {
