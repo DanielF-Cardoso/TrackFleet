@@ -5,12 +5,12 @@ import { Manager } from '@/domain/manager/enterprise/entities/manager.entity'
 export class InMemoryManagerRepository implements ManagerRepository {
   public items: Manager[] = []
 
-  async create(manager: Manager): Promise<Manager> {
+  async create(manager: Manager) {
     this.items.push(manager)
     return manager
   }
 
-  async findByEmail(email: string): Promise<Manager | null> {
+  async findByEmail(email: string) {
     const emailVO = new Email(email)
     const manager = this.items.find(
       (item) => item.email.toValue() === emailVO.toValue(),
@@ -18,7 +18,7 @@ export class InMemoryManagerRepository implements ManagerRepository {
     return manager || null
   }
 
-  async findById(id: string): Promise<Manager | null> {
+  async findById(id: string) {
     const manager = this.items.find((item) => item.id.toValue() === id)
     return manager || null
   }

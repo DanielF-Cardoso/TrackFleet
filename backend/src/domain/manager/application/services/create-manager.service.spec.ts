@@ -1,8 +1,7 @@
-import { describe, it, expect, beforeEach } from 'vitest'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { CreateManagerService } from './create-manager.service'
 import { FakeHashGenerator } from 'test/cryptography/fake-hasher'
-import { makeManager } from 'test/factories/manager/make-manager'
+import { makeManagerInput } from 'test/factories/manager/make-manager-input'
 import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 
 let sut: CreateManagerService
@@ -16,7 +15,7 @@ beforeEach(() => {
 
 describe('CreateManagerUseCase', () => {
   it('should be able to create a new manager', async () => {
-    const createManagerData = makeManager()
+    const createManagerData = makeManagerInput()
 
     const result = await sut.execute(createManagerData)
 
@@ -36,7 +35,7 @@ describe('CreateManagerUseCase', () => {
 
   it('should not allow creating a manager with the same email', async () => {
     const email = 'daniel@email.com'
-    const createManagerData = makeManager({ email })
+    const createManagerData = makeManagerInput({ email })
 
     await sut.execute(createManagerData)
 
