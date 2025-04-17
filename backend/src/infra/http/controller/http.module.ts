@@ -9,6 +9,8 @@ import { GetManagerProfileService } from '@/domain/manager/application/services/
 import { GetManagerProfileController } from './get-manager-profile.controller'
 import { ListManagersController } from './list-managers.controllers'
 import { ListManagersService } from '@/domain/manager/application/services/list-managers.service'
+import { UpdateManagerPasswordController } from './update-manager-password.controller'
+import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -17,12 +19,14 @@ import { ListManagersService } from '@/domain/manager/application/services/list-
     CreateManagerController,
     GetManagerProfileController,
     ListManagersController,
+    UpdateManagerPasswordController,
   ],
   providers: [
     AuthenticateManagerService,
     CreateManagerService,
     GetManagerProfileService,
     ListManagersService,
+    UpdateManagerPasswordService,
   ],
 })
 export class HttpModule {}

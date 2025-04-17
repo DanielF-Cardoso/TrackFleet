@@ -1,6 +1,6 @@
 import { IsEmail, IsNotEmpty, MinLength } from 'class-validator'
 
-export class CreateManagerBody {
+export class CreateManagerDTO {
   @IsNotEmpty()
   firstName!: string
 

@@ -8,7 +8,7 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
-import { CreateManagerBody } from '../dto/create-manager-body.dto'
+import { CreateManagerDTO } from '../dto/create-manager-body.dto'
 import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
 import { ManagerPresenter } from '../presenters/manager.presenter'
 
@@ -18,7 +18,7 @@ export class CreateManagerController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  async create(@Body() body: CreateManagerBody) {
+  async create(@Body() body: CreateManagerDTO) {
     const { firstName, lastName, email, password } = body
 
     const result = await this.createManagerService.execute({
