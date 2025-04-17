@@ -5,6 +5,7 @@ import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
 import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { Either, left, right } from '@/core/errors/either'
+import { Injectable } from '@nestjs/common'
 
 export interface CreateManagerServiceRequest {
   firstName: string
@@ -18,6 +19,7 @@ type CreateManagerServiceResponse = Either<
   { manager: Manager }
 >
 
+@Injectable()
 export class CreateManagerService {
   constructor(
     private managerRepository: ManagerRepository,

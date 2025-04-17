@@ -22,4 +22,11 @@ export class InMemoryManagerRepository implements ManagerRepository {
     const manager = this.items.find((item) => item.id.toValue() === id)
     return manager || null
   }
+
+  async save(manager: Manager): Promise<void> {
+    const index = this.items.findIndex((item) => item.id.equals(manager.id))
+    if (index >= 0) {
+      this.items[index] = manager
+    }
+  }
 }
