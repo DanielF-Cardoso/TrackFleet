@@ -29,4 +29,8 @@ export class InMemoryManagerRepository implements ManagerRepository {
       this.items[index] = manager
     }
   }
+
+  async findAll(): Promise<Manager[]> {
+    return this.items
+  }
 }

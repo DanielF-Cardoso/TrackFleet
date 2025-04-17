@@ -5,4 +5,5 @@ export abstract class ManagerRepository {
   abstract findByEmail(email: string): Promise<Manager | null>
   abstract create(manager: Manager): Promise<Manager>
   abstract save(manager: Manager): Promise<void>
+  abstract findAll(): Promise<Manager[]>
 }

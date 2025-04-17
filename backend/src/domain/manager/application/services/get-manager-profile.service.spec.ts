@@ -1,7 +1,7 @@
 import { GetManagerProfileService } from './get-manager-profile.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
-import { ManagerNotFound } from './errors/manager-not-found.error'
+import { ResourceNotFoundError } from './errors/resource-not-found.error'
 
 let sut: GetManagerProfileService
 let managerRepository: InMemoryManagerRepository
@@ -31,6 +31,6 @@ describe('GetManagerProfileService', () => {
     const result = await sut.execute({ managerId: 'non-existent-id' })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ManagerNotFound)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
   })
 })
