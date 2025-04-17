@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest'
 import { Address } from './address.vo'
 
 describe('Address Value Object', () => {

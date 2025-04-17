@@ -1,4 +1,3 @@
-import { describe, it, expect } from 'vitest'
 import { Email } from './email.vo'
 
 describe('Email Value Object', () => {
@@ -16,7 +15,9 @@ describe('Email Value Object', () => {
   })
 
   it('should throw an error for an invalid email', () => {
-    expect(() => new Email('invalid_email')).toThrowError('Invalid email format.')
+    expect(() => new Email('invalid_email')).toThrowError(
+      'Invalid email format.',
+    )
     expect(() => new Email('')).toThrowError('Invalid email format.')
     expect(() => new Email('a@b')).toThrowError('Invalid email format.')
   })
