@@ -6,6 +6,7 @@ import { Name } from '@/core/value-objects/name.vo'
 import { Either, left, right } from '@/core/errors/either'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { SameEmailError } from './errors/same-email'
+import { Manager } from '../../enterprise/entities/manager.entity'
 
 interface UpdateManagerProfileRequest {
   managerId: string
@@ -16,7 +17,7 @@ interface UpdateManagerProfileRequest {
 
 type UpdateManagerProfileResponse = Either<
   ResourceNotFoundError | ManagerAlreadyExistsError | SameEmailError,
-  { success: true }
+  { manager: Manager }
 >
 
 @Injectable()
@@ -56,6 +57,6 @@ export class UpdateManagerProfileService {
 
     await this.managerRepository.save(manager)
 
-    return right({ success: true })
+    return right({ manager })
   }
 }

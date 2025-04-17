@@ -8,9 +8,9 @@ import {
   UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
-import { CreateManagerDTO } from '../dto/create-manager-body.dto'
 import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
-import { ManagerPresenter } from '../presenters/manager.presenter'
+import { ManagerPresenter } from '../../presenters/manager.presenter'
+import { CreateManagerDTO } from '../../dto/manager/create-manager.dto'
 
 @Controller('managers')
 export class CreateManagerController {

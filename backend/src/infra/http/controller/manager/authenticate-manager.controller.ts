@@ -6,8 +6,8 @@ import {
   BadRequestException,
 } from '@nestjs/common'
 import { AuthenticateManagerService } from '@/domain/manager/application/services/authenticate-manager.service'
-import { AuthenticateManagerDTO } from '../dto/authenticate-manager-body.dto'
 import { InvalidCredentialsError } from '@/domain/manager/application/services/errors/invalid-credentials.error'
+import { AuthenticateManagerDTO } from '../../dto/manager/authenticate-manager.dto'
 
 @Controller('login')
 export class AuthenticateManagerController {

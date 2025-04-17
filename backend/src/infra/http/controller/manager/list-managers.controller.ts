@@ -1,7 +1,7 @@
 import { Controller, Get, UseGuards, NotFoundException } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { ListManagersService } from '@/domain/manager/application/services/list-managers.service'
-import { ManagerPresenter } from '../presenters/manager.presenter'
+import { ManagerPresenter } from '../../presenters/manager.presenter'
 
 @Controller('managers')
 export class ListManagersController {

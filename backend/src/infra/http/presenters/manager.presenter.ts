@@ -8,6 +8,7 @@ export class ManagerPresenter {
       lastName: manager.name.getLastName(),
       email: manager.email.toValue(),
       createdAt: manager.createdAt,
+      updatedAt: manager.updatedAt,
     }
   }
 }

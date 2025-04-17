@@ -11,7 +11,7 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
 import { InvalidCredentialsError } from '@/domain/manager/application/services/errors/invalid-credentials.error'
 import { Request } from 'express'
-import { UpdateManagerPasswordDTO } from '../dto/update-manager-password-body.dto'
+import { UpdateManagerPasswordDTO } from '../../dto/manager/update-manager-password.dto'
 
 interface AuthenticatedRequest extends Request {
   user: {

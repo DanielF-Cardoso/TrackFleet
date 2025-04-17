@@ -6,9 +6,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common'
 import { GetManagerProfileService } from '@/domain/manager/application/services/get-manager-profile.service'
-import { ManagerPresenter } from '../presenters/manager.presenter'
 import { Request } from 'express'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
+import { ManagerPresenter } from '../../presenters/manager.presenter'
 
 interface AuthenticatedRequest extends Request {
   user: {

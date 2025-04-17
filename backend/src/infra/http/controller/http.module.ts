@@ -1,16 +1,18 @@
 import { DatabaseModule } from '@/infra/database/prisma/database.module'
 import { Module } from '@nestjs/common'
-import { AuthenticateManagerController } from './authenticate-manager.controller'
+import { AuthenticateManagerController } from './manager/authenticate-manager.controller'
 import { AuthenticateManagerService } from '@/domain/manager/application/services/authenticate-manager.service'
 import { CryptographyModule } from '@/infra/cryptography/cryptography.module'
-import { CreateManagerController } from './create-manager.controller'
 import { CreateManagerService } from '@/domain/manager/application/services/create-manager.service'
 import { GetManagerProfileService } from '@/domain/manager/application/services/get-manager-profile.service'
-import { GetManagerProfileController } from './get-manager-profile.controller'
-import { ListManagersController } from './list-managers.controllers'
 import { ListManagersService } from '@/domain/manager/application/services/list-managers.service'
-import { UpdateManagerPasswordController } from './update-manager-password.controller'
 import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
+import { UpdateManagerProfileService } from '@/domain/manager/application/services/update-manager-profile.service'
+import { ListManagersController } from './manager/list-managers.controller'
+import { CreateManagerController } from './manager/create-manager.controller'
+import { UpdateManagerPasswordController } from './manager/update-manager-password.controller'
+import { UpdateManagerProfileController } from './manager/update-manager-profile-controller'
+import { GetManagerProfileController } from './manager/get-manager-profile.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -20,6 +22,7 @@ import { UpdateManagerPasswordService } from '@/domain/manager/application/servi
     GetManagerProfileController,
     ListManagersController,
     UpdateManagerPasswordController,
+    UpdateManagerProfileController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -27,6 +30,7 @@ import { UpdateManagerPasswordService } from '@/domain/manager/application/servi
     GetManagerProfileService,
     ListManagersService,
     UpdateManagerPasswordService,
+    UpdateManagerProfileService,
   ],
 })
 export class HttpModule {}
