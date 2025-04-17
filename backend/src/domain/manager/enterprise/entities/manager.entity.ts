@@ -50,6 +50,12 @@ export class Manager extends Entity<ManagerProps> {
     this.touch()
   }
 
+  updateProfile({ name, email }: { name: Name; email: Email }) {
+    this.props.name = name
+    this.props.email = email
+    this.touch()
+  }
+
   private touch() {
     this.props.updatedAt = new Date()
   }
