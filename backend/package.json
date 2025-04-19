@@ -17,6 +17,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
+    "test:ui": "vitest --ui",
+    "test:ui:coverage": "vitest --ui --coverage",
+    "test:e2e": "vitest --config ./vitest.config.e2e.mts",
     "test:debug": "vitest --inspect-brk --inspect"
   },
   "dependencies": {
@@ -46,6 +49,7 @@
     "@types/supertest": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.0.0",
     "@typescript-eslint/parser": "^8.0.0",
+    "@vitest/ui": "^3.1.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",

@@ -11,7 +11,7 @@ import { UpdateManagerProfileService } from '@/domain/manager/application/servic
 import { ListManagersController } from './manager/list-managers.controller'
 import { CreateManagerController } from './manager/create-manager.controller'
 import { UpdateManagerPasswordController } from './manager/update-manager-password.controller'
-import { UpdateManagerProfileController } from './manager/update-manager-profile-controller'
+import { UpdateManagerProfileController } from './manager/update-manager-profile.controller'
 import { GetManagerProfileController } from './manager/get-manager-profile.controller'
 
 @Module({

@@ -7,7 +7,7 @@ export function makeManagerInput(
   return {
     firstName: overrides.firstName ?? faker.person.firstName(),
     lastName: overrides.lastName ?? faker.person.lastName(),
-    email: overrides.email ?? faker.internet.email(),
+    email: overrides.email ?? faker.internet.email().toLowerCase(),
     password: overrides.password ?? faker.internet.password(),
   }
 }
