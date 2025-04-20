@@ -1,6 +1,7 @@
 {
     "car": {
-      "alreadyExists": "A car with this license plate already exists."
+      "alreadyExists": "A car with this license plate already exists.",
+      "notFound": "Car not found."
     },
     "manager": {
       "alreadyExists": "A manager with this email already exists.",

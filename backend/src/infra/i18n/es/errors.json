@@ -1,6 +1,7 @@
 {
     "car": {
-      "alreadyExists": "Ya existe un vehículo con esta matrícula."
+      "alreadyExists": "Ya existe un vehículo con esta matrícula.",
+      "notFound": "Vehículo no encontrado."
     },
     "manager": {
       "alreadyExists": "Ya existe un gestor con este correo electrónico.",
