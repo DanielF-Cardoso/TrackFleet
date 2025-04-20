@@ -85,6 +85,41 @@ export class Car extends Entity<CarProps> {
     this.touch()
   }
 
+  updateCar(datails: {
+    brand?: string
+    model?: string
+    year?: number
+    color?: string
+    odometer?: number
+  }) {
+    if (datails.brand) {
+      this.props.brand = datails.brand
+    }
+    if (datails.model) {
+      this.props.model = datails.model
+    }
+    if (datails.year) {
+      this.props.year = datails.year
+    }
+    if (datails.color) {
+      this.props.color = datails.color
+    }
+    if (datails.odometer) {
+      this.props.odometer = datails.odometer
+    }
+    this.touch()
+  }
+
+  updateLicensePlate(licensePlate: LicensePlate) {
+    this.props.licensePlate = licensePlate
+    this.touch()
+  }
+
+  updateRenavam(renavam: string) {
+    this.props.renavam = renavam
+    this.touch()
+  }
+
   private touch() {
     this.props.updatedAt = new Date()
   }
