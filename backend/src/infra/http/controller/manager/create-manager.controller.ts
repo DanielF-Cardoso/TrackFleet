@@ -12,7 +12,9 @@ import { ManagerAlreadyExistsError } from '@/domain/manager/application/services
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { CreateManagerDTO } from '../../dto/manager/create-manager.dto'
 import { I18nService } from 'nestjs-i18n'
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
+@ApiTags('Gestores')
 @Controller('managers')
 export class CreateManagerController {
   constructor(
@@ -22,6 +24,36 @@ export class CreateManagerController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Criar um novo gestor',
+    description: 'Cria um novo gestor no sistema.',
+  })
+  @ApiBody({
+    description: 'Dados necessários para criar um gestor.',
+    type: CreateManagerDTO,
+  })
+  @ApiResponse({
+    status: 201,
+    description: 'Gestor criado com sucesso.',
+    schema: {
+      example: {
+        manager: {
+          id: '12345',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Não autorizado.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'O gestor já existe.',
+  })
   async create(@Body() body: CreateManagerDTO) {
     const { firstName, lastName, email, password } = body
 

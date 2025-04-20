@@ -17,6 +17,7 @@ import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
 import { InvalidPasswordError } from '@/domain/manager/application/services/errors/invalid-password.error'
 import { SamePasswordError } from '@/domain/manager/application/services/errors/same-password'
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -24,6 +25,7 @@ interface AuthenticatedRequest extends Request {
   }
 }
 
+@ApiTags('Gestores')
 @Controller('managers/password')
 export class UpdateManagerPasswordController {
   constructor(
@@ -33,6 +35,34 @@ export class UpdateManagerPasswordController {
 
   @Patch()
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Atualizar senha do gestor',
+    description: 'Permite que um gestor autenticado atualize sua senha.',
+  })
+  @ApiBody({
+    description: 'Dados necessários para atualizar a senha.',
+    type: UpdateManagerPasswordDTO,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Senha atualizada com sucesso.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Senha atual inválida.',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Não autorizado.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Gestor não encontrado.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'A nova senha não pode ser igual à senha atual.',
+  })
   async handle(
     @Body() body: UpdateManagerPasswordDTO,
     @Req() req: AuthenticatedRequest,

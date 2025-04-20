@@ -17,6 +17,7 @@ import { ManagerAlreadyExistsError } from '@/domain/manager/application/services
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { UpdateManagerProfileDTO } from '../../dto/manager/update-manager-profile.dto'
 import { I18nService } from 'nestjs-i18n'
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -24,6 +25,7 @@ interface AuthenticatedRequest extends Request {
   }
 }
 
+@ApiTags('Gestores')
 @Controller('managers/me')
 export class UpdateManagerProfileController {
   constructor(
@@ -33,6 +35,44 @@ export class UpdateManagerProfileController {
 
   @Patch()
   @UseGuards(JwtAuthGuard)
+  @ApiOperation({
+    summary: 'Atualizar perfil do gestor',
+    description: 'Permite que um gestor autenticado atualize seu perfil.',
+  })
+  @ApiBody({
+    description: 'Dados necessários para atualizar o perfil.',
+    type: UpdateManagerProfileDTO,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Perfil atualizado com sucesso.',
+    schema: {
+      example: {
+        manager: {
+          id: '12345',
+          firstName: 'John',
+          lastName: 'Doe',
+          email: 'john.doe@example.com',
+        },
+      },
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Não autorizado.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: 'Gestor não encontrado.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'O novo e‑mail não pode ser igual ao atual.',
+  })
+  @ApiResponse({
+    status: 409,
+    description: 'Já existe um gestor com este e‑mail.',
+  })
   async handle(
     @Body() body: UpdateManagerProfileDTO,
     @Req() req: AuthenticatedRequest,
