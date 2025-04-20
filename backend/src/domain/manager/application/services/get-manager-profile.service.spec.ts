@@ -1,14 +1,22 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { GetManagerProfileService } from './get-manager-profile.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { I18nService } from 'nestjs-i18n'
 
 let sut: GetManagerProfileService
 let managerRepository: InMemoryManagerRepository
+let i18n: I18nService
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
-  sut = new GetManagerProfileService(managerRepository)
+
+  i18n = {
+    translate: vi.fn(),
+  } as unknown as I18nService
+
+  sut = new GetManagerProfileService(managerRepository, i18n)
 })
 
 describe('GetManagerProfileService', () => {
@@ -27,10 +35,15 @@ describe('GetManagerProfileService', () => {
     }
   })
 
-  it('should not return manager if not found', async () => {
+  it('should return error with translated message if manager is not found', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Manager not found.')
+
     const result = await sut.execute({ managerId: 'non-existent-id' })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
+      expect(result.value.message).toBe('Manager not found.')
+    }
   })
 })

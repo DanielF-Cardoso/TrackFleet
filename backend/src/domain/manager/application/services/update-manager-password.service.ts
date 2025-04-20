@@ -5,6 +5,9 @@ import { Either, left, right } from '@/core/errors/either'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { SamePasswordError } from './errors/same-password'
+import { I18nService } from 'nestjs-i18n'
+import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { InvalidPasswordError } from './errors/invalid-password.error'
 
 interface UpdateManagerPasswordRequest {
   managerId: string
@@ -13,7 +16,7 @@ interface UpdateManagerPasswordRequest {
 }
 
 type UpdateManagerPasswordResponse = Either<
-  InvalidCredentialsError,
+  InvalidCredentialsError | ResourceNotFoundError | SamePasswordError,
   { success: true }
 >
 
@@ -23,6 +26,7 @@ export class UpdateManagerPasswordService {
     private managerRepository: ManagerRepository,
     private hashComparer: HashComparer,
     private hashGenerator: HashGenerator,
+    private i18n: I18nService,
   ) {}
 
   async execute({
@@ -33,7 +37,8 @@ export class UpdateManagerPasswordService {
     const manager = await this.managerRepository.findById(managerId)
 
     if (!manager) {
-      return left(new InvalidCredentialsError())
+      const errorMessage = await this.i18n.translate('errors.manager.notFound')
+      return left(new ResourceNotFoundError(errorMessage))
     }
 
     const isValid = await this.hashComparer.compareHash(
@@ -42,11 +47,17 @@ export class UpdateManagerPasswordService {
     )
 
     if (!isValid) {
-      return left(new InvalidCredentialsError())
+      const errorMessage = await this.i18n.translate(
+        'errors.manager.invalidPassword',
+      )
+      return left(new InvalidPasswordError(errorMessage))
     }
 
     if (currentPassword === newPassword) {
-      return left(new SamePasswordError())
+      const errorMessage = await this.i18n.translate(
+        'errors.generic.samePassword',
+      )
+      return left(new SamePasswordError(errorMessage))
     }
 
     const hashedPassword = await this.hashGenerator.generateHash(newPassword)

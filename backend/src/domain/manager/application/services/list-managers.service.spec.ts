@@ -1,14 +1,22 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ListManagersService } from './list-managers.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { I18nService } from 'nestjs-i18n'
 
 let sut: ListManagersService
 let managerRepository: InMemoryManagerRepository
+let i18n: I18nService
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
-  sut = new ListManagersService(managerRepository)
+
+  i18n = {
+    translate: vi.fn(),
+  } as unknown as I18nService
+
+  sut = new ListManagersService(managerRepository, i18n)
 })
 
 describe('ListManagersService', () => {
@@ -32,10 +40,15 @@ describe('ListManagersService', () => {
     }
   })
 
-  it('should not return managers list if no managers are registered', async () => {
+  it('should return error with translated message if no managers are registered', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Manager not found.')
+
     const result = await sut.execute()
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
+      expect(result.value.message).toBe('Manager not found.')
+    }
   })
 })

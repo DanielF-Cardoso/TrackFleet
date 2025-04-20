@@ -3,12 +3,15 @@ import {
   Get,
   Req,
   UseGuards,
-  UnauthorizedException,
+  NotFoundException,
+  InternalServerErrorException,
 } from '@nestjs/common'
 import { GetManagerProfileService } from '@/domain/manager/application/services/get-manager-profile.service'
 import { Request } from 'express'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
+import { I18nService } from 'nestjs-i18n'
+import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -18,7 +21,10 @@ interface AuthenticatedRequest extends Request {
 
 @Controller('managers')
 export class GetManagerProfileController {
-  constructor(private getManagerProfile: GetManagerProfileService) {}
+  constructor(
+    private getManagerProfile: GetManagerProfileService,
+    private i18n: I18nService,
+  ) {}
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
@@ -28,7 +34,18 @@ export class GetManagerProfileController {
     const result = await this.getManagerProfile.execute({ managerId })
 
     if (result.isLeft()) {
-      throw new UnauthorizedException('Manager not found')
+      const error = result.value
+
+      switch (error.constructor) {
+        case ResourceNotFoundError:
+          throw new NotFoundException(
+            await this.i18n.translate('errors.manager.notFound'),
+          )
+        default:
+          throw new InternalServerErrorException(
+            await this.i18n.translate('errors.generic.unexpectedError'),
+          )
+      }
     }
 
     return {

@@ -6,6 +6,7 @@ import { Name } from '@/core/value-objects/name.vo'
 import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { Either, left, right } from '@/core/errors/either'
 import { Injectable } from '@nestjs/common'
+import { I18nService } from 'nestjs-i18n'
 
 export interface CreateManagerServiceRequest {
   firstName: string
@@ -24,6 +25,7 @@ export class CreateManagerService {
   constructor(
     private managerRepository: ManagerRepository,
     private hashGenerator: HashGenerator,
+    private i18n: I18nService,
   ) {}
 
   async execute({
@@ -40,7 +42,10 @@ export class CreateManagerService {
     )
 
     if (existingManager) {
-      return left(new ManagerAlreadyExistsError())
+      const errorMessage = await this.i18n.translate(
+        'errors.manager.alreadyExists',
+      )
+      return left(new ManagerAlreadyExistsError(errorMessage))
     }
 
     const hashedPassword = await this.hashGenerator.generateHash(password)

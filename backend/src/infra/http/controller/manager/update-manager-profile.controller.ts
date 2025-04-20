@@ -5,7 +5,8 @@ import {
   Req,
   UseGuards,
   BadRequestException,
-  UnauthorizedException,
+  NotFoundException,
+  ConflictException,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { Request } from 'express'
@@ -15,6 +16,7 @@ import { SameEmailError } from '@/domain/manager/application/services/errors/sam
 import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { UpdateManagerProfileDTO } from '../../dto/manager/update-manager-profile.dto'
+import { I18nService } from 'nestjs-i18n'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -26,6 +28,7 @@ interface AuthenticatedRequest extends Request {
 export class UpdateManagerProfileController {
   constructor(
     private updateManagerProfileService: UpdateManagerProfileService,
+    private readonly i18n: I18nService,
   ) {}
 
   @Patch()
@@ -48,13 +51,21 @@ export class UpdateManagerProfileController {
 
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new UnauthorizedException('Manager not found')
+          throw new NotFoundException(
+            await this.i18n.translate('errors.manager.notFound'),
+          )
         case SameEmailError:
-          throw new BadRequestException('Email is the same as the current one')
+          throw new ConflictException(
+            await this.i18n.translate('errors.generic.sameEmail'),
+          )
         case ManagerAlreadyExistsError:
-          throw new BadRequestException('Email already in use')
+          throw new ConflictException(
+            await this.i18n.translate('errors.manager.alreadyExists'),
+          )
         default:
-          throw new BadRequestException('Unexpected error')
+          throw new BadRequestException(
+            await this.i18n.translate('errors.generic.unexpectedError'),
+          )
       }
     }
 

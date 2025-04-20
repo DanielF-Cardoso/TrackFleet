@@ -1,5 +1,6 @@
 export class CarAlreadyExistsError extends Error {
-  constructor() {
-    super('Car already exists')
+  constructor(message: string = 'Car already exists') {
+    super(message)
+    this.name = 'CarAlreadyExistsError'
   }
 }

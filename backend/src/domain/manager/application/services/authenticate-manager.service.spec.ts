@@ -1,3 +1,4 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { AuthenticateManagerService } from './authenticate-manager.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
@@ -5,19 +6,26 @@ import { FakeEncrypter } from 'test/cryptography/fake-encrypter'
 import { Email } from '@/core/value-objects/email.vo'
 import { FakeHashComparer } from 'test/cryptography/fake-hasher-compare'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
+import { I18nService } from 'nestjs-i18n'
 
 let sut: AuthenticateManagerService
 let managerRepository: InMemoryManagerRepository
+let i18n: I18nService
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
   const hashComparer = new FakeHashComparer()
   const encrypter = new FakeEncrypter()
 
+  i18n = {
+    translate: vi.fn(),
+  } as unknown as I18nService
+
   sut = new AuthenticateManagerService(
     managerRepository,
     hashComparer,
     encrypter,
+    i18n,
   )
 })
 
@@ -45,7 +53,9 @@ describe('AuthenticateManagerService', () => {
     }
   })
 
-  it('should return error if email is incorrect', async () => {
+  it('should return error with translated message if email is incorrect', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Invalid email or password.')
+
     const email = 'valid@auth.com'
     const password = '123456'
 
@@ -63,9 +73,15 @@ describe('AuthenticateManagerService', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidCredentialsError)
+
+    if (result.value instanceof InvalidCredentialsError) {
+      expect(result.value.message).toBe('Invalid email or password.')
+    }
   })
 
-  it('should return error if password is incorrect', async () => {
+  it('should return error with translated message if password is incorrect', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Invalid email or password.')
+
     const email = 'valid@auth.com'
     const password = '123456'
 
@@ -83,5 +99,8 @@ describe('AuthenticateManagerService', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidCredentialsError)
+    if (result.value instanceof InvalidCredentialsError) {
+      expect(result.value.message).toBe('Invalid email or password.')
+    }
   })
 })

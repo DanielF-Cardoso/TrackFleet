@@ -1,5 +1,8 @@
 export class SameEmailError extends Error {
-  constructor() {
-    super('New email must be different from the current email.')
+  constructor(
+    message: string = 'The new email cannot be the same as the current email',
+  ) {
+    super(message)
+    this.name = 'SameEmailError'
   }
 }

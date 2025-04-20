@@ -4,6 +4,7 @@ import { CarAlreadyExistsError } from './errors/car-already-exists-error'
 import { CarRepository } from '../repositories/car-repository'
 import { LicensePlate } from '@/core/value-objects/license-plate.vo'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { I18nService } from 'nestjs-i18n'
 
 export interface CreateCarServiceRequest {
   managerId: string
@@ -19,7 +20,10 @@ export interface CreateCarServiceRequest {
 type CreateCarServiceResponse = Either<CarAlreadyExistsError, { car: Car }>
 
 export class CreateCarService {
-  constructor(private carRepository: CarRepository) {}
+  constructor(
+    private carRepository: CarRepository,
+    private i18n: I18nService,
+  ) {}
 
   async execute({
     managerId,
@@ -35,7 +39,8 @@ export class CreateCarService {
       await this.carRepository.findByLicensePlate(licensePlate)
 
     if (existingCar) {
-      return left(new CarAlreadyExistsError())
+      const errorMessage = await this.i18n.translate('errors.car.alreadyExists')
+      return left(new CarAlreadyExistsError(errorMessage))
     }
 
     const licensePlateVo = new LicensePlate(licensePlate)

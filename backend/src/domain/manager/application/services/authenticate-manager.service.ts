@@ -4,6 +4,7 @@ import { Encrypter } from '@/core/cryptography/encrypter'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { Either, left, right } from '@/core/errors/either'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
+import { I18nService } from 'nestjs-i18n'
 
 interface AuthenticateManagerRequest {
   email: string
@@ -21,6 +22,7 @@ export class AuthenticateManagerService {
     private managerRepository: ManagerRepository,
     private hashComparer: HashComparer,
     private encrypter: Encrypter,
+    private i18n: I18nService,
   ) {}
 
   async execute({
@@ -30,7 +32,10 @@ export class AuthenticateManagerService {
     const manager = await this.managerRepository.findByEmail(email)
 
     if (!manager) {
-      return left(new InvalidCredentialsError())
+      const errorMessage = await this.i18n.translate(
+        'errors.auth.invalidCredentials',
+      )
+      return left(new InvalidCredentialsError(errorMessage))
     }
 
     const isValid = await this.hashComparer.compareHash(
@@ -39,7 +44,10 @@ export class AuthenticateManagerService {
     )
 
     if (!isValid) {
-      return left(new InvalidCredentialsError())
+      const errorMessage = await this.i18n.translate(
+        'errors.auth.invalidCredentials',
+      )
+      return left(new InvalidCredentialsError(errorMessage))
     }
 
     const accessToken = await this.encrypter.encrypt({

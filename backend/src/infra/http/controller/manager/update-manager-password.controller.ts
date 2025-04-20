@@ -4,14 +4,19 @@ import {
   Patch,
   Req,
   UseGuards,
-  UnauthorizedException,
   BadRequestException,
+  NotFoundException,
+  ConflictException,
+  InternalServerErrorException,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
-import { InvalidCredentialsError } from '@/domain/manager/application/services/errors/invalid-credentials.error'
 import { Request } from 'express'
 import { UpdateManagerPasswordDTO } from '../../dto/manager/update-manager-password.dto'
+import { I18nService } from 'nestjs-i18n'
+import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
+import { InvalidPasswordError } from '@/domain/manager/application/services/errors/invalid-password.error'
+import { SamePasswordError } from '@/domain/manager/application/services/errors/same-password'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -23,6 +28,7 @@ interface AuthenticatedRequest extends Request {
 export class UpdateManagerPasswordController {
   constructor(
     private updateManagerPasswordService: UpdateManagerPasswordService,
+    private readonly i18n: I18nService,
   ) {}
 
   @Patch()
@@ -43,10 +49,22 @@ export class UpdateManagerPasswordController {
       const error = result.value
 
       switch (error.constructor) {
-        case InvalidCredentialsError:
-          throw new BadRequestException('Invalid password')
+        case ResourceNotFoundError:
+          throw new NotFoundException(
+            await this.i18n.translate('errors.manager.notFound'),
+          )
+        case InvalidPasswordError:
+          throw new BadRequestException(
+            await this.i18n.translate('errors.auth.invalidPassword'),
+          )
+        case SamePasswordError:
+          throw new ConflictException(
+            await this.i18n.translate('errors.generic.samePassword'),
+          )
         default:
-          throw new UnauthorizedException('Unexpected error')
+          throw new InternalServerErrorException(
+            await this.i18n.translate('errors.generic.unexpectedError'),
+          )
       }
     }
 

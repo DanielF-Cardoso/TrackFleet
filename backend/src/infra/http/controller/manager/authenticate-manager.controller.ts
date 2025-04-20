@@ -2,16 +2,20 @@ import {
   Body,
   Controller,
   Post,
-  UnauthorizedException,
   BadRequestException,
+  InternalServerErrorException,
 } from '@nestjs/common'
 import { AuthenticateManagerService } from '@/domain/manager/application/services/authenticate-manager.service'
 import { InvalidCredentialsError } from '@/domain/manager/application/services/errors/invalid-credentials.error'
 import { AuthenticateManagerDTO } from '../../dto/manager/authenticate-manager.dto'
+import { I18nService } from 'nestjs-i18n'
 
 @Controller('login')
 export class AuthenticateManagerController {
-  constructor(private authenticateManager: AuthenticateManagerService) {}
+  constructor(
+    private authenticateManager: AuthenticateManagerService,
+    private i18n: I18nService,
+  ) {}
 
   @Post()
   async login(@Body() body: AuthenticateManagerDTO) {
@@ -27,10 +31,13 @@ export class AuthenticateManagerController {
 
       switch (error.constructor) {
         case InvalidCredentialsError:
-          throw new UnauthorizedException(error.message)
-
+          throw new BadRequestException(
+            await this.i18n.translate('errors.auth.invalidCredentials'),
+          )
         default:
-          throw new BadRequestException(error.message)
+          throw new InternalServerErrorException(
+            await this.i18n.translate('errors.generic.unexpectedError'),
+          )
       }
     }
 

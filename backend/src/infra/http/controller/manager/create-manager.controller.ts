@@ -1,20 +1,24 @@
 import { CreateManagerService } from '@/domain/manager/application/services/create-manager.service'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import {
-  BadRequestException,
   Body,
+  ConflictException,
   Controller,
+  InternalServerErrorException,
   Post,
-  UnauthorizedException,
   UseGuards,
 } from '@nestjs/common'
 import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { CreateManagerDTO } from '../../dto/manager/create-manager.dto'
+import { I18nService } from 'nestjs-i18n'
 
 @Controller('managers')
 export class CreateManagerController {
-  constructor(private createManagerService: CreateManagerService) {}
+  constructor(
+    private createManagerService: CreateManagerService,
+    private i18n: I18nService,
+  ) {}
 
   @Post()
   @UseGuards(JwtAuthGuard)
@@ -33,9 +37,13 @@ export class CreateManagerController {
 
       switch (error.constructor) {
         case ManagerAlreadyExistsError:
-          throw new BadRequestException(error.message)
+          throw new ConflictException(
+            await this.i18n.translate('errors.manager.alreadyExists'),
+          )
         default:
-          throw new UnauthorizedException(error.message)
+          throw new InternalServerErrorException(
+            await this.i18n.translate('errors.generic.unexpectedError'),
+          )
       }
     }
 

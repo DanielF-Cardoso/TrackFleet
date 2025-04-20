@@ -1,0 +1,21 @@
+{
+    "car": {
+      "alreadyExists": "Já existe um carro com esta placa."
+    },
+    "manager": {
+      "alreadyExists": "Já existe um gestor com este e‑mail.",
+      "notFound": "Gestor não encontrado.",
+      "notFoundAll": "Nenhum gestor encontrado."
+    },
+    "auth": {
+      "invalidCredentials": "E‑mail ou senha inválidos.",
+      "invalidPassword": "Senha atual inválida.",
+      "unauthorized": "Você não está autorizado a realizar esta ação."
+    },
+    "generic": {
+      "sameEmail": "O novo e‑mail não pode ser igual ao atual.",
+      "samePassword": "A nova senha não pode ser igual à atual.",
+      "unexpectedError": "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde."
+    }
+  }
+  

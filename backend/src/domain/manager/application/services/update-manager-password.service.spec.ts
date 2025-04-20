@@ -1,23 +1,32 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { UpdateManagerPasswordService } from './update-manager-password.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
 import { FakeHashGenerator } from 'test/cryptography/fake-hasher'
 import { FakeHashComparer } from 'test/cryptography/fake-hasher-compare'
-import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { SamePasswordError } from './errors/same-password'
+import { I18nService } from 'nestjs-i18n'
+import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { InvalidPasswordError } from './errors/invalid-password.error'
 
 let sut: UpdateManagerPasswordService
 let managerRepository: InMemoryManagerRepository
+let i18n: I18nService
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
   const hasher = new FakeHashGenerator()
   const hashComparer = new FakeHashComparer()
 
+  i18n = {
+    translate: vi.fn(),
+  } as unknown as I18nService
+
   sut = new UpdateManagerPasswordService(
     managerRepository,
     hashComparer,
     hasher,
+    i18n,
   )
 })
 
@@ -37,6 +46,8 @@ describe('UpdateManagerPasswordService', () => {
   })
 
   it('should not update password if manager does not exist', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Manager not found.')
+
     const result = await sut.execute({
       managerId: '1',
       currentPassword: 'any-pass',
@@ -44,10 +55,17 @@ describe('UpdateManagerPasswordService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidCredentialsError)
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
+      expect(result.value.message).toBe('Manager not found.')
+    }
   })
 
   it('should not update password if new password is the same as current', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'The new password cannot be the same as the current password.',
+    )
+
     const manager = makeManager({ password: 'hashed-oldpass' })
     await managerRepository.create(manager)
 
@@ -59,10 +77,17 @@ describe('UpdateManagerPasswordService', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(SamePasswordError)
+    if (result.value instanceof SamePasswordError) {
+      expect(result.value.message).toBe(
+        'The new password cannot be the same as the current password.',
+      )
+    }
     expect(manager.password).toBe('hashed-oldpass')
   })
 
-  it('should not update password if current is invalid', async () => {
+  it('should not update password if current password is invalid', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Invalid current password.')
+
     const manager = makeManager({ password: 'hashed-oldpass' })
     await managerRepository.create(manager)
 
@@ -73,6 +98,9 @@ describe('UpdateManagerPasswordService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidCredentialsError)
+    expect(result.value).toBeInstanceOf(InvalidPasswordError)
+    if (result.value instanceof InvalidPasswordError) {
+      expect(result.value.message).toBe('Invalid current password.')
+    }
   })
 })

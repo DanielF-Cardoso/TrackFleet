@@ -1,10 +1,18 @@
-import { IsNotEmpty, MinLength } from 'class-validator'
+import { IsNotEmpty, IsString, MinLength } from 'class-validator'
+import { i18nValidationMessage } from 'nestjs-i18n'
 
 export class UpdateManagerPasswordDTO {
-  @IsNotEmpty()
+  @IsString({ message: i18nValidationMessage('validation.isNotString') })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.isEmpty') })
+  @MinLength(6, {
+    message: i18nValidationMessage('validation.minLength'),
+  })
   currentPassword!: string
 
-  @IsNotEmpty()
-  @MinLength(6)
+  @IsString({ message: i18nValidationMessage('validation.isNotString') })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.isEmpty') })
+  @MinLength(6, {
+    message: i18nValidationMessage('validation.minLength'),
+  })
   newPassword!: string
 }

@@ -1,0 +1,14 @@
+{
+    "isNotUUID": "El campo {property} debe ser un UUID válido.",
+    "isNotString": "El campo {property} debe ser una cadena.",
+    "isNotEmail": "El campo {property} debe ser un correo electrónico válido.",
+    "isEmpty": "El campo {property} no puede estar vacío.",
+    "isEmptyObject": "El objeto {object} está vacío.",
+    "isNotDateString": "El campo {property} debe ser una fecha válida.",
+    "isNotMobilePhone": "El campo {property} debe ser un número de teléfono móvil válido.",
+    "isNotArray": "El campo {property} debe ser un arreglo.",
+    "isArrayEmpty": "El campo {property} no puede ser un arreglo vacío.",
+    "isNotEnum": "El campo {property} debe ser uno de los valores permitidos.",
+    "isNotNumber": "El campo {property} debe ser un número.",
+    "minLength": "El campo {property} debe tener al menos {constraints[0]} caracteres."
+  }

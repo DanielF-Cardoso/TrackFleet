@@ -1,9 +1,14 @@
-import { IsEmail, IsNotEmpty } from 'class-validator'
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator'
+import { i18nValidationMessage } from 'nestjs-i18n'
 
 export class AuthenticateManagerDTO {
-  @IsEmail()
+  @IsNotEmpty({ message: i18nValidationMessage('validation.isEmpty') })
+  @IsEmail(undefined, {
+    message: i18nValidationMessage('validation.isNotEmail'),
+  })
   email!: string
 
-  @IsNotEmpty()
+  @IsString({ message: i18nValidationMessage('validation.isNotString') })
+  @IsNotEmpty({ message: i18nValidationMessage('validation.isEmpty') })
   password!: string
 }

@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core'
 import { AppModule } from './infra/app.module'
 import { EnvService } from './infra/env/env.service'
-import { ValidationPipe } from '@nestjs/common'
+import { I18nValidationExceptionFilter, I18nValidationPipe } from 'nestjs-i18n'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -9,12 +9,17 @@ async function bootstrap() {
   app.setGlobalPrefix('api/v1')
 
   app.useGlobalPipes(
-    new ValidationPipe({
+    new I18nValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true,
       transform: true,
+      validationError: {
+        target: false,
+        value: false,
+      },
     }),
   )
+
+  app.useGlobalFilters(new I18nValidationExceptionFilter())
 
   const envService = app.get(EnvService)
   const port = envService.get('PORT')

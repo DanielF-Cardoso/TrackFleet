@@ -7,6 +7,7 @@ import { Either, left, right } from '@/core/errors/either'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { SameEmailError } from './errors/same-email'
 import { Manager } from '../../enterprise/entities/manager.entity'
+import { I18nService } from 'nestjs-i18n'
 
 interface UpdateManagerProfileRequest {
   managerId: string
@@ -22,7 +23,10 @@ type UpdateManagerProfileResponse = Either<
 
 @Injectable()
 export class UpdateManagerProfileService {
-  constructor(private managerRepository: ManagerRepository) {}
+  constructor(
+    private managerRepository: ManagerRepository,
+    private i18n: I18nService,
+  ) {}
 
   async execute({
     managerId,
@@ -33,25 +37,40 @@ export class UpdateManagerProfileService {
     const manager = await this.managerRepository.findById(managerId)
 
     if (!manager) {
-      return left(new ResourceNotFoundError('Manager'))
+      const errorMessage = await this.i18n.translate('errors.manager.notFound')
+      return left(new ResourceNotFoundError(errorMessage))
     }
 
-    const newEmail = new Email(email)
+    let newEmail = manager.email
+    if (email) {
+      const emailValueObject = new Email(email)
 
-    if (manager.email.equals(newEmail)) {
-      return left(new SameEmailError())
+      if (manager.email.equals(emailValueObject)) {
+        const errorMessage = await this.i18n.translate(
+          'errors.generic.sameEmail',
+        )
+        return left(new SameEmailError(errorMessage))
+      }
+
+      const existingWithSameEmail = await this.managerRepository.findByEmail(
+        emailValueObject.toValue(),
+      )
+
+      if (existingWithSameEmail) {
+        const errorMessage = await this.i18n.translate(
+          'errors.generic.alreadyExists',
+        )
+        return left(new ManagerAlreadyExistsError(errorMessage))
+      }
+
+      newEmail = emailValueObject
     }
 
-    const existingWithSameEmail = await this.managerRepository.findByEmail(
-      newEmail.toValue(),
-    )
-
-    if (existingWithSameEmail) {
-      return left(new ManagerAlreadyExistsError())
-    }
+    const newFirstName = firstName || manager.name.getFirstName()
+    const newLastName = lastName || manager.name.getLastName()
 
     manager.updateProfile({
-      name: new Name(firstName, lastName),
+      name: new Name(newFirstName, newLastName),
       email: newEmail,
     })
 

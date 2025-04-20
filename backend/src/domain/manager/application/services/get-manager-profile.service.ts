@@ -3,6 +3,7 @@ import { ManagerRepository } from '../repositories/manager-repository'
 import { Manager } from '../../enterprise/entities/manager.entity'
 import { Either, left, right } from '@/core/errors/either'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { I18nService } from 'nestjs-i18n'
 
 interface GetManagerProfileRequest {
   managerId: string
@@ -17,7 +18,10 @@ type GetManagerProfileResponse = Either<
 
 @Injectable()
 export class GetManagerProfileService {
-  constructor(private managerRepository: ManagerRepository) {}
+  constructor(
+    private managerRepository: ManagerRepository,
+    private i18n: I18nService,
+  ) {}
 
   async execute({
     managerId,
@@ -25,7 +29,8 @@ export class GetManagerProfileService {
     const manager = await this.managerRepository.findById(managerId)
 
     if (!manager) {
-      return left(new ResourceNotFoundError('Manager'))
+      const errorMessage = await this.i18n.translate('errors.manager.notFound')
+      return left(new ResourceNotFoundError(errorMessage))
     }
 
     return right({ manager })

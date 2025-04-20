@@ -1,17 +1,25 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
 import { CreateCarService } from './create-car.service'
 import { makeCarInput } from 'test/factories/car/make-car-input'
 import { CarAlreadyExistsError } from './errors/car-already-exists-error'
+import { I18nService } from 'nestjs-i18n'
 
 let sut: CreateCarService
 let carRepository: InMemoryCarRepository
+let i18n: I18nService
+
+beforeEach(() => {
+  carRepository = new InMemoryCarRepository()
+
+  i18n = {
+    translate: vi.fn(),
+  } as unknown as I18nService
+
+  sut = new CreateCarService(carRepository, i18n)
+})
 
 describe('CreateCarService', () => {
-  beforeEach(() => {
-    carRepository = new InMemoryCarRepository()
-    sut = new CreateCarService(carRepository)
-  })
-
   it('should be able to create a new car', async () => {
     const carData = makeCarInput()
 
@@ -30,7 +38,11 @@ describe('CreateCarService', () => {
     }
   })
 
-  it('should not allow creating a car with same license plate', async () => {
+  it('should not allow creating a car with the same license plate', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'A car with this license plate already exists.',
+    )
+
     const carData = makeCarInput({ licensePlate: 'ABC1234' })
 
     await sut.execute(carData)
@@ -38,5 +50,10 @@ describe('CreateCarService', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(CarAlreadyExistsError)
+    if (result.value instanceof CarAlreadyExistsError) {
+      expect(result.value.message).toBe(
+        'A car with this license plate already exists.',
+      )
+    }
   })
 })

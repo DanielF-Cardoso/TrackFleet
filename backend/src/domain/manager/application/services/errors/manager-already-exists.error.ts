@@ -1,5 +1,6 @@
 export class ManagerAlreadyExistsError extends Error {
-  constructor() {
-    super('Manager already exists')
+  constructor(message: string = 'Manager already exists') {
+    super(message)
+    this.name = 'ManagerAlreadyExistsError'
   }
 }

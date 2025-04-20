@@ -1,19 +1,27 @@
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { CreateManagerService } from './create-manager.service'
 import { FakeHashGenerator } from 'test/cryptography/fake-hasher'
 import { makeManagerInput } from 'test/factories/manager/make-manager-input'
 import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
+import { I18nService } from 'nestjs-i18n'
 
 let sut: CreateManagerService
 let managerRepository: InMemoryManagerRepository
+let i18n: I18nService
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
   const hasher = new FakeHashGenerator()
-  sut = new CreateManagerService(managerRepository, hasher)
+
+  i18n = {
+    translate: vi.fn(),
+  } as unknown as I18nService
+
+  sut = new CreateManagerService(managerRepository, hasher, i18n)
 })
 
-describe('CreateManagerUseCase', () => {
+describe('CreateManagerService', () => {
   it('should be able to create a new manager', async () => {
     const createManagerData = makeManagerInput()
 
@@ -34,6 +42,10 @@ describe('CreateManagerUseCase', () => {
   })
 
   it('should not allow creating a manager with the same email', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'A manager with this email already exists.',
+    )
+
     const email = 'daniel@email.com'
     const createManagerData = makeManagerInput({ email })
 
@@ -43,5 +55,10 @@ describe('CreateManagerUseCase', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ManagerAlreadyExistsError)
+    if (result.value instanceof ManagerAlreadyExistsError) {
+      expect(result.value.message).toBe(
+        'A manager with this email already exists.',
+      )
+    }
   })
 })
