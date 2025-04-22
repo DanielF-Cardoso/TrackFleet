@@ -51,7 +51,7 @@ export class UpdateCarService {
       const existingCar = await this.carRepository.findByLicensePlate(
         licensePlateVo.toValue(),
       )
-      if (existingCar && existingCar.id.equals(findedCar.id)) {
+      if (existingCar && !existingCar.id.equals(findedCar.id)) {
         const errorMessage = await this.i18n.translate(
           'erros.car.alreadyExists',
         )
@@ -65,7 +65,7 @@ export class UpdateCarService {
       const existingRenavam = await this.carRepository.findByRenavam(
         renavamVo.toValue(),
       )
-      if (existingRenavam && existingRenavam.id.equals(findedCar.id)) {
+      if (existingRenavam && !existingRenavam.id.equals(findedCar.id)) {
         const errorMessage = await this.i18n.translate(
           'erros.car.alreadyExists',
         )
