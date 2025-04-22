@@ -5,6 +5,7 @@ import { CarRepository } from '../repositories/car-repository'
 import { LicensePlate } from '@/core/value-objects/license-plate.vo'
 import { I18nService } from 'nestjs-i18n'
 import { CarNotFoundError } from './errors/car-not-found'
+import { Renavam } from '@/core/value-objects/renavam.vo'
 
 export interface UpdateCarServiceRequest {
   carId: string
@@ -60,14 +61,17 @@ export class UpdateCarService {
     }
 
     if (renavam) {
-      const existingRenavam = await this.carRepository.findByRenavam(renavam)
+      const renavamVo = new Renavam(renavam)
+      const existingRenavam = await this.carRepository.findByRenavam(
+        renavamVo.toValue(),
+      )
       if (existingRenavam && existingRenavam.id.equals(findedCar.id)) {
         const errorMessage = await this.i18n.translate(
           'erros.car.alreadyExists',
         )
         return left(new CarAlreadyExistsError(errorMessage))
       }
-      findedCar.updateRenavam(renavam)
+      findedCar.updateRenavam(renavamVo)
     }
 
     findedCar.updateCar({

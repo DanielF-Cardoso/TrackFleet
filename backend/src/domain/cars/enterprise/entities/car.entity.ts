@@ -1,6 +1,7 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { LicensePlate } from '@/core/value-objects/license-plate.vo'
+import { Renavam } from '@/core/value-objects/renavam.vo'
 
 export type CarStatus = 'AVAILABLE' | 'IN_USE' | 'IN_MAINTENANCE'
 
@@ -13,7 +14,7 @@ export interface CarProps {
   licensePlate: LicensePlate
   odometer: number
   status: CarStatus
-  renavam: string
+  renavam: Renavam
   createdAt: Date
   updatedAt?: Date
 }
@@ -115,7 +116,7 @@ export class Car extends Entity<CarProps> {
     this.touch()
   }
 
-  updateRenavam(renavam: string) {
+  updateRenavam(renavam: Renavam) {
     this.props.renavam = renavam
     this.touch()
   }

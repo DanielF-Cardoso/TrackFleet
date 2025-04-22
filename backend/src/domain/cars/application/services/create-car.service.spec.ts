@@ -34,7 +34,7 @@ describe('CreateCarService', () => {
       expect(car.year).toBe(carData.year)
       expect(car.color).toBe(carData.color)
       expect(car.odometer).toBe(carData.odometer)
-      expect(car.renavam).toBe(carData.renavam)
+      expect(car.renavam.toValue()).toBe(carData.renavam)
     }
   })
 
@@ -53,6 +53,25 @@ describe('CreateCarService', () => {
     if (result.value instanceof CarAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A car with this license plate already exists.',
+      )
+    }
+  })
+
+  it('should not allow creating a car with the same Renavam', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'A car with this Renavam already exists.',
+    )
+
+    const carData = makeCarInput({ renavam: '12345678901' })
+
+    await sut.execute(carData)
+    const result = await sut.execute(carData)
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(CarAlreadyExistsError)
+    if (result.value instanceof CarAlreadyExistsError) {
+      expect(result.value.message).toBe(
+        'A car with this Renavam already exists.',
       )
     }
   })

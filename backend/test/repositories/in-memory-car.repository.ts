@@ -9,11 +9,16 @@ export class InMemoryCarRepository implements CarRepository {
     return car || null
   }
 
-  async findByLicensePlate(licensePlate: string): Promise<Car[] | null> {
+  async findByLicensePlate(licensePlate: string): Promise<Car | null> {
     const car = this.items.find(
       (item) => item.licensePlate.toValue() === licensePlate,
     )
-    return car ? [car] : null
+    return car ?? null
+  }
+
+  async findByRenavam(renavam: string): Promise<Car | null> {
+    const car = this.items.find((item) => item.renavam.toValue() === renavam)
+    return car ?? null
   }
 
   async create(car: Car): Promise<Car> {
