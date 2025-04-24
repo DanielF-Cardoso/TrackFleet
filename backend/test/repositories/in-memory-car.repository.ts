@@ -40,4 +40,8 @@ export class InMemoryCarRepository implements CarRepository {
       this.items.splice(index, 1)
     }
   }
+
+  async findAll(): Promise<Car[]> {
+    return this.items
+  }
 }

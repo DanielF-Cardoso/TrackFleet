@@ -7,4 +7,5 @@ export abstract class CarRepository {
   abstract save(car: Car): Promise<Car>
   abstract delete(id: string): Promise<void>
   abstract findByRenavam(renavam: string): Promise<Car | null>
+  abstract findAll(): Promise<Car[]>
 }
