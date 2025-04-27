@@ -5,6 +5,7 @@ import { EnvModule } from './env/env.module'
 import { AuthModule } from './auth/auth.module'
 import { HttpModule } from './http/controller/http.module'
 import { I18nModule } from '@/infra/i18n/i18n.module'
+import { LoggerModule } from './logger/logger.module'
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { I18nModule } from '@/infra/i18n/i18n.module'
     EnvModule,
     AuthModule,
     HttpModule,
+    LoggerModule,
   ],
 })
 export class AppModule {}
