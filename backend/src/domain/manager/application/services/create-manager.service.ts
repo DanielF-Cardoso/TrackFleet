@@ -5,8 +5,9 @@ import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
 import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { Either, left, right } from '@/core/errors/either'
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { I18nService } from 'nestjs-i18n'
+import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 
 export interface CreateManagerServiceRequest {
   firstName: string
@@ -26,6 +27,8 @@ export class CreateManagerService {
     private managerRepository: ManagerRepository,
     private hashGenerator: HashGenerator,
     private i18n: I18nService,
+    @Inject(LOGGER_SERVICE)
+    private readonly logger: LoggerService,
   ) {}
 
   async execute({
@@ -34,6 +37,11 @@ export class CreateManagerService {
     email,
     password,
   }: CreateManagerServiceRequest): Promise<CreateManagerServiceResponse> {
+    this.logger.log(
+      `Starting manager creation for email: ${email}`,
+      'CreateManagerService',
+    )
+
     const nameVO = new Name(firstName, lastName)
     const emailVO = new Email(email)
 
@@ -44,6 +52,10 @@ export class CreateManagerService {
     if (existingManager) {
       const errorMessage = await this.i18n.translate(
         'errors.manager.alreadyExists',
+      )
+      this.logger.warn(
+        `Manager already exists with email: ${email}`,
+        'CreateManagerService',
       )
       return left(new ManagerAlreadyExistsError(errorMessage))
     }
@@ -57,6 +69,11 @@ export class CreateManagerService {
     })
 
     await this.managerRepository.create(manager)
+
+    this.logger.log(
+      `Manager created successfully with email: ${email}`,
+      'CreateManagerService',
+    )
 
     return right({ manager })
   }

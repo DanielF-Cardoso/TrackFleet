@@ -8,10 +8,12 @@ import { SamePasswordError } from './errors/same-password'
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { InvalidPasswordError } from './errors/invalid-password.error'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: UpdateManagerPasswordService
 let managerRepository: InMemoryManagerRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
@@ -22,11 +24,14 @@ beforeEach(() => {
     translate: vi.fn(),
   } as unknown as I18nService
 
+  logger = new FakeLogger()
+
   sut = new UpdateManagerPasswordService(
     managerRepository,
     hashComparer,
     hasher,
     i18n,
+    logger,
   )
 })
 

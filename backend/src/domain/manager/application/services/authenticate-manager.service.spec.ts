@@ -7,10 +7,12 @@ import { Email } from '@/core/value-objects/email.vo'
 import { FakeHashComparer } from 'test/cryptography/fake-hasher-compare'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { I18nService } from 'nestjs-i18n'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: AuthenticateManagerService
 let managerRepository: InMemoryManagerRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
@@ -21,11 +23,14 @@ beforeEach(() => {
     translate: vi.fn(),
   } as unknown as I18nService
 
+  logger = new FakeLogger()
+
   sut = new AuthenticateManagerService(
     managerRepository,
     hashComparer,
     encrypter,
     i18n,
+    logger,
   )
 })
 

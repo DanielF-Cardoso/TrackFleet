@@ -7,10 +7,12 @@ import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { Email } from '@/core/value-objects/email.vo'
 import { SameEmailError } from './errors/same-email'
 import { I18nService } from 'nestjs-i18n'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: UpdateManagerProfileService
 let managerRepository: InMemoryManagerRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
@@ -19,7 +21,9 @@ beforeEach(() => {
     translate: vi.fn(),
   } as unknown as I18nService
 
-  sut = new UpdateManagerProfileService(managerRepository, i18n)
+  logger = new FakeLogger()
+
+  sut = new UpdateManagerProfileService(managerRepository, i18n, logger)
 })
 
 describe('UpdateManagerProfileService', () => {
