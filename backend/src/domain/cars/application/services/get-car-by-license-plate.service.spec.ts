@@ -4,10 +4,12 @@ import { I18nService } from 'nestjs-i18n'
 import { makeCar } from 'test/factories/car/make-car'
 import { CarNotFoundError } from './errors/car-not-found'
 import { GetCarByLicensePlateService } from './get-car-by-license-plate'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: GetCarByLicensePlateService
 let carRepository: InMemoryCarRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   carRepository = new InMemoryCarRepository()
@@ -16,7 +18,9 @@ beforeEach(() => {
     translate: vi.fn(),
   } as unknown as I18nService
 
-  sut = new GetCarByLicensePlateService(carRepository, i18n)
+  logger = new FakeLogger()
+
+  sut = new GetCarByLicensePlateService(carRepository, i18n, logger)
 })
 
 describe('GetCarByLicensePlateService', () => {

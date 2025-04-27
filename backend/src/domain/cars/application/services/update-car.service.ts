@@ -6,6 +6,8 @@ import { LicensePlate } from '@/core/value-objects/license-plate.vo'
 import { I18nService } from 'nestjs-i18n'
 import { CarNotFoundError } from './errors/car-not-found'
 import { Renavam } from '@/core/value-objects/renavam.vo'
+import { Inject, Injectable, LoggerService } from '@nestjs/common'
+import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 
 export interface UpdateCarServiceRequest {
   carId: string
@@ -23,10 +25,13 @@ type UpdateCarServiceResponse = Either<
   { findedCar: Car }
 >
 
+@Injectable()
 export class UpdateCarService {
   constructor(
     private carRepository: CarRepository,
     private i18n: I18nService,
+    @Inject(LOGGER_SERVICE)
+    private readonly logger: LoggerService,
   ) {}
 
   async execute({
@@ -39,10 +44,19 @@ export class UpdateCarService {
     odometer,
     renavam,
   }: UpdateCarServiceRequest): Promise<UpdateCarServiceResponse> {
+    this.logger.log(
+      `Attempting to update car with ID: ${carId}`,
+      'UpdateCarService',
+    )
+
     const findedCar = await this.carRepository.findById(carId)
 
     if (!findedCar) {
-      const errorMessage = await this.i18n.translate('erros.car.notFound')
+      const errorMessage = await this.i18n.translate('errors.car.notFound')
+      this.logger.warn(
+        `Car not found for update: ID ${carId}`,
+        'UpdateCarService',
+      )
       return left(new CarNotFoundError(errorMessage))
     }
 
@@ -53,7 +67,11 @@ export class UpdateCarService {
       )
       if (existingCar && !existingCar.id.equals(findedCar.id)) {
         const errorMessage = await this.i18n.translate(
-          'erros.car.alreadyExists',
+          'errors.car.alreadyExists',
+        )
+        this.logger.warn(
+          `License plate already in use: ${licensePlate}`,
+          'UpdateCarService',
         )
         return left(new CarAlreadyExistsError(errorMessage))
       }
@@ -67,7 +85,11 @@ export class UpdateCarService {
       )
       if (existingRenavam && !existingRenavam.id.equals(findedCar.id)) {
         const errorMessage = await this.i18n.translate(
-          'erros.car.alreadyExists',
+          'errors.car.alreadyExists',
+        )
+        this.logger.warn(
+          `Renavam already in use: ${renavam}`,
+          'UpdateCarService',
         )
         return left(new CarAlreadyExistsError(errorMessage))
       }
@@ -83,6 +105,11 @@ export class UpdateCarService {
     })
 
     await this.carRepository.save(findedCar)
+
+    this.logger.log(
+      `Car updated successfully with ID: ${carId}`,
+      'UpdateCarService',
+    )
 
     return right({ findedCar })
   }

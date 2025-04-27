@@ -4,10 +4,12 @@ import { I18nService } from 'nestjs-i18n'
 import { DeleteCarService } from './delete-car.service'
 import { makeCar } from 'test/factories/car/make-car'
 import { CarNotFoundError } from './errors/car-not-found'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: DeleteCarService
 let carRepository: InMemoryCarRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   carRepository = new InMemoryCarRepository()
@@ -16,7 +18,9 @@ beforeEach(() => {
     translate: vi.fn(),
   } as unknown as I18nService
 
-  sut = new DeleteCarService(carRepository, i18n)
+  logger = new FakeLogger()
+
+  sut = new DeleteCarService(carRepository, i18n, logger)
 })
 
 describe('DeleteCarService', () => {

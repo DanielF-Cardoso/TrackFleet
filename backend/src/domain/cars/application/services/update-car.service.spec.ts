@@ -4,15 +4,19 @@ import { I18nService } from 'nestjs-i18n'
 import { CarNotFoundError } from './errors/car-not-found'
 import { CarAlreadyExistsError } from './errors/car-already-exists-error'
 import { makeCar } from 'test/factories/car/make-car'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: UpdateCarService
 let carRepository: InMemoryCarRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   carRepository = new InMemoryCarRepository()
   i18n = { translate: vi.fn() } as unknown as I18nService
-  sut = new UpdateCarService(carRepository, i18n)
+  logger = new FakeLogger()
+
+  sut = new UpdateCarService(carRepository, i18n, logger)
 })
 
 describe('UpdateCarService', () => {
