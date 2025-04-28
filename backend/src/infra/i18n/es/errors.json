@@ -16,7 +16,11 @@
     "generic": {
       "sameEmail": "El nuevo correo electrónico no puede ser igual al actual.",
       "samePassword": "La nueva contraseña no puede ser igual a la actual.",
-      "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde."
+      "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+      "serviceHealthy": "El servicio está saludable.",
+      "serviceUnhealthy": "El servicio tiene problemas.",
+      "databaseConnected": "Base de datos conectada.",
+      "databaseDisconnected": "Base de datos desconectada."
     }
   }
   
