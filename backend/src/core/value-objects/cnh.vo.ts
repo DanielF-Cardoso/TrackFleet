@@ -10,30 +10,40 @@ export class Cnh {
   }
 
   private validate(cnh: string): boolean {
-    if (!/^\d{11}$/.test(cnh)) return false
-
-    if (/^(\d)\1{10}$/.test(cnh)) return false
-
-    const nums = cnh.split('').map(Number)
-
-    let sum1 = 0
-    for (let i = 0, w = 9; i < 9; i++, w--) {
-      sum1 += nums[i] * w
+    if (!/^\d{11}$/.test(cnh)) {
+      return false
     }
-    let dv1 = ((sum1 % 11) + 11) % 11
-    if (dv1 === 0 || dv1 === 1) dv1 = 0
 
-    let sum2 = 0
-    for (let i = 0, w = 1; i < 9; i++, w++) {
-      sum2 += nums[i] * w
+    if (/^(\d)\1+$/.test(cnh)) {
+      return false
     }
-    let dv2 = ((sum2 % 11) + 11) % 11
-    if (dv1 === 0) {
-      dv2 = dv2 - 2 < 0 ? dv2 + 9 : dv2 - 2
-    }
-    if (dv2 === 0 || dv2 === 1) dv2 = 0
 
-    return dv1 === nums[9] && dv2 === nums[10]
+    const digits = cnh.split('').map(Number)
+
+    let dsc = 0
+    let sum = 0
+
+    for (let i = 0, j = 9; i < 9; i++, j--) {
+      sum += digits[i] * j
+    }
+
+    let dv1 = sum % 11
+    if (dv1 >= 10) {
+      dv1 = 0
+      dsc = 2
+    }
+
+    sum = 0
+    for (let i = 0, j = 1; i < 9; i++, j++) {
+      sum += digits[i] * j
+    }
+
+    let dv2 = (sum - dsc) % 11
+    if (dv2 >= 10) {
+      dv2 = 0
+    }
+
+    return dv1 === digits[9] && dv2 === digits[10]
   }
 
   toValue(): string {
