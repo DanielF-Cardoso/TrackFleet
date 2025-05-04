@@ -16,6 +16,7 @@ export function makeDriverInput(
     street: overrides.street ?? faker.location.streetAddress(),
     number: overrides.number ?? faker.number.int({ min: 1, max: 1000 }),
     district: overrides.district ?? faker.location.street(),
+    zipCode: overrides.zipCode ?? faker.location.zipCode('#####-###'),
     city: overrides.city ?? faker.location.city(),
     state: overrides.state ?? faker.location.state(),
   }

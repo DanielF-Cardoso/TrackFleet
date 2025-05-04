@@ -22,6 +22,7 @@ export interface CreateDriverServiceRequest {
   number: number
   district: string
   city: string
+  zipCode: string
   state: string
 }
 
@@ -52,6 +53,7 @@ export class CreateDriverService {
     district,
     city,
     state,
+    zipCode,
   }: CreateDriverServiceRequest): Promise<CreateDriverServiceResponse> {
     this.logger.log(
       `Starting driver creation for email: ${email}`,
@@ -92,7 +94,7 @@ export class CreateDriverService {
       cnh: cnhVO,
       cnhType,
       phone,
-      address: new Address(street, number, district, city, state),
+      address: new Address(street, number, district, zipCode, city, state),
     })
 
     await this.driverRepository.create(driver)

@@ -1,5 +1,6 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { Address } from '@/core/value-objects/address.vo'
 import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
 
@@ -7,6 +8,8 @@ export interface ManagerProps {
   name: Name
   email: Email
   password: string
+  phone: string
+  address: Address
   createdAt: Date
   updatedAt?: Date
 }
