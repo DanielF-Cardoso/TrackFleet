@@ -9,9 +9,17 @@ async function main() {
 
   await prisma.manager.create({
     data: {
-      firstName: 'Admin',
-      lastName: 'Root',
+      firstName: 'Acesso',
+      lastName: 'Admin',
       email: 'admin@admin.com',
+      phone: '001111111111',
+      street: 'Rua 1',
+      number: 1,
+      district: 'Bairro 1',
+      city: 'Cidade 1',
+      state: 'SP',
+      zipCode: '00000-000',
+      lastLogin: new Date(),
       password: hashedPassword,
     },
   })

@@ -38,6 +38,14 @@ model Manager {
   lastName  String   @map("last_name")
   email     String   @unique
   password  String
+  phone     String   @unique
+  street    String
+  number    Int
+  district  String
+  city      String
+  state     String
+  zipCode   String
+  lastLogin DateTime? @map("last_login")
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 

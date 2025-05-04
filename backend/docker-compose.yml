@@ -1,6 +1,6 @@
 services:
   postgres:
-    container_name: a3project-postgres
+    container_name: trackfleet-postgres
     image: postgres
     ports:
       - "5432:5432"
