@@ -47,6 +47,13 @@ describe('Update Manager Profile Controller (E2E)', () => {
       firstName: 'UpdatedFirstName',
       lastName: 'UpdatedLastName',
       email: 'updatedemail@example.com',
+      phone: '11999999999',
+      street: 'Updated Street',
+      number: 123,
+      district: 'Updated District',
+      zipCode: '12345678',
+      city: 'Updated City',
+      state: 'US',
     }
 
     const result = await request(app.getHttpServer())
@@ -62,6 +69,15 @@ describe('Update Manager Profile Controller (E2E)', () => {
         firstName: updatedData.firstName,
         lastName: updatedData.lastName,
         email: updatedData.email,
+        phone: updatedData.phone,
+        address: {
+          street: updatedData.street,
+          number: updatedData.number,
+          district: updatedData.district,
+          zipCode: updatedData.zipCode,
+          city: updatedData.city,
+          state: updatedData.state,
+        },
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
       },

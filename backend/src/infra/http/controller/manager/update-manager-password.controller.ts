@@ -16,7 +16,7 @@ import { UpdateManagerPasswordDTO } from '../../dto/manager/update-manager-passw
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
 import { InvalidPasswordError } from '@/domain/manager/application/services/errors/invalid-password.error'
-import { SamePasswordError } from '@/domain/manager/application/services/errors/same-password'
+import { SamePasswordError } from '@/domain/manager/application/services/errors/same-password.error'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 interface AuthenticatedRequest extends Request {
@@ -31,7 +31,7 @@ export class UpdateManagerPasswordController {
   constructor(
     private updateManagerPasswordService: UpdateManagerPasswordService,
     private readonly i18n: I18nService,
-  ) {}
+  ) { }
 
   @Patch()
   @UseGuards(JwtAuthGuard)

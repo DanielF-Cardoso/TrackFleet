@@ -63,6 +63,15 @@ describe('Create Manager Controller (E2E)', () => {
       firstName: createManagerData.firstName,
       lastName: createManagerData.lastName,
       email: createManagerData.email,
+      phone: createManagerData.phone,
+      address: {
+        street: createManagerData.street,
+        number: createManagerData.number,
+        district: createManagerData.district,
+        zipCode: createManagerData.zipCode,
+        city: createManagerData.city,
+        state: createManagerData.state,
+      },
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
     })

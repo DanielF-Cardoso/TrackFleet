@@ -4,7 +4,7 @@ import { HashGenerator } from '@/core/cryptography/hash-generator'
 import { Either, left, right } from '@/core/errors/either'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { ManagerRepository } from '../repositories/manager-repository'
-import { SamePasswordError } from './errors/same-password'
+import { SamePasswordError } from './errors/same-password.error'
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { InvalidPasswordError } from './errors/invalid-password.error'
@@ -30,7 +30,7 @@ export class UpdateManagerPasswordService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     managerId,

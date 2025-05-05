@@ -3,15 +3,17 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Address } from '@/core/value-objects/address.vo'
 import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 
 export interface ManagerProps {
   name: Name
   email: Email
   password: string
-  phone: string
+  phone: Phone
   address: Address
   createdAt: Date
   updatedAt?: Date
+  lastLogin?: Date
 }
 
 export class Manager extends Entity<ManagerProps> {
@@ -40,6 +42,14 @@ export class Manager extends Entity<ManagerProps> {
     return this.props.password
   }
 
+  get phone() {
+    return this.props.phone
+  }
+
+  get address() {
+    return this.props.address
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
@@ -48,18 +58,44 @@ export class Manager extends Entity<ManagerProps> {
     return this.props.updatedAt
   }
 
+  get lastLogin() {
+    return this.props.lastLogin
+  }
+
   updatePassword(newPassword: string) {
     this.props.password = newPassword
     this.touch()
   }
 
-  updateProfile({ name, email }: { name?: Name; email?: Email }) {
+  updateLastLogin() {
+    this.props.lastLogin = new Date()
+  }
+
+  updateProfile({
+    name,
+    email,
+    phone,
+    address,
+  }: {
+    name?: Name
+    email?: Email
+    phone?: Phone
+    address?: Address
+  }) {
     if (name) {
       this.props.name = name
     }
 
     if (email) {
       this.props.email = email
+    }
+
+    if (address) {
+      this.props.address = address
+    }
+
+    if (phone) {
+      this.props.phone = phone
     }
 
     this.touch()

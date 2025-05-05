@@ -1,14 +1,15 @@
 {
-    "isNotUUID": "O campo {property} deve ser um UUID válido.",
-    "isNotString": "O campo {property} deve ser uma string.",
-    "isNotEmail": "O campo {property} deve ser um email válido.",
-    "isEmpty": "O campo {property} não pode estar vazio.",
-    "isEmptyObject": "O objeto {object} está vazio.",
-    "isNotDateString": "O campo {property} deve ser uma data válida.",
-    "isNotMobilePhone": "O campo {property} deve ser um número de celular válido.",
-    "isNotArray": "O campo {property} deve ser um array.",
-    "isArrayEmpty": "O campo {property} não pode ser um array vazio.",
-    "isNotEnum": "O campo {property} deve ser um dos valores permitidos.",
-    "isNotNumber": "O campo {property} deve ser um número.",
-    "minLength": "O campo {property} deve ter pelo menos {constraints[0]} caracteres."
-  }
+  "isNotUUID": "O campo {property} deve ser um UUID válido.",
+  "isNotString": "O campo {property} deve ser uma string.",
+  "isNotEmail": "O campo {property} deve ser um email válido.",
+  "isEmpty": "O campo {property} não pode estar vazio.",
+  "isEmptyObject": "O objeto {object} está vazio.",
+  "isNotDateString": "O campo {property} deve ser uma data válida.",
+  "isNotMobilePhone": "O campo {property} deve ser um número de celular válido.",
+  "isNotArray": "O campo {property} deve ser um array.",
+  "isArrayEmpty": "O campo {property} não pode ser um array vazio.",
+  "isNotEnum": "O campo {property} deve ser um dos valores permitidos.",
+  "isNotNumber": "O campo {property} deve ser um número.",
+  "minLength": "O campo {property} deve ter pelo menos {constraints[0]} caracteres.",
+  "invalidPhone": "O número de telefone deve ter 11 dígitos, começando com DDD (11-99) e o primeiro dígito após o DDD deve ser entre 2-9."
+}

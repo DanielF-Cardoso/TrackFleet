@@ -8,12 +8,21 @@ import { Either, left, right } from '@/core/errors/either'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { Address } from '@/core/value-objects/address.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 
 export interface CreateManagerServiceRequest {
   firstName: string
   lastName: string
   email: string
   password: string
+  phone: string
+  street: string
+  number: number
+  district: string
+  zipCode: string
+  city: string
+  state: string
 }
 
 type CreateManagerServiceResponse = Either<
@@ -36,6 +45,13 @@ export class CreateManagerService {
     lastName,
     email,
     password,
+    phone,
+    street,
+    number,
+    district,
+    zipCode,
+    city,
+    state,
   }: CreateManagerServiceRequest): Promise<CreateManagerServiceResponse> {
     this.logger.log(
       `Starting manager creation for email: ${email}`,
@@ -44,9 +60,22 @@ export class CreateManagerService {
 
     const nameVO = new Name(firstName, lastName)
     const emailVO = new Email(email)
+    const phoneVO = new Phone(phone)
+    const addressVO = new Address(
+      street,
+      number,
+      district,
+      zipCode,
+      city,
+      state,
+    )
 
     const existingManager = await this.managerRepository.findByEmail(
       emailVO.toValue(),
+    )
+
+    const existingManagerByPhone = await this.managerRepository.findByPhone(
+      phoneVO.toValue(),
     )
 
     if (existingManager) {
@@ -60,12 +89,25 @@ export class CreateManagerService {
       return left(new ManagerAlreadyExistsError(errorMessage))
     }
 
+    if (existingManagerByPhone) {
+      const errorMessage = await this.i18n.translate(
+        'errors.manager.alreadyExistsByPhone',
+      )
+      this.logger.warn(
+        `Manager already exists with phone: ${phone}`,
+        'CreateManagerService',
+      )
+      return left(new ManagerAlreadyExistsError(errorMessage))
+    }
+
     const hashedPassword = await this.hashGenerator.generateHash(password)
 
     const manager = Manager.create({
       name: nameVO,
       email: emailVO,
       password: hashedPassword,
+      phone: phoneVO,
+      address: addressVO,
     })
 
     await this.managerRepository.create(manager)

@@ -12,12 +12,13 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { Request } from 'express'
 import { UpdateManagerProfileService } from '@/domain/manager/application/services/update-manager-profile.service'
 import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
-import { SameEmailError } from '@/domain/manager/application/services/errors/same-email'
+import { SameEmailError } from '@/domain/manager/application/services/errors/same-email.error'
 import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { UpdateManagerProfileDTO } from '../../dto/manager/update-manager-profile.dto'
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { SamePhoneError } from '@/domain/manager/application/services/errors/same-phone.error'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -81,9 +82,16 @@ export class UpdateManagerProfileController {
 
     const result = await this.updateManagerProfileService.execute({
       managerId,
-      firstName: body.firstName ?? '',
-      lastName: body.lastName ?? '',
-      email: body.email ?? '',
+      firstName: body.firstName,
+      lastName: body.lastName,
+      email: body.email,
+      phone: body.phone,
+      street: body.street,
+      number: body.number,
+      district: body.district,
+      zipCode: body.zipCode,
+      city: body.city,
+      state: body.state,
     })
 
     if (result.isLeft()) {
@@ -97,6 +105,10 @@ export class UpdateManagerProfileController {
         case SameEmailError:
           throw new ConflictException(
             await this.i18n.translate('errors.generic.sameEmail'),
+          )
+        case SamePhoneError:
+          throw new ConflictException(
+            await this.i18n.translate('errors.generic.samePhone'),
           )
         case ManagerAlreadyExistsError:
           throw new ConflictException(

@@ -7,6 +7,16 @@ export class ManagerPresenter {
       firstName: manager.name.getFirstName(),
       lastName: manager.name.getLastName(),
       email: manager.email.toValue(),
+      phone: manager.phone.toValue(),
+      address: {
+        street: manager.address.getStreet(),
+        number: manager.address.getNumber(),
+        district: manager.address.getDistrict(),
+        zipCode: manager.address.getZipCode(),
+        city: manager.address.getCity(),
+        state: manager.address.getState(),
+      },
+      lastLogin: manager.lastLogin,
       createdAt: manager.createdAt,
       updatedAt: manager.updatedAt,
     }

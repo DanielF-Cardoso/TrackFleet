@@ -55,6 +55,7 @@ describe('AuthenticateManagerService', () => {
 
     if (result.isRight()) {
       expect(result.value.accessToken).toBe(`token-${manager.id.toString()}`)
+      expect(manager.lastLogin).toBeInstanceOf(Date)
     }
   })
 

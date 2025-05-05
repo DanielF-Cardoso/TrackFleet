@@ -1,4 +1,5 @@
 import { Email } from '@/core/value-objects/email.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 import { ManagerRepository } from '@/domain/manager/application/repositories/manager-repository'
 import { Manager } from '@/domain/manager/enterprise/entities/manager.entity'
 
@@ -20,6 +21,14 @@ export class InMemoryManagerRepository implements ManagerRepository {
 
   async findById(id: string) {
     const manager = this.items.find((item) => item.id.toValue() === id)
+    return manager || null
+  }
+
+  async findByPhone(phone: string) {
+    const phoneVO = new Phone(phone)
+    const manager = this.items.find(
+      (item) => item.phone.toValue() === phoneVO.toValue(),
+    )
     return manager || null
   }
 

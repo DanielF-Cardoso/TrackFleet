@@ -66,6 +66,9 @@ export class AuthenticateManagerService {
       return left(new InvalidCredentialsError(errorMessage))
     }
 
+    manager.updateLastLogin()
+    await this.managerRepository.save(manager)
+
     const accessToken = await this.encrypter.encrypt({
       sub: manager.id.toString(),
     })

@@ -42,6 +42,14 @@ export class CreateManagerController {
           firstName: 'John',
           lastName: 'Doe',
           email: 'john.doe@example.com',
+          password: '123456',
+          phone: '1234567890',
+          street: '123 Main St',
+          number: 123,
+          district: 'Downtown',
+          zipCode: '12345',
+          city: 'Anytown',
+          state: 'CA',
         },
       },
     },
@@ -55,13 +63,32 @@ export class CreateManagerController {
     description: 'O gestor já existe.',
   })
   async create(@Body() body: CreateManagerDTO) {
-    const { firstName, lastName, email, password } = body
+    const {
+      firstName,
+      lastName,
+      email,
+      password,
+      phone,
+      street,
+      number,
+      district,
+      zipCode,
+      city,
+      state,
+    } = body
 
     const result = await this.createManagerService.execute({
       firstName,
       lastName,
       email,
       password,
+      phone,
+      street,
+      number,
+      district,
+      zipCode,
+      city,
+      state,
     })
 
     if (result.isLeft()) {

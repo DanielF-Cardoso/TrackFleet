@@ -4,7 +4,7 @@ import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.r
 import { makeManager } from 'test/factories/manager/make-manager'
 import { FakeHashGenerator } from 'test/cryptography/fake-hasher'
 import { FakeHashComparer } from 'test/cryptography/fake-hasher-compare'
-import { SamePasswordError } from './errors/same-password'
+import { SamePasswordError } from './errors/same-password.error'
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { InvalidPasswordError } from './errors/invalid-password.error'

@@ -2,19 +2,29 @@ import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { Email } from '@/core/value-objects/email.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 import { Name } from '@/core/value-objects/name.vo'
+import { Address } from '@/core/value-objects/address.vo'
 import { Either, left, right } from '@/core/errors/either'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
-import { SameEmailError } from './errors/same-email'
+import { SameEmailError } from './errors/same-email.error'
 import { Manager } from '../../enterprise/entities/manager.entity'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { SamePhoneError } from './errors/same-phone.error'
 
 interface UpdateManagerProfileRequest {
   managerId: string
-  firstName: string
-  lastName: string
-  email: string
+  firstName?: string
+  lastName?: string
+  email?: string
+  phone?: string
+  street?: string
+  number?: number
+  district?: string
+  zipCode?: string
+  city?: string
+  state?: string
 }
 
 type UpdateManagerProfileResponse = Either<
@@ -36,6 +46,13 @@ export class UpdateManagerProfileService {
     firstName,
     lastName,
     email,
+    phone,
+    street,
+    number,
+    district,
+    zipCode,
+    city,
+    state,
   }: UpdateManagerProfileRequest): Promise<UpdateManagerProfileResponse> {
     this.logger.log(
       `Attempting to update profile for managerId: ${managerId}`,
@@ -43,7 +60,6 @@ export class UpdateManagerProfileService {
     )
 
     const manager = await this.managerRepository.findById(managerId)
-
     if (!manager) {
       const errorMessage = await this.i18n.translate('errors.manager.notFound')
       this.logger.warn(
@@ -86,12 +102,54 @@ export class UpdateManagerProfileService {
       newEmail = emailValueObject
     }
 
+    let newPhone = manager.phone
+    if (phone) {
+      const phoneValueObject = new Phone(phone)
+
+      if (manager.phone && manager.phone.equals(phoneValueObject)) {
+        const errorMessage = await this.i18n.translate(
+          'errors.generic.samePhone',
+        )
+        this.logger.warn(
+          `New phone is the same as current phone for managerId: ${managerId}`,
+          'UpdateManagerProfileService',
+        )
+        return left(new SamePhoneError(errorMessage))
+      }
+
+      const existingWithSamePhone = await this.managerRepository.findByPhone(
+        phoneValueObject.toValue(),
+      )
+
+      if (existingWithSamePhone) {
+        const errorMessage = await this.i18n.translate(
+          'errors.generic.alreadyExists',
+        )
+        this.logger.warn(
+          `Phone ${phone} already in use during profile update for managerId: ${managerId}`,
+          'UpdateManagerProfileService',
+        )
+        return left(new ManagerAlreadyExistsError(errorMessage))
+      }
+
+      newPhone = phoneValueObject
+    }
+
     const newFirstName = firstName || manager.name.getFirstName()
+
     const newLastName = lastName || manager.name.getLastName()
+
+    let newAddress = manager.address
+
+    if (street && number && district && zipCode && city && state) {
+      newAddress = new Address(street, number, district, zipCode, city, state)
+    }
 
     manager.updateProfile({
       name: new Name(newFirstName, newLastName),
       email: newEmail,
+      phone: newPhone,
+      address: newAddress,
     })
 
     await this.managerRepository.save(manager)

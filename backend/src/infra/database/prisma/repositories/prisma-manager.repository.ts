@@ -4,6 +4,7 @@ import { Manager } from '@/domain/manager/enterprise/entities/manager.entity'
 import { PrismaManagerMapper } from '../mappers/prisma-manager.mapper'
 import { Email } from '@/core/value-objects/email.vo'
 import { PrismaService } from '../prisma.service'
+import { Phone } from '@/core/value-objects/phone.vo'
 
 @Injectable()
 export class PrismaManagerRepository implements ManagerRepository {
@@ -23,6 +24,19 @@ export class PrismaManagerRepository implements ManagerRepository {
 
     const manager = await this.prisma.manager.findUnique({
       where: { email: value },
+    })
+
+    if (!manager) return null
+
+    return PrismaManagerMapper.toDomain(manager)
+  }
+
+  async findByPhone(phone: string | Phone): Promise<Manager | null> {
+    const value =
+      typeof phone === 'string' ? phone.toLowerCase() : phone.toValue()
+
+    const manager = await this.prisma.manager.findUnique({
+      where: { phone: value },
     })
 
     if (!manager) return null

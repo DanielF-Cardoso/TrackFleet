@@ -50,7 +50,7 @@ describe('CreateManagerService', () => {
       'A manager with this email already exists.',
     )
 
-    const email = 'daniel@email.com'
+    const email = 'manager@email.com'
     const createManagerData = makeManagerInput({ email })
 
     await sut.execute(createManagerData)
@@ -62,6 +62,27 @@ describe('CreateManagerService', () => {
     if (result.value instanceof ManagerAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A manager with this email already exists.',
+      )
+    }
+  })
+
+  it('should not allow creating a manager with the same phone', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'A manager with this phone already exists.',
+    )
+
+    const phone = '11912345678'
+    const createManagerData = makeManagerInput({ phone })
+
+    await sut.execute(createManagerData)
+
+    const result = await sut.execute(createManagerData)
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(ManagerAlreadyExistsError)
+    if (result.value instanceof ManagerAlreadyExistsError) {
+      expect(result.value.message).toBe(
+        'A manager with this phone already exists.',
       )
     }
   })

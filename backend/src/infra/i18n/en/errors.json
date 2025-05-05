@@ -5,6 +5,7 @@
     },
     "manager": {
       "alreadyExists": "A manager with this email already exists.",
+      "alreadyExistsByPhone": "A manager with this phone already exists.",
       "notFound": "Manager not found.",
       "notFoundAll": "No managers found."
     },
@@ -15,6 +16,7 @@
     },
     "generic": {
       "sameEmail": "The new email cannot be the same as the current email.",
+      "samePhone": "The new phone cannot be the same as the current phone.",
       "samePassword": "The new password cannot be the same as the current password.",
       "unexpectedError": "An unexpected error occurred. Please try again later.",
       "serviceHealthy": "The service is healthy.",

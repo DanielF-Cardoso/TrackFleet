@@ -5,6 +5,7 @@
     },
     "manager": {
       "alreadyExists": "Ya existe un gestor con este correo electrónico.",
+      "alreadyExistsByPhone": "Ya existe un gestor con este teléfono.",
       "notFound": "Gestor no encontrado.",
       "notFoundAll": "No se encontraron gestores."
     },
@@ -15,6 +16,7 @@
     },
     "generic": {
       "sameEmail": "El nuevo correo electrónico no puede ser igual al actual.",
+      "samePhone": "El nuevo teléfono no puede ser igual al actual.",
       "samePassword": "La nueva contraseña no puede ser igual a la actual.",
       "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
       "serviceHealthy": "El servicio está saludable.",

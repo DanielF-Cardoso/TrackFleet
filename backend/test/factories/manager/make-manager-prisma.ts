@@ -5,6 +5,8 @@ import { Manager } from '@/domain/manager/enterprise/entities/manager.entity'
 import { Name } from '@/core/value-objects/name.vo'
 import { Email } from '@/core/value-objects/email.vo'
 import { faker } from '@faker-js/faker'
+import { Phone } from '@/core/value-objects/phone.vo'
+import { Address } from '@/core/value-objects/address.vo'
 
 interface MakePrismaManagerData {
   firstName?: string
@@ -25,8 +27,17 @@ export class ManagerFactory {
 
     const manager = Manager.create({
       name: new Name(firstName, lastName),
+      phone: new Phone(faker.phone.number({ style: 'national' })),
       email: new Email(email),
       password,
+      address: new Address(
+        faker.location.street(),
+        faker.number.int({ min: 1, max: 9999 }),
+        faker.location.city(),
+        faker.location.zipCode('#####-###'),
+        faker.location.city(),
+        faker.location.state(),
+      ),
     })
 
     await this.prisma.manager.create({
