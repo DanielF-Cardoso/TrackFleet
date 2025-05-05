@@ -1,4 +1,3 @@
-import { HashGenerator } from '@/core/cryptography/hash-generator'
 import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
 import { Either, left, right } from '@/core/errors/either'
@@ -10,6 +9,7 @@ import { Driver } from '../../enterprise/entities/driver.entity'
 import { DriverRepository } from '../repositories/driver-repository'
 import { Cnh } from '@/core/value-objects/cnh.vo'
 import { Address } from '@/core/value-objects/address.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 
 export interface CreateDriverServiceRequest {
   firstName: string
@@ -35,7 +35,6 @@ type CreateDriverServiceResponse = Either<
 export class CreateDriverService {
   constructor(
     private driverRepository: DriverRepository,
-    private hashGenerator: HashGenerator,
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
@@ -63,6 +62,7 @@ export class CreateDriverService {
     const nameVO = new Name(firstName, lastName)
     const emailVO = new Email(email)
     const cnhVO = new Cnh(cnh)
+    const phoneVO = new Phone(phone)
 
     const existingDriver = await this.driverRepository.findByEmail(
       emailVO.toValue(),
@@ -88,12 +88,23 @@ export class CreateDriverService {
       return left(new DriverAlreadyExistsError(errorMessage))
     }
 
+    const existingPhone = await this.driverRepository.findByPhone(
+      phoneVO.toValue(),
+    )
+    if (existingPhone) {
+      const errorMessage = await this.i18n.translate(
+        'errors.driver.phoneAlreadyExists',
+      )
+      this.logger.warn(`Phone already exists: ${phone}`, 'CreateDriverService')
+      return left(new DriverAlreadyExistsError(errorMessage))
+    }
+
     const driver = Driver.create({
       name: nameVO,
       email: emailVO,
       cnh: cnhVO,
       cnhType,
-      phone,
+      phone: phoneVO,
       address: new Address(street, number, district, zipCode, city, state),
     })
 

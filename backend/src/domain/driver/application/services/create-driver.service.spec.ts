@@ -1,7 +1,6 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 
 import { CreateDriverService } from './create-driver.service'
-import { FakeHashGenerator } from 'test/cryptography/fake-hasher'
 
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
@@ -16,7 +15,6 @@ let logger: FakeLogger
 
 beforeEach(() => {
   driverRepository = new InMemoryDriverRepository()
-  const hasher = new FakeHashGenerator()
 
   i18n = {
     translate: vi.fn(),
@@ -24,7 +22,7 @@ beforeEach(() => {
 
   logger = new FakeLogger()
 
-  sut = new CreateDriverService(driverRepository, hasher, i18n, logger)
+  sut = new CreateDriverService(driverRepository, i18n, logger)
 })
 
 describe('CreateDriverService', () => {

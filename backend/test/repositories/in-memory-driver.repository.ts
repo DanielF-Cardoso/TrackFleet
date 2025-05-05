@@ -1,5 +1,6 @@
 import { Cnh } from '@/core/value-objects/cnh.vo'
 import { Email } from '@/core/value-objects/email.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 import { DriverRepository } from '@/domain/driver/application/repositories/driver-repository'
 import { Driver } from '@/domain/driver/enterprise/entities/driver.entity'
 
@@ -21,6 +22,14 @@ export class InMemoryDriverRepository implements DriverRepository {
 
   async findById(id: string) {
     const driver = this.items.find((item) => item.id.toValue() === id)
+    return driver || null
+  }
+
+  async findByPhone(phone: string) {
+    const phoneVO = new Phone(phone)
+    const driver = this.items.find(
+      (item) => item.phone.toValue() === phoneVO.toValue(),
+    )
     return driver || null
   }
 

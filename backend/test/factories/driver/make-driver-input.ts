@@ -12,7 +12,9 @@ export function makeDriverInput(
     cnhType:
       overrides.cnhType ??
       faker.helpers.arrayElement(['A', 'B', 'C', 'D', 'E']),
-    phone: overrides.phone ?? faker.phone.number(),
+    phone:
+      overrides.phone ??
+      `11${faker.number.int({ min: 200000000, max: 999999999 })}`,
     street: overrides.street ?? faker.location.streetAddress(),
     number: overrides.number ?? faker.number.int({ min: 1, max: 1000 }),
     district: overrides.district ?? faker.location.street(),

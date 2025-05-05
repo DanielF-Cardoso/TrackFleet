@@ -4,6 +4,7 @@ import { Address } from '@/core/value-objects/address.vo'
 import { Cnh } from '@/core/value-objects/cnh.vo'
 import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
+import { Phone } from '@/core/value-objects/phone.vo'
 
 export type CnhType = 'A' | 'B' | 'C' | 'D' | 'E'
 
@@ -12,7 +13,7 @@ export interface DriverProps {
   cnh: Cnh
   cnhType: CnhType
   email: Email
-  phone: string
+  phone: Phone
   address: Address
   createdAt: Date
   updatedAt?: Date
@@ -64,7 +65,7 @@ export class Driver extends Entity<DriverProps> {
     return this.props.updatedAt
   }
 
-  updatePhonenumber(newPhone: string) {
+  updatePhoneNumber(newPhone: Phone) {
     this.props.phone = newPhone
     this.touch()
   }
