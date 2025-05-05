@@ -65,6 +65,46 @@ export class Driver extends Entity<DriverProps> {
     return this.props.updatedAt
   }
 
+  updateProfile({
+    name,
+    email,
+    phone,
+    address,
+    cnh,
+    cnhType,
+  }: {
+    name?: Name
+    email?: Email
+    phone?: Phone
+    address?: Address
+    cnh?: Cnh
+    cnhType?: CnhType
+  }) {
+    if (name) {
+      this.props.name = name
+    }
+
+    if (email) {
+      this.props.email = email
+    }
+
+    if (address) {
+      this.props.address = address
+    }
+
+    if (phone) {
+      this.props.phone = phone
+    }
+    if (cnh) {
+      this.props.cnh = cnh
+    }
+    if (cnhType) {
+      this.props.cnhType = cnhType
+    }
+
+    this.touch()
+  }
+
   updatePhoneNumber(newPhone: Phone) {
     this.props.phone = newPhone
     this.touch()
