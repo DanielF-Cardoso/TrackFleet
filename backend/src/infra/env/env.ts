@@ -8,7 +8,7 @@ export const envSchema = z.object({
   DATABASE_URL: z.string(),
   FALLBACK_LANGUAGE: z.string().optional().default('en'),
   JWT_SECRET: z.string(),
-
+  JWT_EXPIRES_IN: z.string(),
   LOG_PREFIX: z.string().optional().default('TrackFleet'),
   LOG_LEVEL: z
     .enum(['debug', 'info', 'warn', 'error', 'verbose'])

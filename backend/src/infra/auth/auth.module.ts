@@ -14,7 +14,7 @@ import { EnvService } from '../env/env.service'
       inject: [EnvService],
       useFactory: (env: EnvService) => ({
         secret: env.get('JWT_SECRET'),
-        signOptions: { expiresIn: '1d' },
+        signOptions: { expiresIn: env.get('JWT_EXPIRES_IN') },
       }),
     }),
   ],
