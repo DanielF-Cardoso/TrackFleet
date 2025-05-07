@@ -7,4 +7,5 @@ export abstract class ManagerRepository {
   abstract create(manager: Manager): Promise<Manager>
   abstract save(manager: Manager): Promise<void>
   abstract findAll(): Promise<Manager[]>
+  abstract delete(manager: Manager): Promise<void>
 }

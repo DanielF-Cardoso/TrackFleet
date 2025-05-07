@@ -6,6 +6,7 @@
     "manager": {
       "alreadyExists": "A manager with this email already exists.",
       "alreadyExistsByPhone": "A manager with this phone already exists.",
+      "cannotDeleteLast": "Cannot delete the last manager.",
       "notFound": "Manager not found.",
       "notFoundAll": "No managers found."
     },

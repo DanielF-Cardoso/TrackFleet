@@ -7,6 +7,7 @@
       "alreadyExists": "Ya existe un gestor con este correo electrónico.",
       "alreadyExistsByPhone": "Ya existe un gestor con este teléfono.",
       "notFound": "Gestor no encontrado.",
+      "cannotDeleteLast": "No se puede eliminar el último gestor.",
       "notFoundAll": "No se encontraron gestores."
     },
     "auth": {

@@ -32,6 +32,13 @@ export class InMemoryManagerRepository implements ManagerRepository {
     return manager || null
   }
 
+  async delete(manager: Manager): Promise<void> {
+    const index = this.items.findIndex((item) => item.id.equals(manager.id))
+    if (index >= 0) {
+      this.items.splice(index, 1)
+    }
+  }
+
   async save(manager: Manager): Promise<void> {
     const index = this.items.findIndex((item) => item.id.equals(manager.id))
     if (index >= 0) {
