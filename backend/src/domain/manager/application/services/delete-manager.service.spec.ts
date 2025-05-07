@@ -4,6 +4,7 @@ import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.r
 import { makeManager } from 'test/factories/manager/make-manager'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { CannotDeleteLastManagerError } from './errors/cannot-delete-last-maanger.error'
+import { CannotDeleteOwnAccountError } from './errors/cannot-delete-own-account.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 
@@ -32,7 +33,10 @@ describe('DeleteManagerService', () => {
     await managerRepository.create(manager1)
     await managerRepository.create(manager2)
 
-    const result = await sut.execute({ managerId: manager1.id.toString() })
+    const result = await sut.execute({
+      managerId: manager1.id.toString(),
+      currentManagerId: manager2.id.toString(),
+    })
 
     expect(result.isRight()).toBe(true)
     expect(managerRepository.items).toHaveLength(1)
@@ -41,7 +45,10 @@ describe('DeleteManagerService', () => {
   it('should not be able to delete a manager that does not exist', async () => {
     vi.spyOn(i18n, 'translate').mockResolvedValue('Manager not found.')
 
-    const result = await sut.execute({ managerId: 'non-existing-manager-id' })
+    const result = await sut.execute({
+      managerId: 'non-existing-manager-id',
+      currentManagerId: 'some-other-id',
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(ResourceNotFoundError)
@@ -58,12 +65,36 @@ describe('DeleteManagerService', () => {
       'Cannot delete the last manager.',
     )
 
-    const result = await sut.execute({ managerId: manager.id.toString() })
+    const result = await sut.execute({
+      managerId: manager.id.toString(),
+      currentManagerId: 'some-other-id',
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(CannotDeleteLastManagerError)
     if (result.value instanceof CannotDeleteLastManagerError) {
       expect(result.value.message).toBe('Cannot delete the last manager.')
+    }
+    expect(managerRepository.items).toHaveLength(1)
+  })
+
+  it('should not be able to delete own account', async () => {
+    const manager = makeManager()
+    await managerRepository.create(manager)
+
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'Cannot delete your own account.',
+    )
+
+    const result = await sut.execute({
+      managerId: manager.id.toString(),
+      currentManagerId: manager.id.toString(),
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(CannotDeleteOwnAccountError)
+    if (result.value instanceof CannotDeleteOwnAccountError) {
+      expect(result.value.message).toBe('Cannot delete your own account.')
     }
     expect(managerRepository.items).toHaveLength(1)
   })

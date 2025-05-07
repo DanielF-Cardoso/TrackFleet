@@ -7,6 +7,7 @@
       "alreadyExists": "Já existe um gestor com este e‑mail.",
       "alreadyExistsByPhone": "Já existe um gestor com este telefone.",
       "cannotDeleteLast": "Não é possível deletar o último gestor.",
+      "cannotDeleteOwn": "Não é possível deletar sua própria conta.",
       "notFound": "Gestor não encontrado.",
       "notFoundAll": "Nenhum gestor encontrado."
     },

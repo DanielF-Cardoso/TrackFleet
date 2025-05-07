@@ -8,6 +8,7 @@
       "alreadyExistsByPhone": "Ya existe un gestor con este teléfono.",
       "notFound": "Gestor no encontrado.",
       "cannotDeleteLast": "No se puede eliminar el último gestor.",
+      "cannotDeleteOwn": "No se puede eliminar su propia cuenta.",
       "notFoundAll": "No se encontraron gestores."
     },
     "auth": {

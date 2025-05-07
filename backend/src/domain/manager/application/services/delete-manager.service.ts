@@ -1,21 +1,22 @@
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { ManagerRepository } from '../repositories/manager-repository'
-import { Manager } from '../../enterprise/entities/manager.entity'
 import { Either, left, right } from '@/core/errors/either'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { CannotDeleteLastManagerError } from './errors/cannot-delete-last-maanger.error'
+import { CannotDeleteOwnAccountError } from './errors/cannot-delete-own-account.error'
 
 interface DeleteManagerRequest {
   managerId: string
+  currentManagerId: string
 }
 
 type DeleteManagerResponse = Either<
-  ResourceNotFoundError | CannotDeleteLastManagerError,
-  {
-    manager: Manager
-  }
+  | ResourceNotFoundError
+  | CannotDeleteLastManagerError
+  | CannotDeleteOwnAccountError,
+  null
 >
 
 @Injectable()
@@ -29,11 +30,23 @@ export class DeleteManagerService {
 
   async execute({
     managerId,
+    currentManagerId,
   }: DeleteManagerRequest): Promise<DeleteManagerResponse> {
     this.logger.log(
       `Fetching manager for remove, with id: ${managerId}`,
       'DeleteManagerService',
     )
+
+    if (managerId === currentManagerId) {
+      const errorMessage = await this.i18n.translate(
+        'errors.manager.cannotDeleteOwn',
+      )
+      this.logger.warn(
+        `Attempted to delete own account: managerId: ${managerId}`,
+        'DeleteManagerService',
+      )
+      return left(new CannotDeleteOwnAccountError(errorMessage))
+    }
 
     const manager = await this.managerRepository.findById(managerId)
 
@@ -64,6 +77,6 @@ export class DeleteManagerService {
       `Manager removed with id: ${managerId}`,
       'DeleteManagerService',
     )
-    return right({ manager })
+    return right(null)
   }
 }

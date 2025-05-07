@@ -44,6 +44,12 @@ export class PrismaManagerRepository implements ManagerRepository {
     return PrismaManagerMapper.toDomain(manager)
   }
 
+  async delete(manager: Manager): Promise<void> {
+    await this.prisma.manager.delete({
+      where: { id: manager.id.toString() },
+    })
+  }
+
   async findById(id: string): Promise<Manager | null> {
     const manager = await this.prisma.manager.findUnique({
       where: { id },

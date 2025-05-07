@@ -8,11 +8,13 @@ import { GetManagerProfileService } from '@/domain/manager/application/services/
 import { ListManagersService } from '@/domain/manager/application/services/list-managers.service'
 import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
 import { UpdateManagerProfileService } from '@/domain/manager/application/services/update-manager-profile.service'
+import { DeleteManagerService } from '@/domain/manager/application/services/delete-manager.service'
 import { ListManagersController } from './manager/list-managers.controller'
 import { CreateManagerController } from './manager/create-manager.controller'
 import { UpdateManagerPasswordController } from './manager/update-manager-password.controller'
 import { UpdateManagerProfileController } from './manager/update-manager-profile.controller'
 import { GetManagerProfileController } from './manager/get-manager-profile.controller'
+import { DeleteManagerController } from './manager/delete-manager.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -23,6 +25,7 @@ import { GetManagerProfileController } from './manager/get-manager-profile.contr
     ListManagersController,
     UpdateManagerPasswordController,
     UpdateManagerProfileController,
+    DeleteManagerController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -31,6 +34,7 @@ import { GetManagerProfileController } from './manager/get-manager-profile.contr
     ListManagersService,
     UpdateManagerPasswordService,
     UpdateManagerProfileService,
+    DeleteManagerService,
   ],
 })
 export class HttpModule {}
