@@ -14,7 +14,9 @@
     "event": {
       "invalidOdometer": "El odómetro no puede disminuir.",
       "odometerTooHigh": "El odómetro no puede aumentar más de un 10%.",
-      "carInUse": "El vehículo ya está en uso."
+      "carInUse": "El vehículo ya está en uso.",
+      "alreadyFinalized": "El evento ya está finalizado.",
+      "notFound": "Evento no encontrado."
     },
     "auth": {
       "invalidCredentials": "Correo electrónico o contraseña inválidos.",

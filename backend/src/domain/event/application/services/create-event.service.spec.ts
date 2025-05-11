@@ -64,7 +64,7 @@ describe('CreateEventService', () => {
       expect(event.driverId.toValue()).toBe(driver.id.toValue())
       expect(event.managerId.toValue()).toBe(managerId)
       expect(event.odometer).toBe(1050)
-      expect(event.status).toBe('ENTRY')
+      expect(event.status).toBe('EXIT')
       expect(event.endAt).toBeUndefined()
       expect(updatedCar?.status).toBe('IN_USE')
     }

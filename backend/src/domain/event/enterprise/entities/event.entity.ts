@@ -68,6 +68,7 @@ export class Event extends Entity<EventProps> {
   finalize(endAt: Date, odometer: number) {
     this.props.endAt = endAt
     this.props.odometer = odometer
+    this.props.status = 'ENTRY'
     this.touch()
   }
 
