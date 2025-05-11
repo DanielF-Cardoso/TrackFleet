@@ -6,7 +6,6 @@ import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repositor
 import { makeCar } from 'test/factories/car/make-car'
 import { makeEvent } from 'test/factories/event/make-event'
 import { InvalidEventError } from './errors/invalid-event.error'
-import { makeFinalizeEventInput } from '@/test/factories/event/make-finalize-event-input'
 import { EventNotFoundError } from './errors/event-not-found.error'
 
 let sut: FinalizeEventService
@@ -37,12 +36,10 @@ describe('FinalizeEventService', () => {
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 1050,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 1050,
+    })
 
     expect(result.isRight()).toBeTruthy()
 
@@ -61,11 +58,10 @@ describe('FinalizeEventService', () => {
   it('should not be able to finalize a non-existent event', async () => {
     vi.spyOn(i18n, 'translate').mockResolvedValue('Event not found.')
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: 'non-existent-id',
-      }),
-    )
+    const result = await sut.execute({
+      eventId: 'non-existent-id',
+      odometer: 1050,
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(EventNotFoundError)
@@ -87,12 +83,10 @@ describe('FinalizeEventService', () => {
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 1050,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 1050,
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidEventError)
@@ -108,18 +102,16 @@ describe('FinalizeEventService', () => {
     const event = makeEvent({
       carId: car.id,
       odometer: 1000,
-      status: 'ENTRY',
+      status: 'EXIT',
     })
 
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 900,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 900,
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidEventError)
@@ -135,18 +127,16 @@ describe('FinalizeEventService', () => {
     const event = makeEvent({
       carId: car.id,
       odometer: 100,
-      status: 'ENTRY',
+      status: 'EXIT',
     })
 
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 150,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 150,
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidEventError)
@@ -162,18 +152,16 @@ describe('FinalizeEventService', () => {
     const event = makeEvent({
       carId: car.id,
       odometer: 100000,
-      status: 'ENTRY',
+      status: 'EXIT',
     })
 
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 106000,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 106000,
+    })
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(InvalidEventError)
@@ -193,12 +181,10 @@ describe('FinalizeEventService', () => {
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 110,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 110,
+    })
 
     expect(result.isRight()).toBeTruthy()
 
@@ -220,12 +206,10 @@ describe('FinalizeEventService', () => {
     await carRepository.create(car)
     await eventRepository.create(event)
 
-    const result = await sut.execute(
-      makeFinalizeEventInput({
-        eventId: event.id.toValue(),
-        odometer: 105000,
-      }),
-    )
+    const result = await sut.execute({
+      eventId: event.id.toValue(),
+      odometer: 105000,
+    })
 
     expect(result.isRight()).toBeTruthy()
 
