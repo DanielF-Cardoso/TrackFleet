@@ -16,7 +16,8 @@
       "odometerTooHigh": "The odometer cannot be increased more than 10%.",
       "carInUse": "The car is already in use.",
       "alreadyFinalized": "The event is already finalized.",
-      "notFound": "Event not found."
+      "notFound": "Event not found.",
+      "cannotDeleteFinalized": "Cannot delete a finalized event."
     },
     "auth": {
       "invalidCredentials": "Invalid email or password.",

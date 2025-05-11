@@ -16,7 +16,8 @@
       "odometerTooHigh": "O odômetro não pode aumentar mais de um 10%.",
       "carInUse": "O carro já está em uso.",
       "alreadyFinalized": "O evento já está finalizado.",
-      "notFound": "Evento não encontrado."
+      "notFound": "Evento não encontrado.",
+      "cannotDeleteFinalized": "Não é possível deletar um evento finalizado."
     },
     "auth": {
       "invalidCredentials": "E‑mail ou senha inválidos.",
