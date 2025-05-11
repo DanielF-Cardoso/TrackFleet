@@ -11,6 +11,11 @@
       "notFound": "Manager not found.",
       "notFoundAll": "No managers found."
     },
+    "event": {
+      "invalidOdometer": "The odometer cannot be decreased.",
+      "odometerTooHigh": "The odometer cannot be increased more than 10%.",
+      "carInUse": "The car is already in use."
+    },
     "auth": {
       "invalidCredentials": "Invalid email or password.",
       "invalidPassword": "Invalid current password.",

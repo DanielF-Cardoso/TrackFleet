@@ -2,12 +2,12 @@ import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { Driver } from '../../enterprise/entities/driver.entity'
 import { DriverRepository } from '../repositories/driver-repository'
 import { Either, left, right } from '@/core/errors/either'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { DriverNotFoundError } from './errors/driver-not-found'
 
 type ListDriversServiceResponse = Either<
-  ResourceNotFoundError,
+  DriverNotFoundError,
   { drivers: Driver[] }
 >
 
@@ -30,7 +30,7 @@ export class ListDriversService {
         'errors.driver.notFoundAll',
       )
       this.logger.warn('No drivers found', 'ListDriversService')
-      return left(new ResourceNotFoundError(errorMessage))
+      return left(new DriverNotFoundError(errorMessage))
     }
 
     this.logger.log(`Found ${drivers.length} driver(s)`, 'ListDriversService')

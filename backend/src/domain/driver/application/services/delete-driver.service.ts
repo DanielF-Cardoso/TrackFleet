@@ -3,13 +3,13 @@ import { DriverRepository } from '../repositories/driver-repository'
 import { Either, left, right } from '@/core/errors/either'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { DriverNotFoundError } from './errors/driver-not-found'
 
 interface DeleteDriverServiceRequest {
   driverId: string
 }
 
-type DeleteDriverServiceResponse = Either<ResourceNotFoundError, null>
+type DeleteDriverServiceResponse = Either<DriverNotFoundError, null>
 
 @Injectable()
 export class DeleteDriverService {
@@ -36,7 +36,7 @@ export class DeleteDriverService {
         `Driver not found for driverId: ${driverId}`,
         'DeleteDriverServiceService',
       )
-      return left(new ResourceNotFoundError(errorMessage))
+      return left(new DriverNotFoundError(errorMessage))
     }
 
     await this.driverRepository.delete(driverId)

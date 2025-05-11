@@ -6,7 +6,7 @@ export type EventType = 'ENTRY' | 'EXIT'
 export interface EventProps {
   managerId: UniqueEntityID
   driverId: UniqueEntityID
-  cardId: UniqueEntityID
+  carId: UniqueEntityID
   odometer: number
   status: EventType
   startAt: Date
@@ -37,8 +37,8 @@ export class Event extends Entity<EventProps> {
     return this.props.driverId
   }
 
-  get cardId() {
-    return this.props.cardId
+  get carId() {
+    return this.props.carId
   }
 
   get odometer() {

@@ -4,14 +4,14 @@ import { Driver } from '../../enterprise/entities/driver.entity'
 import { Either, left, right } from '@/core/errors/either'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { DriverNotFoundError } from './errors/driver-not-found'
 
 interface GetDriverProfileRequest {
   driverId: string
 }
 
 type GetDriverProfileResponse = Either<
-  ResourceNotFoundError,
+  DriverNotFoundError,
   {
     driver: Driver
   }
@@ -42,7 +42,7 @@ export class GetDriverProfileService {
         `Driver profile not found for driverId: ${driverId}`,
         'GetDriverProfileService',
       )
-      return left(new ResourceNotFoundError(errorMessage))
+      return left(new DriverNotFoundError(errorMessage))
     }
 
     this.logger.log(

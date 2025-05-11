@@ -11,6 +11,11 @@
       "cannotDeleteOwn": "No se puede eliminar su propia cuenta.",
       "notFoundAll": "No se encontraron gestores."
     },
+    "event": {
+      "invalidOdometer": "El odómetro no puede disminuir.",
+      "odometerTooHigh": "El odómetro no puede aumentar más de un 10%.",
+      "carInUse": "El vehículo ya está en uso."
+    },
     "auth": {
       "invalidCredentials": "Correo electrónico o contraseña inválidos.",
       "invalidPassword": "Contraseña actual inválida.",

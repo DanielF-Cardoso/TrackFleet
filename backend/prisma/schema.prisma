@@ -33,12 +33,12 @@ enum EventType {
 }
 
 model Manager {
-  id        String   @id @unique @default(uuid())
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
-  email     String   @unique
+  id        String    @id @unique @default(uuid())
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  email     String    @unique
   password  String
-  phone     String   @unique
+  phone     String    @unique
   street    String
   number    Int
   district  String
@@ -46,8 +46,8 @@ model Manager {
   state     String
   zipCode   String
   lastLogin DateTime? @map("last_login")
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   Cars  Cars[]
   Event Event[]
@@ -103,7 +103,7 @@ model Event {
   status    EventType
   odometer  Int
   start_at  DateTime  @map("start_at")
-  end_at    DateTime  @map("end_at")
+  end_at    DateTime? @map("end_at")
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 

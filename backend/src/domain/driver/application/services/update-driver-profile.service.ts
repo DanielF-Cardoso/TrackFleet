@@ -5,7 +5,6 @@ import { Phone } from '@/core/value-objects/phone.vo'
 import { Name } from '@/core/value-objects/name.vo'
 import { Address } from '@/core/value-objects/address.vo'
 import { Either, left, right } from '@/core/errors/either'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { Driver } from '../../enterprise/entities/driver.entity'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
@@ -15,6 +14,7 @@ import { SameEmailError } from './errors/same-email.error'
 import { SamePhoneError } from './errors/same-phone.error'
 import { Cnh } from '@/core/value-objects/cnh.vo'
 import { CnhType } from '@prisma/client'
+import { DriverNotFoundError } from './errors/driver-not-found'
 
 interface UpdateDriverProfileRequest {
   driverId: string
@@ -33,7 +33,7 @@ interface UpdateDriverProfileRequest {
 }
 
 type UpdateDriverProfileResponse = Either<
-  | ResourceNotFoundError
+  | DriverNotFoundError
   | DriverAlreadyExistsError
   | SameEmailError
   | SamePhoneError
@@ -77,7 +77,7 @@ export class UpdateDriverProfileService {
         `Driver not found for profile update: driverId ${driverId}`,
         'UpdateDriverProfileService',
       )
-      return left(new ResourceNotFoundError(errorMessage))
+      return left(new DriverNotFoundError(errorMessage))
     }
 
     let newEmail = driver.email

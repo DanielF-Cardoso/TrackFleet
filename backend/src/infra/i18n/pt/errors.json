@@ -11,6 +11,11 @@
       "notFound": "Gestor não encontrado.",
       "notFoundAll": "Nenhum gestor encontrado."
     },
+    "event": {
+      "invalidOdometer": "O odômetro não pode diminuir.",
+      "odometerTooHigh": "O odômetro não pode aumentar mais de um 10%.",
+      "carInUse": "O carro já está em uso."
+    },
     "auth": {
       "invalidCredentials": "E‑mail ou senha inválidos.",
       "invalidPassword": "Senha atual inválida.",

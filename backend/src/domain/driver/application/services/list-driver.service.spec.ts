@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryDriverRepository } from 'test/repositories/in-memory-driver.repository'
 import { makeDriver } from 'test/factories/driver/make-driver'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { ListDriversService } from './list-driver.service'
+import { DriverNotFoundError } from './errors/driver-not-found'
 
 let sut: ListDriversService
 let driverRepository: InMemoryDriverRepository
@@ -50,8 +50,8 @@ describe('ListDriversService', () => {
     const result = await sut.execute()
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
-    if (result.value instanceof ResourceNotFoundError) {
+    expect(result.value).toBeInstanceOf(DriverNotFoundError)
+    if (result.value instanceof DriverNotFoundError) {
       expect(result.value.message).toBe('Driver not found.')
     }
   })
