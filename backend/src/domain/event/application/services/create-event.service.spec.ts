@@ -7,11 +7,11 @@ import { InMemoryDriverRepository } from 'test/repositories/in-memory-driver.rep
 import { makeCar } from 'test/factories/car/make-car'
 import { makeDriver } from 'test/factories/driver/make-driver'
 import { makeEvent } from 'test/factories/event/make-event'
+import { makeEventInput } from 'test/factories/event/make-event-input'
 import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
 import { DriverNotFoundError } from '@/domain/driver/application/services/errors/driver-not-found'
 import { InvalidEventError } from './errors/invalid-event.error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { makeEventInput } from 'test/factories/event/make-event-input'
 
 let sut: CreateEventService
 let eventRepository: InMemoryEventRepository
@@ -37,7 +37,7 @@ beforeEach(() => {
 })
 
 describe('CreateEventService', () => {
-  it('should be able to create a new event', async () => {
+  it('should be able to create a new event and update car status to IN_USE', async () => {
     const car = makeCar({ odometer: 1000 })
     const driver = makeDriver()
     const managerId = 'manager-1'
@@ -58,6 +58,7 @@ describe('CreateEventService', () => {
 
     if (result.isRight()) {
       const event = result.value.event
+      const updatedCar = await carRepository.findById(car.id.toValue())
 
       expect(event.carId.toValue()).toBe(car.id.toValue())
       expect(event.driverId.toValue()).toBe(driver.id.toValue())
@@ -65,6 +66,7 @@ describe('CreateEventService', () => {
       expect(event.odometer).toBe(1050)
       expect(event.status).toBe('ENTRY')
       expect(event.endAt).toBeUndefined()
+      expect(updatedCar?.status).toBe('IN_USE')
     }
   })
 
@@ -196,6 +198,11 @@ describe('CreateEventService', () => {
     )
 
     expect(result.isRight()).toBeTruthy()
+
+    if (result.isRight()) {
+      const updatedCar = await carRepository.findById(car.id.toValue())
+      expect(updatedCar?.status).toBe('IN_USE')
+    }
   })
 
   it('should be able to create an event with reasonable odometer increase for a high mileage car', async () => {
@@ -216,6 +223,11 @@ describe('CreateEventService', () => {
     )
 
     expect(result.isRight()).toBeTruthy()
+
+    if (result.isRight()) {
+      const updatedCar = await carRepository.findById(car.id.toValue())
+      expect(updatedCar?.status).toBe('IN_USE')
+    }
   })
 
   it('should not be able to create an event for a car that is already in use', async () => {

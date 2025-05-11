@@ -80,6 +80,9 @@ export class CreateEventService {
       endAt: undefined,
     })
 
+    car.updateStatus('IN_USE')
+    await this.carRepository.save(car)
+
     await this.eventRepository.create(event)
 
     return right({ event })
