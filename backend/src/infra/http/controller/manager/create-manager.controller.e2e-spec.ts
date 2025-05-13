@@ -68,7 +68,7 @@ describe('Create Manager Controller (E2E)', () => {
         street: createManagerData.street,
         number: createManagerData.number,
         district: createManagerData.district,
-        zipCode: createManagerData.zipCode,
+        zipCode: createManagerData.zipCode.replace('-', ''),
         city: createManagerData.city,
         state: createManagerData.state,
       },

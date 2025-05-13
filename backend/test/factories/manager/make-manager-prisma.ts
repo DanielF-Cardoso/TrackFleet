@@ -27,7 +27,9 @@ export class ManagerFactory {
 
     const manager = Manager.create({
       name: new Name(firstName, lastName),
-      phone: new Phone(faker.phone.number({ style: 'national' })),
+      phone: new Phone(
+        `11${faker.number.int({ min: 200000000, max: 999999999 })}`,
+      ),
       email: new Email(email),
       password,
       address: new Address(

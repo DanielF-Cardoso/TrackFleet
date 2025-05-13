@@ -3,7 +3,7 @@ import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { createLogger, format, transports } from 'winston'
 import { EnvService } from '@/infra/env/env.service'
 import { RequestContext } from '@/infra/logger/request-context'
-import * as DailyRotateFile from 'winston-daily-rotate-file'
+import DailyRotateFile from 'winston-daily-rotate-file'
 
 @Injectable()
 export class AppLogger {
