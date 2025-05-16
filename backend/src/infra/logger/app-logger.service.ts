@@ -3,7 +3,7 @@ import { utilities as nestWinstonModuleUtilities } from 'nest-winston'
 import { createLogger, format, transports } from 'winston'
 import { EnvService } from '@/infra/env/env.service'
 import { RequestContext } from '@/infra/logger/request-context'
-import * as DailyRotateFile from 'winston-daily-rotate-file'
+import 'winston-daily-rotate-file'
 
 @Injectable()
 export class AppLogger {
@@ -36,7 +36,7 @@ export class AppLogger {
             prettyPrint: true,
           }),
         }),
-        new DailyRotateFile({
+        new transports.DailyRotateFile({
           dirname: 'logs',
           filename: `${prefix.toLowerCase()}-%DATE%-error.log`,
           datePattern: 'YYYY-MM-DD',
@@ -45,7 +45,7 @@ export class AppLogger {
           maxSize,
           maxFiles,
         }),
-        new DailyRotateFile({
+        new transports.DailyRotateFile({
           dirname: 'logs',
           filename: `${prefix.toLowerCase()}-%DATE%-combined.log`,
           datePattern: 'YYYY-MM-DD',
