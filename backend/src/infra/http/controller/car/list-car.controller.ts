@@ -7,10 +7,10 @@ import {
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { I18nService } from 'nestjs-i18n'
-import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ListCarService } from '@/domain/cars/application/services/list-car.service'
 import { CarPresenter } from '../../presenters/car.presenter'
+import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
 
 @ApiTags('Gestores')
 @Controller('cars')
@@ -63,7 +63,7 @@ export class ListCarsController {
       const error = result.value
 
       switch (error.constructor) {
-        case ResourceNotFoundError:
+        case CarNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.car.notFoundAll'),
           )

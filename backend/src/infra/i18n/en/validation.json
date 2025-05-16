@@ -1,14 +1,19 @@
 {
-    "isNotUUID": "The field {property} must be a valid UUID.",
-    "isNotString": "The field {property} must be a string.",
-    "isNotEmail": "The field {property} must be a valid email.",
-    "isEmpty": "The field {property} cannot be empty.",
-    "isEmptyObject": "The object {object} is empty.",
-    "isNotDateString": "The field {property} must be a valid date string.",
-    "isNotMobilePhone": "The field {property} must be a valid mobile number.",
-    "isNotArray": "The field {property} must be an array.",
-    "isArrayEmpty": "The field {property} cannot be an empty array.",
-    "isNotEnum": "The field {property} must be one of the allowed values.",
-    "isNotNumber": "The field {property} must be a number.",
-    "minLength": "The field {property} must be at least {constraints[0]} characters long."
-  }
+  "isNotUUID": "The field {property} must be a valid UUID.",
+  "isNotString": "The field {property} must be a string.",
+  "isNotEmail": "The field {property} must be a valid email.",
+  "isEmpty": "The field {property} cannot be empty.",
+  "isEmptyObject": "The object {object} is empty.",
+  "isNotDateString": "The field {property} must be a valid date string.",
+  "isNotMobilePhone": "The field {property} must be a valid mobile number.",
+  "isNotArray": "The field {property} must be an array.",
+  "isArrayEmpty": "The field {property} cannot be an empty array.",
+  "isNotEnum": "The field {property} must be one of the allowed values.",
+  "isNotNumber": "The field {property} must be a number.",
+  "isNumber": "The field {property} must be a number.",
+  "minLength": "The field {property} must be at least {constraints[0]} characters long.",
+  "invalidPhone": "The phone number must be 11 digits, starting with the DDD (11-99) and the first digit after the DDD must be between 2-9.",
+  "isNotRenavam": "The field {property} must be a valid Renavam.",
+  "isNotLicensePlate": "The field {property} must be a valid license plate.",
+  "min": "The field {property} must be greater than {constraints[0]}."
+}

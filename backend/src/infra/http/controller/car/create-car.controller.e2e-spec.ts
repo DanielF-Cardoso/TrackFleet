@@ -59,11 +59,6 @@ describe('Create Car Controller (E2E)', () => {
       .set('Authorization', `Bearer ${accessToken}`)
       .send(createCarData)
 
-    console.log('Response:', {
-      status: result.status,
-      body: result.body,
-    })
-
     expect(result.status).toBe(201)
     expect(result.body.car).toEqual({
       id: expect.any(String),

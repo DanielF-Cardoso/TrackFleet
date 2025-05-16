@@ -10,5 +10,10 @@
     "isArrayEmpty": "El campo {property} no puede ser un arreglo vacío.",
     "isNotEnum": "El campo {property} debe ser uno de los valores permitidos.",
     "isNotNumber": "El campo {property} debe ser un número.",
-    "minLength": "El campo {property} debe tener al menos {constraints[0]} caracteres."
+    "minLength": "El campo {property} debe tener al menos {constraints[0]} caracteres.",
+    "invalidPhone": "El número de teléfono debe tener 11 dígitos, comenzando con el DDD (11-99) y el primer dígito después del DDD debe ser entre 2-9.",
+    "isNotRenavam": "El campo {property} debe ser un Renavam válido.",
+    "isNumber": "El campo {property} debe ser un número.",
+    "isNotLicensePlate": "El campo {property} debe ser una placa válida.",
+    "min": "El campo {property} debe ser mayor que {constraints[0]}."
   }
