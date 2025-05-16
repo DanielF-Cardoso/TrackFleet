@@ -14,7 +14,7 @@ import { DeleteCarService } from '@/domain/cars/application/services/delete-car.
 import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
 
 @ApiTags('Carros')
-@Controller('car')
+@Controller('cars')
 export class DeleteCarController {
   constructor(
     private deleteCarService: DeleteCarService,
