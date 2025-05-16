@@ -17,6 +17,8 @@ import { GetManagerProfileController } from './manager/get-manager-profile.contr
 import { DeleteManagerController } from './manager/delete-manager.controller'
 import { CreateCarController } from './car/create-car.controller'
 import { CreateCarService } from '@/domain/cars/application/services/create-car.service'
+import { ListCarsController } from './car/list-car.controller'
+import { ListCarService } from '@/domain/cars/application/services/list-car.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -29,6 +31,7 @@ import { CreateCarService } from '@/domain/cars/application/services/create-car.
     UpdateManagerProfileController,
     DeleteManagerController,
     CreateCarController,
+    ListCarsController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -39,6 +42,7 @@ import { CreateCarService } from '@/domain/cars/application/services/create-car.
     UpdateManagerProfileService,
     DeleteManagerService,
     CreateCarService,
+    ListCarService,
   ],
 })
 export class HttpModule {}
