@@ -26,7 +26,9 @@
     "unauthorized": "Você não está autorizado a realizar esta ação.",
     "inactiveUser": "Usuário inativo. Entre em contato com o administrador.",
     "forgotPasswordSubject": "Redefinir sua senha",
-    "tokenRequestTooSoon": "Solicitação de token recente. Por favor, aguarde um minuto antes de solicitar outro token."
+    "tokenRequestTooSoon": "Solicitação de token recente. Por favor, aguarde um minuto antes de solicitar outro token.",
+    "invalidToken": "Token inválido.",
+    "passwordReset": "Senha redefinida com sucesso."
   },
   "generic": {
     "sameEmail": "O novo e‑mail não pode ser igual ao atual.",

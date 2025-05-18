@@ -26,6 +26,8 @@ import { InactivateManagerService } from '@/domain/manager/application/services/
 import { EmailModule } from '@/infra/email/mailer.module'
 import { ForgotPasswordController } from './manager/forgot-password.controller'
 import { SendForgotPasswordEmailService } from '@/domain/manager/application/services/send-forgot-password-email.service'
+import { ResetPasswordController } from './manager/reset-password.controller'
+import { ResetManagerPasswordService } from '@/domain/manager/application/services/reset-manager-password.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -41,6 +43,7 @@ import { SendForgotPasswordEmailService } from '@/domain/manager/application/ser
     DeleteCarController,
     GetCarProfileController,
     ForgotPasswordController,
+    ResetPasswordController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -55,6 +58,7 @@ import { SendForgotPasswordEmailService } from '@/domain/manager/application/ser
     DeleteCarService,
     GetCarByLicensePlateService,
     SendForgotPasswordEmailService,
+    ResetManagerPasswordService,
   ],
 })
 export class HttpModule {}

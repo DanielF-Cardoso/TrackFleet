@@ -25,7 +25,9 @@
       "invalidPassword": "Contraseña actual inválida.",
       "unauthorized": "No estás autorizado para realizar esta acción.",
       "forgotPasswordSubject": "Restablecer contraseña",
-      "tokenRequestTooSoon": "Se ha solicitado un token demasiado pronto. Por favor, espera un minuto antes de solicitar otro token."
+      "tokenRequestTooSoon": "Se ha solicitado un token demasiado pronto. Por favor, espera un minuto antes de solicitar otro token.",
+      "invalidToken": "Token inválido.",
+      "passwordReset": "Contraseña restablecida correctamente."
     },
     "generic": {
       "sameEmail": "El nuevo correo electrónico no puede ser igual al actual.",

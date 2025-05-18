@@ -5,8 +5,9 @@ import { Test } from '@nestjs/testing'
 import request from 'supertest'
 import { ManagerFactory } from 'test/factories/manager/make-manager-prisma'
 import { PrismaService } from '@/infra/database/prisma/prisma.service'
+import { PasswordResetToken } from '@/domain/manager/enterprise/entities/password-reset-token.entity'
 
-describe('Forgot Password Controller (E2E)', () => {
+describe('Reset Password Controller (E2E)', () => {
   let app: INestApplication
   let managerFactory: ManagerFactory
   let prisma: PrismaService
@@ -39,41 +40,41 @@ describe('Forgot Password Controller (E2E)', () => {
     await prisma.passwordResetToken.deleteMany()
   })
 
-  test('[POST] /api/v1/managers/forgot-password – success', async () => {
+  test('[POST] /api/v1/managers/reset-password – success', async () => {
     const manager = await managerFactory.makePrismaManager()
 
-    const result = await request(app.getHttpServer())
-      .post('/managers/forgot-password')
-      .send({
-        email: manager.email.toValue(),
-      })
+    const token = PasswordResetToken.create({
+      token: 'valid-token',
+      managerId: manager.id,
+      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+    })
 
-    expect(result.status).toBe(201)
-
-    const token = await prisma.passwordResetToken.findFirst({
-      where: {
-        managerId: manager.id.toString(),
+    await prisma.passwordResetToken.create({
+      data: {
+        id: token.id.toString(),
+        token: token.token,
+        managerId: token.managerId.toString(),
+        expiresAt: token.expiresAt,
+        createdAt: token.createdAt,
       },
     })
 
-    expect(token).toBeTruthy()
-    expect(token?.expiresAt).toBeTruthy()
-    expect(token?.usedAt).toBeNull()
-  })
-
-  test('[POST] /api/v1/managers/forgot-password – should not allow requesting a new token within 1 minute', async () => {
-    const manager = await managerFactory.makePrismaManager()
-
-    await request(app.getHttpServer()).post('/managers/forgot-password').send({
-      email: manager.email.toValue(),
-    })
-
     const result = await request(app.getHttpServer())
-      .post('/managers/forgot-password')
+      .post('/auth/reset-password')
       .send({
-        email: manager.email.toValue(),
+        token: 'valid-token',
+        password: 'new-password123',
       })
 
-    expect(result.status).toBe(429)
+    expect(result.status).toBe(201)
+    expect(result.body.message).toBeTruthy()
+
+    const updatedToken = await prisma.passwordResetToken.findUnique({
+      where: {
+        token: 'valid-token',
+      },
+    })
+
+    expect(updatedToken?.usedAt).toBeTruthy()
   })
 })
