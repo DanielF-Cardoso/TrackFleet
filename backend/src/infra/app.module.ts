@@ -7,6 +7,7 @@ import { HttpModule } from './http/controller/http.module'
 import { I18nModule } from '@/infra/i18n/i18n.module'
 import { LoggerModule } from './logger/logger.module'
 import { HealthModule } from './health/health.module'
+import { EmailModule } from './email/mailer.module'
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { HealthModule } from './health/health.module'
     AuthModule,
     HttpModule,
     LoggerModule,
+    EmailModule,
   ],
 })
 export class AppModule {}

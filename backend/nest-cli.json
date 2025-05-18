@@ -7,6 +7,10 @@
       {
         "include": "infra/i18n/**/*",
         "outDir": "dist/src"
+      },
+      {
+        "include": "infra/email/templates/**/*.hbs",
+        "outDir": "dist/src"
       }
     ],
     "watchAssets": true,

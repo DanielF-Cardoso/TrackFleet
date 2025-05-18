@@ -16,6 +16,11 @@ export const envSchema = z.object({
     .default('info'),
   LOG_MAX_SIZE: z.string().optional().default('20m'),
   LOG_MAX_FILES: z.string().optional().default('14d'),
+  MAIL_HOST: z.string(),
+  MAIL_PORT: z.coerce.number(),
+  MAIL_USER: z.string(),
+  MAIL_PASSWORD: z.string(),
+  MAIL_FROM: z.string(),
 })
 
 export type Env = z.infer<typeof envSchema>
