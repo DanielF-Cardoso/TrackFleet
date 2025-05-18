@@ -78,6 +78,7 @@ describe('Update Manager Profile Controller (E2E)', () => {
           city: updatedData.city,
           state: updatedData.state,
         },
+        isActive: true,
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
       },

@@ -4,23 +4,23 @@ import { Either, left, right } from '@/core/errors/either'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
-import { CannotDeleteLastManagerError } from './errors/cannot-delete-last-maanger.error'
-import { CannotDeleteOwnAccountError } from './errors/cannot-delete-own-account.error'
+import { LastManagerCannotBeInactivatedError } from './errors/last-manager-cannot-be-inactivated.error'
+import { OwnAccountCannotBeInactivatedError } from './errors/own-account-cannot-be-inactivated.error'
 
-interface DeleteManagerRequest {
+interface InactivateManagerRequest {
   managerId: string
   currentManagerId: string
 }
 
-type DeleteManagerResponse = Either<
+type InactivateManagerResponse = Either<
   | ResourceNotFoundError
-  | CannotDeleteLastManagerError
-  | CannotDeleteOwnAccountError,
+  | LastManagerCannotBeInactivatedError
+  | OwnAccountCannotBeInactivatedError,
   null
 >
 
 @Injectable()
-export class DeleteManagerService {
+export class InactivateManagerService {
   constructor(
     private managerRepository: ManagerRepository,
     private i18n: I18nService,
@@ -31,21 +31,21 @@ export class DeleteManagerService {
   async execute({
     managerId,
     currentManagerId,
-  }: DeleteManagerRequest): Promise<DeleteManagerResponse> {
+  }: InactivateManagerRequest): Promise<InactivateManagerResponse> {
     this.logger.log(
-      `Fetching manager for remove, with id: ${managerId}`,
-      'DeleteManagerService',
+      `Fetching manager for inactivation, with id: ${managerId}`,
+      'InactivateManagerService',
     )
 
     if (managerId === currentManagerId) {
       const errorMessage = await this.i18n.translate(
-        'errors.manager.cannotDeleteOwn',
+        'errors.manager.cannotInactivateOwn',
       )
       this.logger.warn(
-        `Attempted to delete own account: managerId: ${managerId}`,
-        'DeleteManagerService',
+        `Attempted to inactivate own account: managerId: ${managerId}`,
+        'InactivateManagerService',
       )
-      return left(new CannotDeleteOwnAccountError(errorMessage))
+      return left(new OwnAccountCannotBeInactivatedError(errorMessage))
     }
 
     const manager = await this.managerRepository.findById(managerId)
@@ -54,7 +54,7 @@ export class DeleteManagerService {
       const errorMessage = await this.i18n.translate('errors.manager.notFound')
       this.logger.warn(
         `Manager not found for managerId: ${managerId}`,
-        'DeleteManagerService',
+        'InactivateManagerService',
       )
       return left(new ResourceNotFoundError(errorMessage))
     }
@@ -62,20 +62,21 @@ export class DeleteManagerService {
     const allManagers = await this.managerRepository.findAll()
     if (allManagers.length === 1) {
       const errorMessage = await this.i18n.translate(
-        'errors.manager.cannotDeleteLast',
+        'errors.manager.cannotInactivateLast',
       )
       this.logger.warn(
-        `Attempted to delete the last manager with id: ${managerId}`,
-        'DeleteManagerService',
+        `Attempted to inactivate the last manager with id: ${managerId}`,
+        'InactivateManagerService',
       )
-      return left(new CannotDeleteLastManagerError(errorMessage))
+      return left(new LastManagerCannotBeInactivatedError(errorMessage))
     }
 
-    await this.managerRepository.delete(manager)
+    manager.inactivate()
+    await this.managerRepository.save(manager)
 
     this.logger.log(
-      `Manager removed with id: ${managerId}`,
-      'DeleteManagerService',
+      `Manager inactivated with id: ${managerId}`,
+      'InactivateManagerService',
     )
     return right(null)
   }

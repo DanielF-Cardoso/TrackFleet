@@ -13,12 +13,13 @@ import { Request } from 'express'
 import { UpdateManagerProfileService } from '@/domain/manager/application/services/update-manager-profile.service'
 import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
 import { SameEmailError } from '@/domain/manager/application/services/errors/same-email.error'
-import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { UpdateManagerProfileDTO } from '../../dto/manager/update-manager-profile.dto'
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { SamePhoneError } from '@/domain/manager/application/services/errors/same-phone.error'
+import { EmailAlreadyExistsError } from '@/domain/manager/application/services/errors/email-already-exists.error'
+import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -110,9 +111,13 @@ export class UpdateManagerProfileController {
           throw new ConflictException(
             await this.i18n.translate('errors.generic.samePhone'),
           )
-        case ManagerAlreadyExistsError:
+        case EmailAlreadyExistsError:
           throw new ConflictException(
             await this.i18n.translate('errors.manager.alreadyExists'),
+          )
+        case PhoneAlreadyExistsError:
+          throw new ConflictException(
+            await this.i18n.translate('errors.manager.alreadyExistsByPhone'),
           )
         default:
           throw new BadRequestException(

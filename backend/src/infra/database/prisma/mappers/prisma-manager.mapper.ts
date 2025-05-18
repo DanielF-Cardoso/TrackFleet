@@ -22,8 +22,10 @@ export class PrismaManagerMapper {
           raw.state,
         ),
         password: raw.password,
+        isActive: raw.isActive,
         updatedAt: raw.updatedAt ?? undefined,
         lastLogin: raw.lastLogin ?? undefined,
+        inactiveAt: raw.inactiveAt ?? undefined,
       },
       new UniqueEntityID(raw.id),
     )
@@ -45,9 +47,11 @@ export class PrismaManagerMapper {
       zipCode: manager.address.getZipCode(),
       city: manager.address.getCity(),
       state: manager.address.getState(),
+      isActive: manager.isActive,
       createdAt: manager.createdAt,
       updatedAt: manager.updatedAt ?? undefined,
       lastLogin: manager.lastLogin ?? undefined,
+      inactiveAt: manager.inactiveAt ?? undefined,
     }
   }
 }

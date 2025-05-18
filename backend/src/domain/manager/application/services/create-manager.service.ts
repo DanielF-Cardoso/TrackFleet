@@ -3,13 +3,14 @@ import { Manager } from '../../enterprise/entities/manager.entity'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { Email } from '@/core/value-objects/email.vo'
 import { Name } from '@/core/value-objects/name.vo'
-import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { Either, left, right } from '@/core/errors/either'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { Address } from '@/core/value-objects/address.vo'
 import { Phone } from '@/core/value-objects/phone.vo'
+import { PhoneAlreadyExistsError } from './errors/phone-already-exists.error'
+import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
 
 export interface CreateManagerServiceRequest {
   firstName: string
@@ -26,7 +27,7 @@ export interface CreateManagerServiceRequest {
 }
 
 type CreateManagerServiceResponse = Either<
-  ManagerAlreadyExistsError,
+  EmailAlreadyExistsError | PhoneAlreadyExistsError,
   { manager: Manager }
 >
 
@@ -54,7 +55,7 @@ export class CreateManagerService {
     state,
   }: CreateManagerServiceRequest): Promise<CreateManagerServiceResponse> {
     this.logger.log(
-      `Starting manager creation for email: ${email}`,
+      `Starting manager creation for email: ${email} and phone: ${phone}`,
       'CreateManagerService',
     )
 
@@ -86,7 +87,7 @@ export class CreateManagerService {
         `Manager already exists with email: ${email}`,
         'CreateManagerService',
       )
-      return left(new ManagerAlreadyExistsError(errorMessage))
+      return left(new EmailAlreadyExistsError(errorMessage))
     }
 
     if (existingManagerByPhone) {
@@ -97,7 +98,7 @@ export class CreateManagerService {
         `Manager already exists with phone: ${phone}`,
         'CreateManagerService',
       )
-      return left(new ManagerAlreadyExistsError(errorMessage))
+      return left(new PhoneAlreadyExistsError(errorMessage))
     }
 
     const hashedPassword = await this.hashGenerator.generateHash(password)
@@ -108,12 +109,13 @@ export class CreateManagerService {
       password: hashedPassword,
       phone: phoneVO,
       address: addressVO,
+      isActive: true,
     })
 
     await this.managerRepository.create(manager)
 
     this.logger.log(
-      `Manager created successfully with email: ${email}`,
+      `Manager created successfully with email: ${email} and phone: ${phone}`,
       'CreateManagerService',
     )
 

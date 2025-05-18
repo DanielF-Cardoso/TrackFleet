@@ -4,13 +4,14 @@ import {
   Post,
   BadRequestException,
   InternalServerErrorException,
+  UnauthorizedException,
 } from '@nestjs/common'
 import { AuthenticateManagerService } from '@/domain/manager/application/services/authenticate-manager.service'
 import { InvalidCredentialsError } from '@/domain/manager/application/services/errors/invalid-credentials.error'
 import { AuthenticateManagerDTO } from '../../dto/manager/authenticate-manager.dto'
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-
+import { InactiveManagerError } from '@/domain/manager/application/services/errors/inactive-manager.error'
 @ApiTags('Gestores')
 @Controller('login')
 export class AuthenticateManagerController {
@@ -41,6 +42,10 @@ export class AuthenticateManagerController {
     status: 400,
     description: 'Credenciais inválidas.',
   })
+  @ApiResponse({
+    status: 401,
+    description: 'Gestor inativo.',
+  })
   async login(@Body() body: AuthenticateManagerDTO) {
     const { email, password } = body
 
@@ -56,6 +61,10 @@ export class AuthenticateManagerController {
         case InvalidCredentialsError:
           throw new BadRequestException(
             await this.i18n.translate('errors.auth.invalidCredentials'),
+          )
+        case InactiveManagerError:
+          throw new UnauthorizedException(
+            await this.i18n.translate('errors.auth.inactiveManager'),
           )
         default:
           throw new InternalServerErrorException(

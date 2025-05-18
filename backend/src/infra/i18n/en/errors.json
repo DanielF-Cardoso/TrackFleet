@@ -1,39 +1,39 @@
 {
-    "car": {
-      "alreadyExists": "A car with this license plate already exists.",
-      "notFound": "Car not found.",
-      "notFoundAll": "No cars found."
-    },
-    "manager": {
-      "alreadyExists": "A manager with this email already exists.",
-      "alreadyExistsByPhone": "A manager with this phone already exists.",
-      "cannotDeleteLast": "Cannot delete the last manager.",
-      "cannotDeleteOwn": "Cannot delete own account.",
-      "notFound": "Manager not found.",
-      "notFoundAll": "No managers found."
-    },
-    "event": {
-      "invalidOdometer": "The odometer cannot be decreased.",
-      "odometerTooHigh": "The odometer cannot be increased more than 10%.",
-      "carInUse": "The car is already in use.",
-      "alreadyFinalized": "The event is already finalized.",
-      "notFound": "Event not found.",
-      "cannotDeleteFinalized": "Cannot delete a finalized event."
-    },
-    "auth": {
-      "invalidCredentials": "Invalid email or password.",
-      "invalidPassword": "Invalid current password.",
-      "unauthorized": "You are not authorized to perform this action."
-    },
-    "generic": {
-      "sameEmail": "The new email cannot be the same as the current email.",
-      "samePhone": "The new phone cannot be the same as the current phone.",
-      "samePassword": "The new password cannot be the same as the current password.",
-      "unexpectedError": "An unexpected error occurred. Please try again later.",
-      "serviceHealthy": "The service is healthy.",
-      "serviceUnhealthy": "The service is unhealthy.",
-      "databaseConnected": "Database connected.",
-      "databaseDisconnected": "Database disconnected."
-    }
+  "car": {
+    "alreadyExists": "A car with this license plate already exists.",
+    "notFound": "Car not found.",
+    "notFoundAll": "No cars found."
+  },
+  "manager": {
+    "alreadyExists": "A manager with this email already exists.",
+    "alreadyExistsByPhone": "A manager with this phone already exists.",
+    "cannotInactivateLast": "Cannot inactivate the last manager.",
+    "cannotInactivateOwn": "Cannot inactivate own account.",
+    "notFound": "Manager not found.",
+    "notFoundAll": "No managers found."
+  },
+  "event": {
+    "invalidOdometer": "The odometer cannot be decreased.",
+    "odometerTooHigh": "The odometer cannot be increased more than 10%.",
+    "carInUse": "The car is already in use.",
+    "alreadyFinalized": "The event is already finalized.",
+    "notFound": "Event not found.",
+    "cannotDeleteFinalized": "Cannot delete a finalized event."
+  },
+  "auth": {
+    "invalidCredentials": "Invalid email or password.",
+    "invalidPassword": "Invalid current password.",
+    "unauthorized": "You are not authorized to perform this action.",
+    "inactiveUser": "Inactive user. Please contact the administrator."
+  },
+  "generic": {
+    "sameEmail": "The new email cannot be the same as the current email.",
+    "samePhone": "The new phone cannot be the same as the current phone.",
+    "samePassword": "The new password cannot be the same as the current password.",
+    "unexpectedError": "An unexpected error occurred. Please try again later.",
+    "serviceHealthy": "The service is healthy.",
+    "serviceUnhealthy": "The service is unhealthy.",
+    "databaseConnected": "Database connected.",
+    "databaseDisconnected": "Database disconnected."
   }
-  
+}

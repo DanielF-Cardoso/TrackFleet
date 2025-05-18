@@ -8,8 +8,8 @@
       "alreadyExists": "Ya existe un gestor con este correo electrónico.",
       "alreadyExistsByPhone": "Ya existe un gestor con este teléfono.",
       "notFound": "Gestor no encontrado.",
-      "cannotDeleteLast": "No se puede eliminar el último gestor.",
-      "cannotDeleteOwn": "No se puede eliminar su propia cuenta.",
+      "cannotInactivateLast": "No se puede inactivar el último gestor.",
+      "cannotInactivateOwn": "No se puede inactivar su propia cuenta.",
       "notFoundAll": "No se encontraron gestores."
     },
     "event": {

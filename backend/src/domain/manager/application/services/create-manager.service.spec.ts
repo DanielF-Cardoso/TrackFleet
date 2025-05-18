@@ -3,9 +3,12 @@ import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.r
 import { CreateManagerService } from './create-manager.service'
 import { FakeHashGenerator } from 'test/cryptography/fake-hasher'
 import { makeManagerInput } from 'test/factories/manager/make-manager-input'
-import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
+import { PhoneAlreadyExistsError } from './errors/phone-already-exists.error'
+import { makeManager } from 'test/factories/manager/make-manager'
+import { Phone } from '@/core/value-objects/phone.vo'
 
 let sut: CreateManagerService
 let managerRepository: InMemoryManagerRepository
@@ -50,7 +53,7 @@ describe('CreateManagerService', () => {
       'A manager with this email already exists.',
     )
 
-    const email = 'manager@email.com'
+    const email = 'manager2@email.com'
     const createManagerData = makeManagerInput({ email })
 
     await sut.execute(createManagerData)
@@ -58,8 +61,8 @@ describe('CreateManagerService', () => {
     const result = await sut.execute(createManagerData)
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ManagerAlreadyExistsError)
-    if (result.value instanceof ManagerAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(EmailAlreadyExistsError)
+    if (result.value instanceof EmailAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A manager with this email already exists.',
       )
@@ -70,17 +73,18 @@ describe('CreateManagerService', () => {
     vi.spyOn(i18n, 'translate').mockResolvedValue(
       'A manager with this phone already exists.',
     )
-
     const phone = '11912345678'
-    const createManagerData = makeManagerInput({ phone })
 
-    await sut.execute(createManagerData)
+    const existingManager = makeManager({ phone: new Phone(phone) })
+    await managerRepository.create(existingManager)
+
+    const createManagerData = makeManagerInput({ phone })
 
     const result = await sut.execute(createManagerData)
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ManagerAlreadyExistsError)
-    if (result.value instanceof ManagerAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(PhoneAlreadyExistsError)
+    if (result.value instanceof PhoneAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A manager with this phone already exists.',
       )

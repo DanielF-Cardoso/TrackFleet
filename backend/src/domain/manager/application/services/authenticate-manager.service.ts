@@ -6,6 +6,7 @@ import { Either, left, right } from '@/core/errors/either'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { InactiveManagerError } from './errors/inactive-manager.error'
 
 interface AuthenticateManagerRequest {
   email: string
@@ -13,7 +14,7 @@ interface AuthenticateManagerRequest {
 }
 
 type AuthenticateManagerResponse = Either<
-  InvalidCredentialsError,
+  InvalidCredentialsError | InactiveManagerError,
   { accessToken: string }
 >
 
@@ -48,6 +49,15 @@ export class AuthenticateManagerService {
         'AuthenticateManagerService',
       )
       return left(new InvalidCredentialsError(errorMessage))
+    }
+
+    if (!manager.isActive) {
+      const errorMessage = await this.i18n.translate('errors.auth.inactiveUser')
+      this.logger.warn(
+        `Authentication failed: Inactive manager for email: ${email}`,
+        'AuthenticateManagerService',
+      )
+      return left(new InactiveManagerError(errorMessage))
     }
 
     const isValid = await this.hashComparer.compareHash(

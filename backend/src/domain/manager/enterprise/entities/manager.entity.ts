@@ -11,9 +11,11 @@ export interface ManagerProps {
   password: string
   phone: Phone
   address: Address
+  isActive: boolean
   createdAt: Date
   updatedAt?: Date
   lastLogin?: Date
+  inactiveAt?: Date
 }
 
 export class Manager extends Entity<ManagerProps> {
@@ -22,6 +24,7 @@ export class Manager extends Entity<ManagerProps> {
     const manager = new Manager(
       {
         ...props,
+        isActive: props.isActive ?? true,
         createdAt: now,
         updatedAt: now,
       },
@@ -50,6 +53,10 @@ export class Manager extends Entity<ManagerProps> {
     return this.props.address
   }
 
+  get isActive() {
+    return this.props.isActive
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
@@ -60,6 +67,10 @@ export class Manager extends Entity<ManagerProps> {
 
   get lastLogin() {
     return this.props.lastLogin
+  }
+
+  get inactiveAt() {
+    return this.props.inactiveAt
   }
 
   updatePassword(newPassword: string) {
@@ -98,6 +109,12 @@ export class Manager extends Entity<ManagerProps> {
       this.props.phone = phone
     }
 
+    this.touch()
+  }
+
+  inactivate() {
+    this.props.isActive = false
+    this.props.inactiveAt = new Date()
     this.touch()
   }
 

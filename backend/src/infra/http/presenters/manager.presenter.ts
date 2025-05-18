@@ -16,9 +16,11 @@ export class ManagerPresenter {
         city: manager.address.getCity(),
         state: manager.address.getState(),
       },
+      isActive: manager.isActive,
       lastLogin: manager.lastLogin,
       createdAt: manager.createdAt,
       updatedAt: manager.updatedAt,
+      inactiveAt: manager.inactiveAt,
     }
   }
 }

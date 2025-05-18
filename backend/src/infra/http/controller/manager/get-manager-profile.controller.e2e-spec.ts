@@ -63,6 +63,7 @@ describe('Get Manager Profile (E2E)', () => {
           city: manager.address.getCity(),
           state: manager.address.getState(),
         },
+        isActive: manager.isActive,
         createdAt: expect.any(String),
         updatedAt: expect.any(String),
       },

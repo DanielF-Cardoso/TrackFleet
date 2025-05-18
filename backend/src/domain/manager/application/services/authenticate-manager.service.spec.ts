@@ -8,6 +8,7 @@ import { FakeHashComparer } from 'test/cryptography/fake-hasher-compare'
 import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { InactiveManagerError } from './errors/inactive-manager.error'
 
 let sut: AuthenticateManagerService
 let managerRepository: InMemoryManagerRepository
@@ -107,6 +108,36 @@ describe('AuthenticateManagerService', () => {
     expect(result.value).toBeInstanceOf(InvalidCredentialsError)
     if (result.value instanceof InvalidCredentialsError) {
       expect(result.value.message).toBe('Invalid email or password.')
+    }
+  })
+
+  it('should return error with translated message if user is inactive', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'Inactive user. Please contact the administrator.',
+    )
+
+    const email = 'valid@auth.com'
+    const password = '123456'
+
+    const manager = makeManager({
+      email: new Email(email),
+      password: `hashed-${password}`,
+      isActive: false,
+    })
+
+    await managerRepository.create(manager)
+
+    const result = await sut.execute({
+      email,
+      password,
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(InactiveManagerError)
+    if (result.value instanceof InactiveManagerError) {
+      expect(result.value.message).toBe(
+        'Inactive user. Please contact the administrator.',
+      )
     }
   })
 })

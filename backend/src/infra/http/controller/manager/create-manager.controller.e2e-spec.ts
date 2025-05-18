@@ -72,6 +72,7 @@ describe('Create Manager Controller (E2E)', () => {
         city: createManagerData.city,
         state: createManagerData.state,
       },
+      isActive: true,
       createdAt: expect.any(String),
       updatedAt: expect.any(String),
     })

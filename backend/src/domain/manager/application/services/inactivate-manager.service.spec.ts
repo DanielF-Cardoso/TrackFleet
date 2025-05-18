@@ -1,14 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { DeleteManagerService } from './delete-manager.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
-import { CannotDeleteLastManagerError } from './errors/cannot-delete-last-maanger.error'
-import { CannotDeleteOwnAccountError } from './errors/cannot-delete-own-account.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { InactivateManagerService } from './inactivate-manager.service'
+import { LastManagerCannotBeInactivatedError } from './errors/last-manager-cannot-be-inactivated.error'
+import { OwnAccountCannotBeInactivatedError } from './errors/own-account-cannot-be-inactivated.error'
 
-let sut: DeleteManagerService
+let sut: InactivateManagerService
 let managerRepository: InMemoryManagerRepository
 let i18n: I18nService
 let logger: FakeLogger
@@ -22,11 +22,11 @@ beforeEach(() => {
 
   logger = new FakeLogger()
 
-  sut = new DeleteManagerService(managerRepository, i18n, logger)
+  sut = new InactivateManagerService(managerRepository, i18n, logger)
 })
 
-describe('DeleteManagerService', () => {
-  it('should be able to delete a manager', async () => {
+describe('InactivateManagerService', () => {
+  it('should be able to inactivate a manager', async () => {
     const manager1 = makeManager()
     const manager2 = makeManager()
 
@@ -39,10 +39,11 @@ describe('DeleteManagerService', () => {
     })
 
     expect(result.isRight()).toBe(true)
-    expect(managerRepository.items).toHaveLength(1)
+    expect(manager1.isActive).toBe(false)
+    expect(manager1.inactiveAt).toBeInstanceOf(Date)
   })
 
-  it('should not be able to delete a manager that does not exist', async () => {
+  it('should not be able to inactivate a manager that does not exist', async () => {
     vi.spyOn(i18n, 'translate').mockResolvedValue('Manager not found.')
 
     const result = await sut.execute({
@@ -57,12 +58,12 @@ describe('DeleteManagerService', () => {
     }
   })
 
-  it('should not be able to delete the last manager', async () => {
+  it('should not be able to inactivate the last manager', async () => {
     const manager = makeManager()
     await managerRepository.create(manager)
 
     vi.spyOn(i18n, 'translate').mockResolvedValue(
-      'Cannot delete the last manager.',
+      'Cannot inactivate the last manager.',
     )
 
     const result = await sut.execute({
@@ -71,19 +72,19 @@ describe('DeleteManagerService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CannotDeleteLastManagerError)
-    if (result.value instanceof CannotDeleteLastManagerError) {
-      expect(result.value.message).toBe('Cannot delete the last manager.')
+    expect(result.value).toBeInstanceOf(LastManagerCannotBeInactivatedError)
+    if (result.value instanceof LastManagerCannotBeInactivatedError) {
+      expect(result.value.message).toBe('Cannot inactivate the last manager.')
     }
-    expect(managerRepository.items).toHaveLength(1)
+    expect(manager.isActive).toBe(true)
   })
 
-  it('should not be able to delete own account', async () => {
+  it('should not be able to inactivate own account', async () => {
     const manager = makeManager()
     await managerRepository.create(manager)
 
     vi.spyOn(i18n, 'translate').mockResolvedValue(
-      'Cannot delete your own account.',
+      'Cannot inactivate your own account.',
     )
 
     const result = await sut.execute({
@@ -92,10 +93,10 @@ describe('DeleteManagerService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CannotDeleteOwnAccountError)
-    if (result.value instanceof CannotDeleteOwnAccountError) {
-      expect(result.value.message).toBe('Cannot delete your own account.')
+    expect(result.value).toBeInstanceOf(OwnAccountCannotBeInactivatedError)
+    if (result.value instanceof OwnAccountCannotBeInactivatedError) {
+      expect(result.value.message).toBe('Cannot inactivate your own account.')
     }
-    expect(managerRepository.items).toHaveLength(1)
+    expect(manager.isActive).toBe(true)
   })
 })

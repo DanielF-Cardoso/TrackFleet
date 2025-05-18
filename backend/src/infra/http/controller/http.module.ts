@@ -8,13 +8,11 @@ import { GetManagerProfileService } from '@/domain/manager/application/services/
 import { ListManagersService } from '@/domain/manager/application/services/list-managers.service'
 import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
 import { UpdateManagerProfileService } from '@/domain/manager/application/services/update-manager-profile.service'
-import { DeleteManagerService } from '@/domain/manager/application/services/delete-manager.service'
 import { ListManagersController } from './manager/list-managers.controller'
 import { CreateManagerController } from './manager/create-manager.controller'
 import { UpdateManagerPasswordController } from './manager/update-manager-password.controller'
 import { UpdateManagerProfileController } from './manager/update-manager-profile.controller'
 import { GetManagerProfileController } from './manager/get-manager-profile.controller'
-import { DeleteManagerController } from './manager/delete-manager.controller'
 import { CreateCarController } from './car/create-car.controller'
 import { CreateCarService } from '@/domain/cars/application/services/create-car.service'
 import { ListCarsController } from './car/list-car.controller'
@@ -23,6 +21,8 @@ import { DeleteCarController } from './car/delete-car.controller'
 import { DeleteCarService } from '@/domain/cars/application/services/delete-car.service'
 import { GetCarByLicensePlateService } from '@/domain/cars/application/services/get-car-by-license-plate'
 import { GetCarProfileController } from './car/get-car-by-licence-plate.controller'
+import { InactivateManagerController } from './manager/inactivate-manager.controller'
+import { InactivateManagerService } from '@/domain/manager/application/services/inactivate-manager.service'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule],
@@ -33,7 +33,7 @@ import { GetCarProfileController } from './car/get-car-by-licence-plate.controll
     ListManagersController,
     UpdateManagerPasswordController,
     UpdateManagerProfileController,
-    DeleteManagerController,
+    InactivateManagerController,
     CreateCarController,
     ListCarsController,
     DeleteCarController,
@@ -46,7 +46,7 @@ import { GetCarProfileController } from './car/get-car-by-licence-plate.controll
     ListManagersService,
     UpdateManagerPasswordService,
     UpdateManagerProfileService,
-    DeleteManagerService,
+    InactivateManagerService,
     CreateCarService,
     ListCarService,
     DeleteCarService,

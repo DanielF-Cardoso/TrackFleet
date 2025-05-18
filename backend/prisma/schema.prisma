@@ -45,9 +45,11 @@ model Manager {
   city      String
   state     String
   zipCode   String
+  isActive  Boolean   @default(true)
   lastLogin DateTime? @map("last_login")
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  inactiveAt DateTime? @map("inactive_at")
 
   Cars  Cars[]
   Event Event[]
@@ -56,20 +58,23 @@ model Manager {
 }
 
 model Driver {
-  id        String   @id @unique @default(uuid())
-  firstName String   @map("first_name")
-  lastName  String   @map("last_name")
-  cnh       String   @unique
+  id        String    @id @unique @default(uuid())
+  firstName String    @map("first_name")
+  lastName  String    @map("last_name")
+  cnh       String    @unique
   cnhType   CnhType
-  email     String   @unique
+  email     String    @unique
   phone     String
   street    String
   number    Int
   district  String
   city      String
   state     String
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  zipCode   String
+  isActive  Boolean   @default(true)
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime? @updatedAt @map("updated_at")
+  inactiveAt DateTime? @map("inactive_at")
   Event     Event[]
 
   @@map("drivers")
@@ -86,8 +91,10 @@ model Cars {
   odometer     Int
   status       CarStatus
   renavam      String    @unique
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime? @updatedAt @map("updated_at")
+  inactiveAt   DateTime? @map("inactive_at")
 
   manager Manager @relation(fields: [managerId], references: [id])
   Event   Event[]

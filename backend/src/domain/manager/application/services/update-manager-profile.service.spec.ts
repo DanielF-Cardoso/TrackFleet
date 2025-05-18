@@ -2,7 +2,6 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { UpdateManagerProfileService } from './update-manager-profile.service'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
-import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { Email } from '@/core/value-objects/email.vo'
 import { SameEmailError } from './errors/same-email.error'
@@ -10,6 +9,8 @@ import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { Phone } from '@/core/value-objects/phone.vo'
 import { SamePhoneError } from './errors/same-phone.error'
+import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
+import { PhoneAlreadyExistsError } from './errors/phone-already-exists.error'
 
 let sut: UpdateManagerProfileService
 let managerRepository: InMemoryManagerRepository
@@ -198,8 +199,8 @@ describe('UpdateManagerProfileService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ManagerAlreadyExistsError)
-    if (result.value instanceof ManagerAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(EmailAlreadyExistsError)
+    if (result.value instanceof EmailAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A manager with this email already exists.',
       )
@@ -225,8 +226,8 @@ describe('UpdateManagerProfileService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(ManagerAlreadyExistsError)
-    if (result.value instanceof ManagerAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(PhoneAlreadyExistsError)
+    if (result.value instanceof PhoneAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A manager with this phone already exists.',
       )

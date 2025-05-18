@@ -1,6 +1,5 @@
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { ManagerRepository } from '../repositories/manager-repository'
-import { ManagerAlreadyExistsError } from './errors/manager-already-exists.error'
 import { Email } from '@/core/value-objects/email.vo'
 import { Phone } from '@/core/value-objects/phone.vo'
 import { Name } from '@/core/value-objects/name.vo'
@@ -12,6 +11,8 @@ import { Manager } from '../../enterprise/entities/manager.entity'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { SamePhoneError } from './errors/same-phone.error'
+import { PhoneAlreadyExistsError } from './errors/phone-already-exists.error'
+import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
 
 interface UpdateManagerProfileRequest {
   managerId: string
@@ -28,7 +29,10 @@ interface UpdateManagerProfileRequest {
 }
 
 type UpdateManagerProfileResponse = Either<
-  ResourceNotFoundError | ManagerAlreadyExistsError | SameEmailError,
+  | ResourceNotFoundError
+  | EmailAlreadyExistsError
+  | PhoneAlreadyExistsError
+  | SameEmailError,
   { manager: Manager }
 >
 
@@ -96,7 +100,7 @@ export class UpdateManagerProfileService {
           `Email ${email} already in use during profile update for managerId: ${managerId}`,
           'UpdateManagerProfileService',
         )
-        return left(new ManagerAlreadyExistsError(errorMessage))
+        return left(new EmailAlreadyExistsError(errorMessage))
       }
 
       newEmail = emailValueObject
@@ -129,7 +133,7 @@ export class UpdateManagerProfileService {
           `Phone ${phone} already in use during profile update for managerId: ${managerId}`,
           'UpdateManagerProfileService',
         )
-        return left(new ManagerAlreadyExistsError(errorMessage))
+        return left(new PhoneAlreadyExistsError(errorMessage))
       }
 
       newPhone = phoneValueObject

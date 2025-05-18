@@ -17,6 +17,7 @@ interface Override {
   zipCode?: string
   city?: string
   state?: string
+  isActive?: boolean
 }
 
 export function makeManager(
@@ -52,6 +53,7 @@ export function makeManager(
       email,
       password,
       phone,
+      isActive: override.isActive ?? true,
       address: new Address(street, number, district, zipCode, city, state),
     },
     id,

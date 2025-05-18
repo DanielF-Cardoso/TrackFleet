@@ -1,39 +1,39 @@
 {
-    "car": {
-      "alreadyExists": "Já existe um carro com esta placa.",
-      "notFound": "Carro não encontrado.",
-      "notFoundAll": "Nenhum carro encontrado."
-    },
-    "manager": {
-      "alreadyExists": "Já existe um gestor com este e‑mail.",
-      "alreadyExistsByPhone": "Já existe um gestor com este telefone.",
-      "cannotDeleteLast": "Não é possível deletar o último gestor.",
-      "cannotDeleteOwn": "Não é possível deletar sua própria conta.",
-      "notFound": "Gestor não encontrado.",
-      "notFoundAll": "Nenhum gestor encontrado."
-    },
-    "event": {
-      "invalidOdometer": "O odômetro não pode diminuir.",
-      "odometerTooHigh": "O odômetro não pode aumentar mais de um 10%.",
-      "carInUse": "O carro já está em uso.",
-      "alreadyFinalized": "O evento já está finalizado.",
-      "notFound": "Evento não encontrado.",
-      "cannotDeleteFinalized": "Não é possível deletar um evento finalizado."
-    },
-    "auth": {
-      "invalidCredentials": "E‑mail ou senha inválidos.",
-      "invalidPassword": "Senha atual inválida.",
-      "unauthorized": "Você não está autorizado a realizar esta ação."
-    },
-    "generic": {
-      "sameEmail": "O novo e‑mail não pode ser igual ao atual.",
-      "samePhone": "O novo telefone não pode ser igual ao atual.",
-      "samePassword": "A nova senha não pode ser igual à atual.",
-      "unexpectedError": "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.",
-      "serviceHealthy": "O serviço está saudável.",
-      "serviceUnhealthy": "O serviço está com problemas.",
-      "databaseConnected": "Banco de dados conectado.",
-      "databaseDisconnected": "Banco de dados desconectado."
-    }
+  "car": {
+    "alreadyExists": "Já existe um carro com esta placa.",
+    "notFound": "Carro não encontrado.",
+    "notFoundAll": "Nenhum carro encontrado."
+  },
+  "manager": {
+    "alreadyExists": "Já existe um gestor com este e‑mail.",
+    "alreadyExistsByPhone": "Já existe um gestor com este telefone.",
+    "cannotInactivateLast": "Não é possível inativar o último gestor.",
+    "cannotInactivateOwn": "Não é possível inativar sua própria conta.",
+    "notFound": "Gestor não encontrado.",
+    "notFoundAll": "Nenhum gestor encontrado."
+  },
+  "event": {
+    "invalidOdometer": "O odômetro não pode diminuir.",
+    "odometerTooHigh": "O odômetro não pode aumentar mais de um 10%.",
+    "carInUse": "O carro já está em uso.",
+    "alreadyFinalized": "O evento já está finalizado.",
+    "notFound": "Evento não encontrado.",
+    "cannotDeleteFinalized": "Não é possível deletar um evento finalizado."
+  },
+  "auth": {
+    "invalidCredentials": "E‑mail ou senha inválidos.",
+    "invalidPassword": "Senha atual inválida.",
+    "unauthorized": "Você não está autorizado a realizar esta ação.",
+    "inactiveUser": "Usuário inativo. Entre em contato com o administrador."
+  },
+  "generic": {
+    "sameEmail": "O novo e‑mail não pode ser igual ao atual.",
+    "samePhone": "O novo telefone não pode ser igual ao atual.",
+    "samePassword": "A nova senha não pode ser igual à atual.",
+    "unexpectedError": "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde.",
+    "serviceHealthy": "O serviço está saudável.",
+    "serviceUnhealthy": "O serviço está com problemas.",
+    "databaseConnected": "Banco de dados conectado.",
+    "databaseDisconnected": "Banco de dados desconectado."
   }
-  
+}

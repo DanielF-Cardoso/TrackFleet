@@ -8,11 +8,12 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { ManagerAlreadyExistsError } from '@/domain/manager/application/services/errors/manager-already-exists.error'
+import { EmailAlreadyExistsError } from '@/domain/manager/application/services/errors/email-already-exists.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { CreateManagerDTO } from '../../dto/manager/create-manager.dto'
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
 
 @ApiTags('Gestores')
 @Controller('managers')
@@ -95,9 +96,13 @@ export class CreateManagerController {
       const error = result.value
 
       switch (error.constructor) {
-        case ManagerAlreadyExistsError:
+        case EmailAlreadyExistsError:
           throw new ConflictException(
             await this.i18n.translate('errors.manager.alreadyExists'),
+          )
+        case PhoneAlreadyExistsError:
+          throw new ConflictException(
+            await this.i18n.translate('errors.manager.alreadyExistsByPhone'),
           )
         default:
           throw new InternalServerErrorException(
