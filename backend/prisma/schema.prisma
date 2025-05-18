@@ -33,49 +33,50 @@ enum EventType {
 }
 
 model Manager {
-  id        String    @id @unique @default(uuid())
-  firstName String    @map("first_name")
-  lastName  String    @map("last_name")
-  email     String    @unique
-  password  String
-  phone     String    @unique
-  street    String
-  number    Int
-  district  String
-  city      String
-  state     String
-  zipCode   String
-  isActive  Boolean   @default(true)
-  lastLogin DateTime? @map("last_login")
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  id         String    @id @unique @default(uuid())
+  firstName  String    @map("first_name")
+  lastName   String    @map("last_name")
+  email      String    @unique
+  password   String
+  phone      String    @unique
+  street     String
+  number     Int
+  district   String
+  city       String
+  state      String
+  zipCode    String
+  isActive   Boolean   @default(true)
+  lastLogin  DateTime? @map("last_login")
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
   inactiveAt DateTime? @map("inactive_at")
 
-  Cars  Cars[]
-  Event Event[]
+  Cars               Cars[]
+  Event              Event[]
+  PasswordResetToken PasswordResetToken[]
 
   @@map("managers")
 }
 
 model Driver {
-  id        String    @id @unique @default(uuid())
-  firstName String    @map("first_name")
-  lastName  String    @map("last_name")
-  cnh       String    @unique
-  cnhType   CnhType
-  email     String    @unique
-  phone     String
-  street    String
-  number    Int
-  district  String
-  city      String
-  state     String
-  zipCode   String
-  isActive  Boolean   @default(true)
-  createdAt DateTime  @default(now()) @map("created_at")
-  updatedAt DateTime? @updatedAt @map("updated_at")
+  id         String    @id @unique @default(uuid())
+  firstName  String    @map("first_name")
+  lastName   String    @map("last_name")
+  cnh        String    @unique
+  cnhType    CnhType
+  email      String    @unique
+  phone      String
+  street     String
+  number     Int
+  district   String
+  city       String
+  state      String
+  zipCode    String
+  isActive   Boolean   @default(true)
+  createdAt  DateTime  @default(now()) @map("created_at")
+  updatedAt  DateTime? @updatedAt @map("updated_at")
   inactiveAt DateTime? @map("inactive_at")
-  Event     Event[]
+  Event      Event[]
 
   @@map("drivers")
 }
@@ -119,4 +120,17 @@ model Event {
   car     Cars    @relation(fields: [carId], references: [id])
 
   @@map("events")
+}
+
+model PasswordResetToken {
+  id        String    @id @default(uuid())
+  token     String    @unique
+  managerId String    @map("manager_id")
+  expiresAt DateTime  @map("expires_at")
+  usedAt    DateTime? @map("used_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  manager Manager @relation(fields: [managerId], references: [id])
+
+  @@map("password_reset_tokens")
 }

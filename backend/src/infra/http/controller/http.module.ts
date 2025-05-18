@@ -23,9 +23,11 @@ import { GetCarByLicensePlateService } from '@/domain/cars/application/services/
 import { GetCarProfileController } from './car/get-car-by-licence-plate.controller'
 import { InactivateManagerController } from './manager/inactivate-manager.controller'
 import { InactivateManagerService } from '@/domain/manager/application/services/inactivate-manager.service'
-
+import { EmailModule } from '@/infra/email/mailer.module'
+import { ForgotPasswordController } from './manager/forgot-password.controller'
+import { SendForgotPasswordEmailService } from '@/domain/manager/application/services/send-forgot-password-email.service'
 @Module({
-  imports: [DatabaseModule, CryptographyModule],
+  imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
     AuthenticateManagerController,
     CreateManagerController,
@@ -38,6 +40,7 @@ import { InactivateManagerService } from '@/domain/manager/application/services/
     ListCarsController,
     DeleteCarController,
     GetCarProfileController,
+    ForgotPasswordController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -51,6 +54,7 @@ import { InactivateManagerService } from '@/domain/manager/application/services/
     ListCarService,
     DeleteCarService,
     GetCarByLicensePlateService,
+    SendForgotPasswordEmailService,
   ],
 })
 export class HttpModule {}
