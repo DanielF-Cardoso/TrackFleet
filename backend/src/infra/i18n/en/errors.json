@@ -25,7 +25,6 @@
     "invalidPassword": "Invalid current password.",
     "unauthorized": "You are not authorized to perform this action.",
     "inactiveUser": "Inactive user. Please contact the administrator.",
-    "forgotPasswordSubject": "Reset your password",
     "tokenRequestTooSoon": "Token request too soon. Please wait a minute before requesting another token.",
     "invalidToken": "Invalid token.",
     "passwordReset": "Password reset successfully."

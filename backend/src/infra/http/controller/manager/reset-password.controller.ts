@@ -50,6 +50,6 @@ export class ResetPasswordController {
       }
     }
 
-    return { message: await this.i18n.translate('success.passwordReset') }
+    return {}
   }
 }

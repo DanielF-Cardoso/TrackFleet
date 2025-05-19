@@ -8,6 +8,9 @@ import { I18nModule } from '@/infra/i18n/i18n.module'
 import { LoggerModule } from './logger/logger.module'
 import { HealthModule } from './health/health.module'
 import { EmailModule } from './email/mailer.module'
+import { EventsModule } from './events/event.module'
+import { APP_INTERCEPTOR } from '@nestjs/core'
+import { EventDispatchInterceptor } from './events/event-dispatch.interceptor'
 
 @Module({
   imports: [
@@ -22,6 +25,13 @@ import { EmailModule } from './email/mailer.module'
     HttpModule,
     LoggerModule,
     EmailModule,
+    EventsModule,
+  ],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: EventDispatchInterceptor,
+    },
   ],
 })
 export class AppModule {}
