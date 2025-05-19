@@ -6,7 +6,7 @@ import { Car } from '../../enterprise/entities/car.entity'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 
-type ListCarServiceResponse = Either<CarNotFoundError, { findedAll: Car[] }>
+type ListCarServiceResponse = Either<CarNotFoundError, { cars: Car[] }>
 
 @Injectable()
 export class ListCarService {
@@ -20,18 +20,18 @@ export class ListCarService {
   async execute(): Promise<ListCarServiceResponse> {
     this.logger.log('Listing all cars', 'ListCarService')
 
-    const findedAll = await this.carRepository.findAll()
+    const cars = await this.carRepository.findAll()
 
-    if (findedAll.length === 0) {
+    if (cars.length === 0) {
       const errorMessage = await this.i18n.translate('errors.car.notFound')
       this.logger.warn('No cars found during listing', 'ListCarService')
       return left(new CarNotFoundError(errorMessage))
     }
 
     this.logger.log(
-      `Found ${findedAll.length} car(s) during listing`,
+      `Found ${cars.length} car(s) during listing`,
       'ListCarService',
     )
-    return right({ findedAll })
+    return right({ cars })
   }
 }

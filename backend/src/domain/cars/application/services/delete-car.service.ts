@@ -9,7 +9,7 @@ export interface DeleteCarServiceRequest {
   carId: string
 }
 
-type DeleteCarServiceResponse = Either<CarNotFoundError, { sucess: true }>
+type DeleteCarServiceResponse = Either<CarNotFoundError, null>
 
 @Injectable()
 export class DeleteCarService {
@@ -28,9 +28,9 @@ export class DeleteCarService {
       'DeleteCarService',
     )
 
-    const findedCar = await this.carRepository.findById(carId)
+    const car = await this.carRepository.findById(carId)
 
-    if (!findedCar) {
+    if (!car) {
       const errorMessage = await this.i18n.translate('errors.car.notFound')
       this.logger.warn(
         `Car not found for deletion: ID ${carId}`,
@@ -39,13 +39,13 @@ export class DeleteCarService {
       return left(new CarNotFoundError(errorMessage))
     }
 
-    await this.carRepository.delete(findedCar.id.toString())
+    await this.carRepository.delete(car.id.toString())
 
     this.logger.log(
       `Car deleted successfully with ID: ${carId}`,
       'DeleteCarService',
     )
 
-    return right({ sucess: true })
+    return right(null)
   }
 }

@@ -7,6 +7,8 @@ import { ResourceNotFoundError } from './errors/resource-not-found.error'
 import { TokenRequestTooSoonError } from './errors/token-request-too-soon.error'
 import { PasswordResetToken } from '../../enterprise/entities/password-reset-token.entity'
 import { InMemoryManagerPasswordResetTokenRepository } from 'test/repositories/in-memory-manager-password-reset-token.repository'
+import { DomainEvents } from '@/core/events/domain-events'
+import { OnPasswordResetTokenCreated } from '../../application/subscribers/on-password-reset-token-created'
 
 let sut: SendForgotPasswordEmailService
 let managerRepository: InMemoryManagerRepository
@@ -15,6 +17,7 @@ let i18n: any
 let logger: FakeLogger
 let mailerService: any
 let configService: any
+let onPasswordResetTokenCreated: OnPasswordResetTokenCreated
 
 beforeEach(() => {
   managerRepository = new InMemoryManagerRepository()
@@ -35,12 +38,20 @@ beforeEach(() => {
     get: vi.fn().mockReturnValue('http://localhost:3000'),
   }
 
+  // Clear any previous event handlers
+  DomainEvents.clearHandlers()
+  DomainEvents.clearMarkedEvents()
+
+  onPasswordResetTokenCreated = new OnPasswordResetTokenCreated(
+    mailerService,
+    configService,
+  )
+  onPasswordResetTokenCreated.setupSubscriptions()
+
   sut = new SendForgotPasswordEmailService(
     managerRepository,
     passwordResetTokenRepository,
-    mailerService,
     i18n,
-    configService,
     logger,
   )
 })
@@ -57,10 +68,14 @@ describe('SendForgotPasswordEmailService', () => {
     })
 
     expect(result.isRight()).toBe(true)
+
+    // Dispatch events
+    await DomainEvents.dispatchEvents()
+
     expect(mailerService.sendMail).toHaveBeenCalledWith(
       expect.objectContaining({
         to: manager.email.toValue(),
-        subject: 'Password Reset',
+        subject: 'Recuperação de senha',
         template: 'forgot-password',
         context: expect.objectContaining({
           name: manager.name.toValue(),
@@ -137,6 +152,10 @@ describe('SendForgotPasswordEmailService', () => {
     })
 
     expect(result.isRight()).toBe(true)
+
+    // Dispatch events
+    await DomainEvents.dispatchEvents()
+
     expect(mailerService.sendMail).toHaveBeenCalled()
   })
 })

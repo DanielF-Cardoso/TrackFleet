@@ -22,7 +22,7 @@ export interface UpdateCarServiceRequest {
 
 type UpdateCarServiceResponse = Either<
   CarAlreadyExistsError | CarNotFoundError,
-  { findedCar: Car }
+  { car: Car }
 >
 
 @Injectable()
@@ -32,7 +32,7 @@ export class UpdateCarService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     carId,
@@ -49,9 +49,9 @@ export class UpdateCarService {
       'UpdateCarService',
     )
 
-    const findedCar = await this.carRepository.findById(carId)
+    const car = await this.carRepository.findById(carId)
 
-    if (!findedCar) {
+    if (!car) {
       const errorMessage = await this.i18n.translate('errors.car.notFound')
       this.logger.warn(
         `Car not found for update: ID ${carId}`,
@@ -65,7 +65,7 @@ export class UpdateCarService {
       const existingCar = await this.carRepository.findByLicensePlate(
         licensePlateVo.toValue(),
       )
-      if (existingCar && !existingCar.id.equals(findedCar.id)) {
+      if (existingCar && !existingCar.id.equals(car.id)) {
         const errorMessage = await this.i18n.translate(
           'errors.car.alreadyExists',
         )
@@ -75,7 +75,7 @@ export class UpdateCarService {
         )
         return left(new CarAlreadyExistsError(errorMessage))
       }
-      findedCar.updateLicensePlate(licensePlateVo)
+      car.updateLicensePlate(licensePlateVo)
     }
 
     if (renavam) {
@@ -83,7 +83,7 @@ export class UpdateCarService {
       const existingRenavam = await this.carRepository.findByRenavam(
         renavamVo.toValue(),
       )
-      if (existingRenavam && !existingRenavam.id.equals(findedCar.id)) {
+      if (existingRenavam && !existingRenavam.id.equals(car.id)) {
         const errorMessage = await this.i18n.translate(
           'errors.car.alreadyExists',
         )
@@ -93,10 +93,10 @@ export class UpdateCarService {
         )
         return left(new CarAlreadyExistsError(errorMessage))
       }
-      findedCar.updateRenavam(renavamVo)
+      car.updateRenavam(renavamVo)
     }
 
-    findedCar.updateCar({
+    car.updateCar({
       brand,
       model,
       year,
@@ -104,13 +104,13 @@ export class UpdateCarService {
       odometer,
     })
 
-    await this.carRepository.save(findedCar)
+    await this.carRepository.save(car)
 
     this.logger.log(
       `Car updated successfully with ID: ${carId}`,
       'UpdateCarService',
     )
 
-    return right({ findedCar })
+    return right({ car })
   }
 }

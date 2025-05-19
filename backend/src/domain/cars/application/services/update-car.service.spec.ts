@@ -40,7 +40,7 @@ describe('UpdateCarService', () => {
 
     expect(result.isRight()).toBe(true)
     if (result.isRight()) {
-      const updated = result.value.findedCar
+      const updated = result.value.car
       expect(updated.id.toString()).toBe(car.id.toString())
       expect(updated.licensePlate.toValue()).toBe(newLicensePlate)
       expect(updated.renavam.toValue()).toBe(newRenavam)

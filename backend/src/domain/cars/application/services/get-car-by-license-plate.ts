@@ -32,9 +32,9 @@ export class GetCarByLicensePlateService {
       'GetCarByLicensePlateService',
     )
 
-    const findedCar = await this.carRepository.findByLicensePlate(licensePlate)
+    const car = await this.carRepository.findByLicensePlate(licensePlate)
 
-    if (!findedCar) {
+    if (!car) {
       const errorMessage = await this.i18n.translate('errors.car.notFound')
       this.logger.warn(
         `Car not found for license plate: ${licensePlate}`,
@@ -48,6 +48,6 @@ export class GetCarByLicensePlateService {
       'GetCarByLicensePlateService',
     )
 
-    return right({ car: findedCar })
+    return right({ car })
   }
 }

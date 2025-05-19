@@ -35,9 +35,9 @@ describe('ListCarService', () => {
 
     expect(result.isRight()).toBe(true)
     if (result.isRight()) {
-      expect(result.value.findedAll).toHaveLength(2)
-      expect(result.value.findedAll[0].licensePlate).toBe(carData.licensePlate)
-      expect(result.value.findedAll[1].licensePlate).toBe(carData2.licensePlate)
+      expect(result.value.cars).toHaveLength(2)
+      expect(result.value.cars[0].licensePlate).toBe(carData.licensePlate)
+      expect(result.value.cars[1].licensePlate).toBe(carData2.licensePlate)
     }
   })
 

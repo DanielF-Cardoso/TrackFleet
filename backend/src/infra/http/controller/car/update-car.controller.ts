@@ -25,7 +25,7 @@ export class UpdateCarController {
     private readonly i18n: I18nService,
   ) {}
 
-  @Patch()
+  @Patch(':id')
   @UseGuards(JwtAuthGuard)
   @ApiOperation({
     summary: 'Atualizar carro',
@@ -96,7 +96,7 @@ export class UpdateCarController {
     }
 
     return {
-      findedCar: CarPresenter.toHTTP(result.value.findedCar),
+      car: CarPresenter.toHTTP(result.value.car),
     }
   }
 }

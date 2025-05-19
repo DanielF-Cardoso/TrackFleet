@@ -18,7 +18,7 @@ export class ListCarsController {
   constructor(
     private listCarsService: ListCarService,
     private i18n: I18nService,
-  ) {}
+  ) { }
 
   @Get()
   @UseGuards(JwtAuthGuard)
@@ -75,7 +75,7 @@ export class ListCarsController {
     }
 
     return {
-      cars: result.value.findedAll.map(CarPresenter.toHTTP),
+      cars: result.value.car.map(CarPresenter.toHTTP),
     }
   }
 }
