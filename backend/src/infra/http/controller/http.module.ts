@@ -36,6 +36,8 @@ import { ListDriversController } from './driver/list-drivers.controller'
 import { ListDriversService } from '@/domain/driver/application/services/list-driver.service'
 import { GetDriverController } from './driver/get-driver.controller'
 import { GetDriverProfileService } from '@/domain/driver/application/services/get-driver-profile.service'
+import { UpdateDriverController } from './driver/update-driver.controller'
+import { UpdateDriverProfileService } from '@/domain/driver/application/services/update-driver-profile.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -56,6 +58,7 @@ import { GetDriverProfileService } from '@/domain/driver/application/services/ge
     CreateDriverController,
     ListDriversController,
     GetDriverController,
+    UpdateDriverController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -75,6 +78,7 @@ import { GetDriverProfileService } from '@/domain/driver/application/services/ge
     CreateDriverService,
     ListDriversService,
     GetDriverProfileService,
+    UpdateDriverProfileService,
   ],
 })
 export class HttpModule {}
