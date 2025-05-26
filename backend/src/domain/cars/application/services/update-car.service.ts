@@ -32,7 +32,7 @@ export class UpdateCarService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) { }
+  ) {}
 
   async execute({
     carId,

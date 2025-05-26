@@ -7,6 +7,8 @@ import { CarRepository } from '@/domain/cars/application/repositories/car-reposi
 import { PrismaCarRepository } from './repositories/prisma-car.repository'
 import { ManagerPasswordResetTokenRepository } from '@/domain/manager/application/repositories/manager-password-reset-token-repository'
 import { PrismaManagerPasswordResetTokenRepository } from './repositories/prisma-manager-password-reset-token.repository'
+import { DriverRepository } from '@/domain/driver/application/repositories/driver-repository'
+import { PrismaDriverRepository } from './repositories/prisma-driver.repository'
 @Module({
   providers: [
     PrismaService,
@@ -23,11 +25,16 @@ import { PrismaManagerPasswordResetTokenRepository } from './repositories/prisma
       provide: ManagerPasswordResetTokenRepository,
       useClass: PrismaManagerPasswordResetTokenRepository,
     },
+    {
+      provide: DriverRepository,
+      useClass: PrismaDriverRepository,
+    },
   ],
   exports: [
     PrismaService,
     ManagerRepository,
     CarRepository,
+    DriverRepository,
     ManagerPasswordResetTokenRepository,
   ],
 })

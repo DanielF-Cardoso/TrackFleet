@@ -15,8 +15,10 @@ export interface DriverProps {
   email: Email
   phone: Phone
   address: Address
+  isActive?: boolean
   createdAt: Date
   updatedAt?: Date
+  inactiveAt?: Date
 }
 
 export class Driver extends Entity<DriverProps> {
@@ -25,6 +27,7 @@ export class Driver extends Entity<DriverProps> {
     const driver = new Driver(
       {
         ...props,
+        isActive: props.isActive ?? true,
         createdAt: now,
         updatedAt: now,
       },
@@ -57,12 +60,20 @@ export class Driver extends Entity<DriverProps> {
     return this.props.address
   }
 
+  get isActive() {
+    return this.props.isActive
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
 
   get updatedAt() {
     return this.props.updatedAt
+  }
+
+  get inactiveAt() {
+    return this.props.inactiveAt
   }
 
   updateProfile({
@@ -107,6 +118,12 @@ export class Driver extends Entity<DriverProps> {
 
   updatePhoneNumber(newPhone: Phone) {
     this.props.phone = newPhone
+    this.touch()
+  }
+
+  inactivate() {
+    this.props.isActive = false
+    this.props.inactiveAt = new Date()
     this.touch()
   }
 

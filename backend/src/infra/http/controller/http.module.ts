@@ -30,6 +30,8 @@ import { ResetPasswordController } from './manager/reset-password.controller'
 import { ResetManagerPasswordService } from '@/domain/manager/application/services/reset-manager-password.service'
 import { UpdateCarController } from './car/update-car.controller'
 import { UpdateCarService } from '@/domain/cars/application/services/update-car.service'
+import { CreateDriverController } from './driver/create-driver.controller'
+import { CreateDriverService } from '@/domain/driver/application/services/create-driver.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -47,6 +49,7 @@ import { UpdateCarService } from '@/domain/cars/application/services/update-car.
     ForgotPasswordController,
     ResetPasswordController,
     UpdateCarController,
+    CreateDriverController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -63,6 +66,7 @@ import { UpdateCarService } from '@/domain/cars/application/services/update-car.
     SendForgotPasswordEmailService,
     ResetManagerPasswordService,
     UpdateCarService,
+    CreateDriverService,
   ],
 })
 export class HttpModule {}
