@@ -32,6 +32,8 @@ import { UpdateCarController } from './car/update-car.controller'
 import { UpdateCarService } from '@/domain/cars/application/services/update-car.service'
 import { CreateDriverController } from './driver/create-driver.controller'
 import { CreateDriverService } from '@/domain/driver/application/services/create-driver.service'
+import { ListDriversController } from './driver/list-drivers.controller'
+import { ListDriversService } from '@/domain/driver/application/services/list-driver.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -50,6 +52,7 @@ import { CreateDriverService } from '@/domain/driver/application/services/create
     ResetPasswordController,
     UpdateCarController,
     CreateDriverController,
+    ListDriversController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -67,6 +70,7 @@ import { CreateDriverService } from '@/domain/driver/application/services/create
     ResetManagerPasswordService,
     UpdateCarService,
     CreateDriverService,
+    ListDriversService,
   ],
 })
 export class HttpModule {}
