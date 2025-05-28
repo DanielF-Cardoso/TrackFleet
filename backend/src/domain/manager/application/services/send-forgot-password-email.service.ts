@@ -5,7 +5,7 @@ import { ManagerRepository } from '../repositories/manager-repository'
 import { ManagerPasswordResetTokenRepository } from '../repositories/manager-password-reset-token-repository'
 import { PasswordResetToken } from '../../enterprise/entities/password-reset-token.entity'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { TokenRequestTooSoonError } from './errors/token-request-too-soon.error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { DomainEvents } from '@/core/events/domain-events'
@@ -28,7 +28,7 @@ export class SendForgotPasswordEmailService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     email,

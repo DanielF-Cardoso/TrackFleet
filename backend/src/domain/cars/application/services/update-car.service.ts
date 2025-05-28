@@ -1,13 +1,14 @@
 import { Either, left, right } from '@/core/errors/either'
 import { Car } from '../../enterprise/entities/car.entity'
-import { CarAlreadyExistsError } from './errors/car-already-exists-error'
 import { CarRepository } from '../repositories/car-repository'
 import { LicensePlate } from '@/core/value-objects/license-plate.vo'
 import { I18nService } from 'nestjs-i18n'
-import { CarNotFoundError } from './errors/car-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { Renavam } from '@/core/value-objects/renavam.vo'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { LicensePlateAlreadyExistsError } from './errors/license-plate-already-exists.error'
+import { RenavamAlreadyExistsError } from './errors/renavam-already-exists.error'
 
 export interface UpdateCarServiceRequest {
   carId: string
@@ -21,7 +22,9 @@ export interface UpdateCarServiceRequest {
 }
 
 type UpdateCarServiceResponse = Either<
-  CarAlreadyExistsError | CarNotFoundError,
+  | ResourceNotFoundError
+  | LicensePlateAlreadyExistsError
+  | RenavamAlreadyExistsError,
   { car: Car }
 >
 
@@ -57,41 +60,43 @@ export class UpdateCarService {
         `Car not found for update: ID ${carId}`,
         'UpdateCarService',
       )
-      return left(new CarNotFoundError(errorMessage))
+      return left(new ResourceNotFoundError(errorMessage))
     }
 
     if (licensePlate) {
       const licensePlateVo = new LicensePlate(licensePlate)
-      const existingCar = await this.carRepository.findByLicensePlate(
-        licensePlateVo.toValue(),
-      )
-      if (existingCar && !existingCar.id.equals(car.id)) {
+      const existingCarByLicensePlate =
+        await this.carRepository.findByLicensePlate(licensePlateVo.toValue())
+      if (
+        existingCarByLicensePlate &&
+        !existingCarByLicensePlate.id.equals(car.id)
+      ) {
         const errorMessage = await this.i18n.translate(
-          'errors.car.alreadyExists',
+          'errors.car.licensePlateAlreadyExists',
         )
         this.logger.warn(
           `License plate already in use: ${licensePlate}`,
           'UpdateCarService',
         )
-        return left(new CarAlreadyExistsError(errorMessage))
+        return left(new LicensePlateAlreadyExistsError(errorMessage))
       }
       car.updateLicensePlate(licensePlateVo)
     }
 
     if (renavam) {
       const renavamVo = new Renavam(renavam)
-      const existingRenavam = await this.carRepository.findByRenavam(
+      const existingCarByRenavam = await this.carRepository.findByRenavam(
         renavamVo.toValue(),
       )
-      if (existingRenavam && !existingRenavam.id.equals(car.id)) {
+      if (existingCarByRenavam && !existingCarByRenavam.id.equals(car.id)) {
         const errorMessage = await this.i18n.translate(
-          'errors.car.alreadyExists',
+          'errors.car.renavamAlreadyExists',
         )
         this.logger.warn(
           `Renavam already in use: ${renavam}`,
           'UpdateCarService',
         )
-        return left(new CarAlreadyExistsError(errorMessage))
+        return left(new RenavamAlreadyExistsError(errorMessage))
       }
       car.updateRenavam(renavamVo)
     }

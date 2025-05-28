@@ -9,7 +9,7 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { ListManagersService } from '@/domain/manager/application/services/list-managers.service'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { I18nService } from 'nestjs-i18n'
-import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 
 @ApiTags('Gestores')
@@ -18,7 +18,7 @@ export class ListManagersController {
   constructor(
     private listManagersService: ListManagersService,
     private i18n: I18nService,
-  ) {}
+  ) { }
 
   @Get()
   @UseGuards(JwtAuthGuard)

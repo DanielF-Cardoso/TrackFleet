@@ -1,6 +1,7 @@
 {
   "car": {
-    "alreadyExists": "Já existe um carro com esta placa.",
+    "licensePlateAlreadyExists": "Já existe um carro com esta placa.",
+    "renavamAlreadyExists": "Já existe um carro com este Renavam.",
     "notFound": "Carro não encontrado.",
     "notFoundAll": "Nenhum carro encontrado."
   },

@@ -10,7 +10,7 @@ import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { Address } from '@/core/value-objects/address.vo'
 import { Phone } from '@/core/value-objects/phone.vo'
 import { PhoneAlreadyExistsError } from './errors/phone-already-exists.error'
-import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
+import { EmailAlreadyExistsError } from '../../../../core/errors/email-already-exists.error'
 
 export interface CreateManagerServiceRequest {
   firstName: string
@@ -39,7 +39,7 @@ export class CreateManagerService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     firstName,

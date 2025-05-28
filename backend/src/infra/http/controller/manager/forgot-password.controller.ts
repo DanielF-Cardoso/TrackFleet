@@ -11,7 +11,7 @@ import { SendForgotPasswordEmailService } from '@/domain/manager/application/ser
 import { ForgotPasswordDTO } from '../../dto/manager/forgot-password.dto'
 import { I18nService } from 'nestjs-i18n'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { TokenRequestTooSoonError } from '@/domain/manager/application/services/errors/token-request-too-soon.error'
 
 @ApiTags('Gestores')
@@ -20,7 +20,7 @@ export class ForgotPasswordController {
   constructor(
     private sendForgotPasswordEmailService: SendForgotPasswordEmailService,
     private i18n: I18nService,
-  ) {}
+  ) { }
 
   @Post('forgot-password')
   @ApiOperation({

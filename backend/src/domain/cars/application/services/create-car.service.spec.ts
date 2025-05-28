@@ -2,9 +2,10 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
 import { CreateCarService } from './create-car.service'
 import { makeCarInput } from 'test/factories/car/make-car-input'
-import { CarAlreadyExistsError } from './errors/car-already-exists-error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { LicensePlateAlreadyExistsError } from './errors/license-plate-already-exists.error'
+import { RenavamAlreadyExistsError } from './errors/renavam-already-exists.error'
 
 let sut: CreateCarService
 let carRepository: InMemoryCarRepository
@@ -47,14 +48,23 @@ describe('CreateCarService', () => {
       'A car with this license plate already exists.',
     )
 
-    const carData = makeCarInput({ licensePlate: 'ABC1234' })
+    const licensePlate = 'ABC1234'
+    const carData = makeCarInput({
+      licensePlate,
+      renavam: '12345678901',
+    })
 
     await sut.execute(carData)
-    const result = await sut.execute(carData)
+    const result = await sut.execute(
+      makeCarInput({
+        licensePlate,
+        renavam: '98765432109', // Renavam diferente
+      }),
+    )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarAlreadyExistsError)
-    if (result.value instanceof CarAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(LicensePlateAlreadyExistsError)
+    if (result.value instanceof LicensePlateAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A car with this license plate already exists.',
       )
@@ -66,14 +76,17 @@ describe('CreateCarService', () => {
       'A car with this Renavam already exists.',
     )
 
-    const carData = makeCarInput({ renavam: '12345678901' })
+    const carData = makeCarInput({
+      renavam: '12345678901',
+      licensePlate: 'ABK1238',
+    })
 
     await sut.execute(carData)
     const result = await sut.execute(carData)
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarAlreadyExistsError)
-    if (result.value instanceof CarAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(RenavamAlreadyExistsError)
+    if (result.value instanceof RenavamAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A car with this Renavam already exists.',
       )

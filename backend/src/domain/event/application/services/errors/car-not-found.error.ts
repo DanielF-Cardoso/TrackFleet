@@ -1,5 +1,5 @@
 export class CarNotFoundError extends Error {
-  constructor(message: string = 'Car not found') {
+  constructor(message: string) {
     super(message)
     this.name = 'CarNotFoundError'
   }

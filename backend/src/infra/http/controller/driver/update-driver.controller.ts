@@ -9,15 +9,15 @@ import {
   Param,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
-import { SameEmailError } from '@/domain/manager/application/services/errors/same-email.error'
+import { SameEmailError } from '@/core/errors/same-email.error'
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { SamePhoneError } from '@/domain/manager/application/services/errors/same-phone.error'
+import { SamePhoneError } from '@/core/errors/same-phone.error'
 import { UpdateDriverProfileService } from '@/domain/driver/application/services/update-driver-profile.service'
 import { UpdateDriverDTO } from '../../dto/driver/update-driver.dto'
 import { DriverPresenter } from '../../presenters/driver.presenter'
 import { DriverNotFoundError } from '@/domain/driver/application/services/errors/driver-not-found'
-import { SameCnhError } from '@/domain/driver/application/services/errors/same-cnh.error'
+import { SameCnhError } from '@/domain/driver/application/services/errors/same-cnh.error.error'
 
 @ApiTags('Motoristas')
 @Controller('drivers')
@@ -25,7 +25,7 @@ export class UpdateDriverController {
   constructor(
     private updateDriverProfileService: UpdateDriverProfileService,
     private readonly i18n: I18nService,
-  ) {}
+  ) { }
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)

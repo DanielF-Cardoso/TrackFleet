@@ -14,7 +14,7 @@ import { UpdateManagerPasswordService } from '@/domain/manager/application/servi
 import { Request } from 'express'
 import { UpdateManagerPasswordDTO } from '../../dto/manager/update-manager-password.dto'
 import { I18nService } from 'nestjs-i18n'
-import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { InvalidPasswordError } from '@/domain/manager/application/services/errors/invalid-password.error'
 import { SamePasswordError } from '@/domain/manager/application/services/errors/same-password.error'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'

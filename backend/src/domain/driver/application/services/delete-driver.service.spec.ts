@@ -4,7 +4,7 @@ import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { makeDriver } from 'test/factories/driver/make-driver'
 import { DeleteDriverService } from './delete-driver.service'
-import { DriverNotFoundError } from './errors/driver-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 let sut: DeleteDriverService
 let driverRepository: InMemoryDriverRepository
@@ -41,8 +41,8 @@ describe('DeleteDriverService', () => {
     const result = await sut.execute({ driverId: 'non-existent-id' })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(DriverNotFoundError)
-    if (result.value instanceof DriverNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Driver not found.')
     }
   })

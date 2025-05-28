@@ -11,7 +11,7 @@ import { CarPresenter } from '../../presenters/car.presenter'
 import { I18nService } from 'nestjs-i18n'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { GetCarByLicensePlateService } from '@/domain/cars/application/services/get-car-by-license-plate'
-import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 @ApiTags('Gestores')
 @Controller('car')
@@ -58,7 +58,7 @@ export class GetCarProfileController {
       const error = result.value
 
       switch (error.constructor) {
-        case CarNotFoundError:
+        case ResourceNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.car.notFound'),
           )

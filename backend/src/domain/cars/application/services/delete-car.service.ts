@@ -1,15 +1,15 @@
 import { Either, left, right } from '@/core/errors/either'
 import { CarRepository } from '../repositories/car-repository'
 import { I18nService } from 'nestjs-i18n'
-import { CarNotFoundError } from './errors/car-not-found'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 export interface DeleteCarServiceRequest {
   carId: string
 }
 
-type DeleteCarServiceResponse = Either<CarNotFoundError, null>
+type DeleteCarServiceResponse = Either<ResourceNotFoundError, null>
 
 @Injectable()
 export class DeleteCarService {
@@ -36,7 +36,7 @@ export class DeleteCarService {
         `Car not found for deletion: ID ${carId}`,
         'DeleteCarService',
       )
-      return left(new CarNotFoundError(errorMessage))
+      return left(new ResourceNotFoundError(errorMessage))
     }
 
     await this.carRepository.delete(car.id.toString())

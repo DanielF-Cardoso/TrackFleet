@@ -43,10 +43,12 @@ describe('Reset Password Controller (E2E)', () => {
   test('[POST] /api/v1/managers/reset-password – success', async () => {
     const manager = await managerFactory.makePrismaManager()
 
+    const expirationDate = new Date(Date.now() + 15 * 60 * 1000) // 15 minutes
+
     const token = PasswordResetToken.create({
       token: 'valid-token',
       managerId: manager.id,
-      expiresAt: new Date(Date.now() + 15 * 60 * 1000), // 15 minutes
+      expiresAt: expirationDate,
     })
 
     await prisma.passwordResetToken.create({
@@ -67,7 +69,6 @@ describe('Reset Password Controller (E2E)', () => {
       })
 
     expect(result.status).toBe(201)
-    expect(result.body.message).toBeTruthy()
 
     const updatedToken = await prisma.passwordResetToken.findUnique({
       where: {

@@ -35,7 +35,7 @@ describe('Update Driver Profile Controller (E2E)', () => {
     await app.close()
   })
 
-  test('[PATCH] /api/v1/drivers/me – success', async () => {
+  test('[PATCH] /api/v1/drivers/:id – success', async () => {
     const driver = await driverFactory.makePrismaDriver()
     const accessToken = jwt.sign({ sub: driver.id.toString() })
 
@@ -44,11 +44,10 @@ describe('Update Driver Profile Controller (E2E)', () => {
     }
 
     const result = await request(app.getHttpServer())
-      .patch(`/drivers/me/${driver.id}`)
+      .patch(`/drivers/${driver.id}`)
       .set('Authorization', `Bearer ${accessToken}`)
       .send(updatedData)
 
-    console.log(result.body)
     expect(result.status).toBe(200)
   })
 })

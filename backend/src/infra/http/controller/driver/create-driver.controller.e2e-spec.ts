@@ -57,8 +57,6 @@ describe('Create Driver Controller (E2E)', () => {
       .set('Authorization', `Bearer ${acessToken}`)
       .send(createDriverData)
 
-    console.log(result.body)
-
     expect(result.status).toBe(201)
     expect(result.body.driver).toEqual({
       id: expect.any(String),

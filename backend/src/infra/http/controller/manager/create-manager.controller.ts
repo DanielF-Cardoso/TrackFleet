@@ -8,7 +8,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common'
-import { EmailAlreadyExistsError } from '@/domain/manager/application/services/errors/email-already-exists.error'
+import { EmailAlreadyExistsError } from '@/core/errors/email-already-exists.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { CreateManagerDTO } from '../../dto/manager/create-manager.dto'
 import { I18nService } from 'nestjs-i18n'

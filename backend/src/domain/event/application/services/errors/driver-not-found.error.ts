@@ -1,5 +1,5 @@
 export class DriverNotFoundError extends Error {
-  constructor(message: string = 'Driver not found') {
+  constructor(message: string) {
     super(message)
     this.name = 'DriverNotFoundError'
   }

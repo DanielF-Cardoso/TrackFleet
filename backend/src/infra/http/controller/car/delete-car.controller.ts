@@ -11,7 +11,7 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { I18nService } from 'nestjs-i18n'
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { DeleteCarService } from '@/domain/cars/application/services/delete-car.service'
-import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 @ApiTags('Carros')
 @Controller('cars')
@@ -57,7 +57,7 @@ export class DeleteCarController {
       const error = result.value
 
       switch (error.constructor) {
-        case CarNotFoundError:
+        case ResourceNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.car.notFound'),
           )

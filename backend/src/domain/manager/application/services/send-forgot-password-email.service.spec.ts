@@ -3,7 +3,7 @@ import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.r
 import { SendForgotPasswordEmailService } from './send-forgot-password-email.service'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { makeManager } from 'test/factories/manager/make-manager'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { TokenRequestTooSoonError } from './errors/token-request-too-soon.error'
 import { PasswordResetToken } from '../../enterprise/entities/password-reset-token.entity'
 import { InMemoryManagerPasswordResetTokenRepository } from 'test/repositories/in-memory-manager-password-reset-token.repository'

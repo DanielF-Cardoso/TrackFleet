@@ -6,7 +6,7 @@ import { makeCar } from 'test/factories/car/make-car'
 import { makeDriver } from 'test/factories/driver/make-driver'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { I18nService } from 'nestjs-i18n'
-import { EventNotFoundError } from './errors/event-not-found.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 let sut: ListEventsService
 let eventRepository: InMemoryEventRepository
@@ -81,8 +81,8 @@ describe('ListEventsService', () => {
     const result = await sut.execute()
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(EventNotFoundError)
-    if (result.value instanceof EventNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('No events found.')
     }
   })

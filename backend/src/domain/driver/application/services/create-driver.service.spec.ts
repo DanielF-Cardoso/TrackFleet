@@ -6,7 +6,9 @@ import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { InMemoryDriverRepository } from 'test/repositories/in-memory-driver.repository'
 import { makeDriverInput } from 'test/factories/driver/make-driver-input'
-import { DriverAlreadyExistsError } from './errors/driver-already-exists'
+import { EmailAlreadyExistsError } from '@/core/errors/email-already-exists.error'
+import { CnhAlreadyExistsError } from './errors/cnh-already-exists.error'
+import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
 
 let sut: CreateDriverService
 let driverRepository: InMemoryDriverRepository
@@ -48,16 +50,24 @@ describe('CreateDriverService', () => {
       'A driver with this email already exists.',
     )
 
-    const email = 'daniel@email.com'
-    const createDriverData = makeDriverInput({ email })
+    const email = 'same-email@email.com'
+    const createDriverData = makeDriverInput({
+      email,
+      cnh: '54570596266',
+    })
 
     await sut.execute(createDriverData)
 
-    const result = await sut.execute(createDriverData)
+    const result = await sut.execute(
+      makeDriverInput({
+        email,
+        cnh: '83788755771',
+      }),
+    )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(DriverAlreadyExistsError)
-    if (result.value instanceof DriverAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(EmailAlreadyExistsError)
+    if (result.value instanceof EmailAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A driver with this email already exists.',
       )
@@ -70,17 +80,52 @@ describe('CreateDriverService', () => {
     )
 
     const cnh = '62050501904'
-    const createDriverData = makeDriverInput({ cnh })
+    const createDriverData = makeDriverInput({
+      cnh,
+    })
 
     await sut.execute(createDriverData)
 
-    const result = await sut.execute(createDriverData)
+    const result = await sut.execute(
+      makeDriverInput({
+        cnh,
+      }),
+    )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(DriverAlreadyExistsError)
-    if (result.value instanceof DriverAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(CnhAlreadyExistsError)
+    if (result.value instanceof CnhAlreadyExistsError) {
       expect(result.value.message).toBe(
         'A driver with this cnh already exists.',
+      )
+    }
+  })
+
+  it('should not allow creating a driver with the same phone', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue(
+      'A driver with this phone already exists.',
+    )
+
+    const phone = '11999999999'
+    const createDriverData = makeDriverInput({
+      phone,
+      cnh: '12110666603',
+    })
+
+    await sut.execute(createDriverData)
+
+    const result = await sut.execute(
+      makeDriverInput({
+        phone,
+        cnh: '85854212027',
+      }),
+    )
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(PhoneAlreadyExistsError)
+    if (result.value instanceof PhoneAlreadyExistsError) {
+      expect(result.value.message).toBe(
+        'A driver with this phone already exists.',
       )
     }
   })

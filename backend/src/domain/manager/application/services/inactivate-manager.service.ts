@@ -1,7 +1,7 @@
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { Either, left, right } from '@/core/errors/either'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { LastManagerCannotBeInactivatedError } from './errors/last-manager-cannot-be-inactivated.error'
@@ -26,7 +26,7 @@ export class InactivateManagerService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     managerId,

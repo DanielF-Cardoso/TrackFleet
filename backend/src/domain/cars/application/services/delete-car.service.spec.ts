@@ -3,8 +3,8 @@ import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repositor
 import { I18nService } from 'nestjs-i18n'
 import { DeleteCarService } from './delete-car.service'
 import { makeCar } from 'test/factories/car/make-car'
-import { CarNotFoundError } from './errors/car-not-found'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 let sut: DeleteCarService
 let carRepository: InMemoryCarRepository
@@ -40,8 +40,8 @@ describe('DeleteCarService', () => {
     const result = await sut.execute({ carId: 'non-existing-car-id' })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarNotFoundError)
-    if (result.value instanceof CarNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Car not found.')
     }
   })

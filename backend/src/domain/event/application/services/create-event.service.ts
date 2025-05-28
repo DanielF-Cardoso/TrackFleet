@@ -6,10 +6,11 @@ import { DriverRepository } from '@/domain/driver/application/repositories/drive
 import { I18nService } from 'nestjs-i18n'
 import { Event } from '../../enterprise/entities/event.entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
-import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
-import { DriverNotFoundError } from '@/domain/driver/application/services/errors/driver-not-found'
+import { DriverNotFoundError } from './errors/driver-not-found.error'
 import { InvalidEventError } from './errors/invalid-event.error'
 import { OdometerValidation } from './validations/odometer.validation'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { CarNotFoundError } from './errors/car-not-found.error'
 
 interface CreateEventServiceRequest {
   carId: string
@@ -19,7 +20,10 @@ interface CreateEventServiceRequest {
 }
 
 type CreateEventServiceResponse = Either<
-  CarNotFoundError | DriverNotFoundError | InvalidEventError,
+  | ResourceNotFoundError
+  | DriverNotFoundError
+  | InvalidEventError
+  | CarNotFoundError,
   { event: Event }
 >
 

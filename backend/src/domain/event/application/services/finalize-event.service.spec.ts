@@ -5,8 +5,9 @@ import { InMemoryEventRepository } from 'test/repositories/in-memory-event.repos
 import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
 import { makeCar } from 'test/factories/car/make-car'
 import { makeEvent } from 'test/factories/event/make-event'
-import { InvalidEventError } from './errors/invalid-event.error'
-import { EventNotFoundError } from './errors/event-not-found.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { EventAlreadyFinalizedError } from './errors/event-already-finalized.error'
+import { InvalidOdometerError } from './errors/invalid-odometer.error'
 
 let sut: FinalizeEventService
 let eventRepository: InMemoryEventRepository
@@ -64,8 +65,8 @@ describe('FinalizeEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(EventNotFoundError)
-    if (result.value instanceof EventNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Event not found.')
     }
   })
@@ -89,8 +90,8 @@ describe('FinalizeEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(EventAlreadyFinalizedError)
+    if (result.value instanceof EventAlreadyFinalizedError) {
       expect(result.value.message).toBe('Event already finalized.')
     }
   })
@@ -114,8 +115,8 @@ describe('FinalizeEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(InvalidOdometerError)
+    if (result.value instanceof InvalidOdometerError) {
       expect(result.value.message).toBe('Invalid odometer value.')
     }
   })
@@ -139,8 +140,8 @@ describe('FinalizeEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(InvalidOdometerError)
+    if (result.value instanceof InvalidOdometerError) {
       expect(result.value.message).toBe('Odometer value is too high.')
     }
   })
@@ -164,8 +165,8 @@ describe('FinalizeEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(InvalidOdometerError)
+    if (result.value instanceof InvalidOdometerError) {
       expect(result.value.message).toBe('Odometer value is too high.')
     }
   })

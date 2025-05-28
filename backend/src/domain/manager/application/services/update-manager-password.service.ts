@@ -6,7 +6,7 @@ import { InvalidCredentialsError } from './errors/invalid-credentials.error'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { SamePasswordError } from './errors/same-password.error'
 import { I18nService } from 'nestjs-i18n'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { InvalidPasswordError } from './errors/invalid-password.error'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 

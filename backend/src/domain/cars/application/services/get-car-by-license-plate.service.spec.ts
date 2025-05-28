@@ -2,9 +2,9 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
 import { I18nService } from 'nestjs-i18n'
 import { makeCar } from 'test/factories/car/make-car'
-import { CarNotFoundError } from './errors/car-not-found'
 import { GetCarByLicensePlateService } from './get-car-by-license-plate'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 let sut: GetCarByLicensePlateService
 let carRepository: InMemoryCarRepository
@@ -43,8 +43,8 @@ describe('GetCarByLicensePlateService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarNotFoundError)
-    if (result.value instanceof CarNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Car not found.')
     }
   })

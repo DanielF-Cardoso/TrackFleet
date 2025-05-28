@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryManagerRepository } from 'test/repositories/in-memory-manager.repository'
 import { makeManager } from 'test/factories/manager/make-manager'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { InactivateManagerService } from './inactivate-manager.service'

@@ -5,14 +5,14 @@ import { Phone } from '@/core/value-objects/phone.vo'
 import { Name } from '@/core/value-objects/name.vo'
 import { Address } from '@/core/value-objects/address.vo'
 import { Either, left, right } from '@/core/errors/either'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
-import { SameEmailError } from './errors/same-email.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { Manager } from '../../enterprise/entities/manager.entity'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
-import { SamePhoneError } from './errors/same-phone.error'
 import { PhoneAlreadyExistsError } from './errors/phone-already-exists.error'
-import { EmailAlreadyExistsError } from './errors/email-already-exists.error'
+import { EmailAlreadyExistsError } from '../../../../core/errors/email-already-exists.error'
+import { SameEmailError } from '@/core/errors/same-email.error'
+import { SamePhoneError } from '@/core/errors/same-phone.error'
 
 interface UpdateManagerProfileRequest {
   managerId: string
@@ -32,7 +32,8 @@ type UpdateManagerProfileResponse = Either<
   | ResourceNotFoundError
   | EmailAlreadyExistsError
   | PhoneAlreadyExistsError
-  | SameEmailError,
+  | SameEmailError
+  | SamePhoneError,
   { manager: Manager }
 >
 
@@ -43,7 +44,7 @@ export class UpdateManagerProfileService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     managerId,

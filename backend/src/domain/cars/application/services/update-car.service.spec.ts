@@ -1,10 +1,11 @@
 import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
 import { UpdateCarService } from './update-car.service'
 import { I18nService } from 'nestjs-i18n'
-import { CarNotFoundError } from './errors/car-not-found'
-import { CarAlreadyExistsError } from './errors/car-already-exists-error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { makeCar } from 'test/factories/car/make-car'
 import { FakeLogger } from 'test/fake/logs-mocks'
+import { LicensePlateAlreadyExistsError } from './errors/license-plate-already-exists.error'
+import { RenavamAlreadyExistsError } from './errors/renavam-already-exists.error'
 
 let sut: UpdateCarService
 let carRepository: InMemoryCarRepository
@@ -58,8 +59,8 @@ describe('UpdateCarService', () => {
     const result = await sut.execute({ carId: 'non-existent-id' })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarNotFoundError)
-    if (result.value instanceof CarNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Car not found.')
     }
   })
@@ -80,8 +81,8 @@ describe('UpdateCarService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarAlreadyExistsError)
-    if (result.value instanceof CarAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(LicensePlateAlreadyExistsError)
+    if (result.value instanceof LicensePlateAlreadyExistsError) {
       expect(result.value.message).toBe('License plate already exists.')
     }
   })
@@ -100,8 +101,8 @@ describe('UpdateCarService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarAlreadyExistsError)
-    if (result.value instanceof CarAlreadyExistsError) {
+    expect(result.value).toBeInstanceOf(RenavamAlreadyExistsError)
+    if (result.value instanceof RenavamAlreadyExistsError) {
       expect(result.value.message).toBe('Renavam already exists.')
     }
   })

@@ -7,8 +7,9 @@ import { makeCar } from 'test/factories/car/make-car'
 import { makeDriver } from 'test/factories/driver/make-driver'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { I18nService } from 'nestjs-i18n'
-import { EventNotFoundError } from './errors/event-not-found.error'
-import { InvalidEventError } from './errors/invalid-event.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { CannotDeleteFinalizedEventError } from './errors/cannot-delete-finalized-event.error'
+import { CarNotFoundError } from './errors/car-not-found.error'
 
 let sut: DeleteEventService
 let eventRepository: InMemoryEventRepository
@@ -64,8 +65,8 @@ describe('DeleteEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(EventNotFoundError)
-    if (result.value instanceof EventNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Event not found.')
     }
   })
@@ -95,8 +96,8 @@ describe('DeleteEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(CannotDeleteFinalizedEventError)
+    if (result.value instanceof CannotDeleteFinalizedEventError) {
       expect(result.value.message).toBe('Cannot delete a finalized event.')
     }
   })
@@ -121,8 +122,8 @@ describe('DeleteEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(CarNotFoundError)
+    if (result.value instanceof CarNotFoundError) {
       expect(result.value.message).toBe('Car not found.')
     }
   })

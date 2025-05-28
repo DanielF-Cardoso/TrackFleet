@@ -1,7 +1,7 @@
 import { Either, left, right } from '@/core/errors/either'
 import { CarRepository } from '../repositories/car-repository'
 import { I18nService } from 'nestjs-i18n'
-import { CarNotFoundError } from './errors/car-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { Car } from '../../enterprise/entities/car.entity'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
@@ -11,7 +11,7 @@ export interface GetCarByLicensePlateServiceRequest {
 }
 
 type GetCarByLicensePlateServiceResponse = Either<
-  CarNotFoundError,
+  ResourceNotFoundError,
   { car: Car }
 >
 
@@ -40,7 +40,7 @@ export class GetCarByLicensePlateService {
         `Car not found for license plate: ${licensePlate}`,
         'GetCarByLicensePlateService',
       )
-      return left(new CarNotFoundError(errorMessage))
+      return left(new ResourceNotFoundError(errorMessage))
     }
 
     this.logger.log(

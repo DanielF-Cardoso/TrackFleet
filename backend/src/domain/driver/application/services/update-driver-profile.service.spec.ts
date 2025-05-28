@@ -3,13 +3,13 @@ import { UpdateDriverProfileService } from './update-driver-profile.service'
 import { InMemoryDriverRepository } from 'test/repositories/in-memory-driver.repository'
 import { makeDriver } from 'test/factories/driver/make-driver'
 import { Email } from '@/core/value-objects/email.vo'
-import { SameEmailError } from './errors/same-email.error'
+import { SameEmailError } from '../../../../core/errors/same-email.error'
 import { I18nService } from 'nestjs-i18n'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { Phone } from '@/core/value-objects/phone.vo'
-import { SamePhoneError } from './errors/same-phone.error'
-import { DriverAlreadyExistsError } from './errors/driver-already-exists'
-import { DriverNotFoundError } from './errors/driver-not-found'
+import { SamePhoneError } from '../../../../core/errors/same-phone.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { DriverAlreadyExistsError } from './errors/driver-already-exists.error'
 
 let sut: UpdateDriverProfileService
 let driverRepository: InMemoryDriverRepository
@@ -125,8 +125,8 @@ describe('UpdateDriverProfileService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(DriverNotFoundError)
-    if (result.value instanceof DriverNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Driver not found.')
     }
   })

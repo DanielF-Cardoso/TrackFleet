@@ -12,7 +12,7 @@ import {
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { CreateDriverDTO } from '../../dto/driver/create-driver.dto'
-import { EmailAlreadyExistsError } from '@/domain/manager/application/services/errors/email-already-exists.error'
+import { EmailAlreadyExistsError } from '@/core/errors/email-already-exists.error'
 import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
 import { DriverPresenter } from '../../presenters/driver.presenter'
 
@@ -22,7 +22,7 @@ export class CreateDriverController {
   constructor(
     private createDriverService: CreateDriverService,
     private i18n: I18nService,
-  ) {}
+  ) { }
 
   @Post()
   @UseGuards(JwtAuthGuard)

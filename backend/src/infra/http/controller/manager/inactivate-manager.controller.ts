@@ -9,7 +9,7 @@ import {
   ForbiddenException,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
-import { ResourceNotFoundError } from '@/domain/manager/application/services/errors/resource-not-found.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
@@ -23,7 +23,7 @@ export class InactivateManagerController {
   constructor(
     private inactivateManagerService: InactivateManagerService,
     private i18n: I18nService,
-  ) {}
+  ) { }
 
   @Patch('inactivate/:id')
   @UseGuards(JwtAuthGuard)

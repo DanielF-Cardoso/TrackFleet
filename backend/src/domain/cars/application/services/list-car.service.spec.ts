@@ -2,7 +2,7 @@ import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
 import { I18nService } from 'nestjs-i18n'
 import { makeCar } from 'test/factories/car/make-car'
-import { CarNotFoundError } from './errors/car-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { ListCarService } from './list-car.service'
 import { FakeLogger } from 'test/fake/logs-mocks'
 
@@ -49,7 +49,7 @@ describe('ListCarService', () => {
 
     expect(result.isLeft()).toBe(true)
     if (result.isLeft()) {
-      expect(result.value).toBeInstanceOf(CarNotFoundError)
+      expect(result.value).toBeInstanceOf(ResourceNotFoundError)
       expect(result.value.message).toBe(errorMessage)
     }
   })

@@ -4,12 +4,15 @@ import { Either, left, right } from '@/core/errors/either'
 import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
-import { DriverAlreadyExistsError } from './errors/driver-already-exists'
+import { DriverAlreadyExistsError } from './errors/driver-already-exists.error'
 import { Driver } from '../../enterprise/entities/driver.entity'
 import { DriverRepository } from '../repositories/driver-repository'
 import { Cnh } from '@/core/value-objects/cnh.vo'
 import { Address } from '@/core/value-objects/address.vo'
 import { Phone } from '@/core/value-objects/phone.vo'
+import { CnhAlreadyExistsError } from './errors/cnh-already-exists.error'
+import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
+import { EmailAlreadyExistsError } from '@/core/errors/email-already-exists.error'
 
 export interface CreateDriverServiceRequest {
   firstName: string
@@ -27,7 +30,10 @@ export interface CreateDriverServiceRequest {
 }
 
 type CreateDriverServiceResponse = Either<
-  DriverAlreadyExistsError,
+  | DriverAlreadyExistsError
+  | CnhAlreadyExistsError
+  | PhoneAlreadyExistsError
+  | EmailAlreadyExistsError,
   { driver: Driver }
 >
 
@@ -64,28 +70,13 @@ export class CreateDriverService {
     const cnhVO = new Cnh(cnh)
     const phoneVO = new Phone(phone)
 
-    const existingDriver = await this.driverRepository.findByEmail(
-      emailVO.toValue(),
-    )
-
     const existingCnh = await this.driverRepository.findByCNH(cnhVO.toValue())
     if (existingCnh) {
       const errorMessage = await this.i18n.translate(
         'errors.driver.cnhAlreadyExists',
       )
       this.logger.warn(`CNH already exists: ${cnh}`, 'CreateDriverService')
-      return left(new DriverAlreadyExistsError(errorMessage))
-    }
-
-    if (existingDriver) {
-      const errorMessage = await this.i18n.translate(
-        'errors.driver.alreadyExists',
-      )
-      this.logger.warn(
-        `Driver already exists with email: ${email}`,
-        'CreateDriverService',
-      )
-      return left(new DriverAlreadyExistsError(errorMessage))
+      return left(new CnhAlreadyExistsError(errorMessage))
     }
 
     const existingPhone = await this.driverRepository.findByPhone(
@@ -96,7 +87,21 @@ export class CreateDriverService {
         'errors.driver.phoneAlreadyExists',
       )
       this.logger.warn(`Phone already exists: ${phone}`, 'CreateDriverService')
-      return left(new DriverAlreadyExistsError(errorMessage))
+      return left(new PhoneAlreadyExistsError(errorMessage))
+    }
+
+    const existingDriver = await this.driverRepository.findByEmail(
+      emailVO.toValue(),
+    )
+    if (existingDriver) {
+      const errorMessage = await this.i18n.translate(
+        'errors.driver.alreadyExists',
+      )
+      this.logger.warn(
+        `Driver already exists with email: ${email}`,
+        'CreateDriverService',
+      )
+      return left(new EmailAlreadyExistsError(errorMessage))
     }
 
     const driver = Driver.create({

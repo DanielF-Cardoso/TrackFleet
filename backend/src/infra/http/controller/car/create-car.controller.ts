@@ -66,7 +66,6 @@ export class CreateCarController {
   async create(@Request() req, @Body() body: CreateCarDto) {
     const { licensePlate, brand, model, year, color, odometer, renavam } = body
 
-    console.log(req.user.sub)
     const result = await this.createCarService.execute({
       managerId: req.user.sub,
       licensePlate,

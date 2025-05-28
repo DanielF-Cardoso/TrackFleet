@@ -2,7 +2,7 @@ import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { ManagerRepository } from '../repositories/manager-repository'
 import { Manager } from '../../enterprise/entities/manager.entity'
 import { Either, left, right } from '@/core/errors/either'
-import { ResourceNotFoundError } from './errors/resource-not-found.error'
+import { ResourceNotFoundError } from '../../../../core/errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 
@@ -24,7 +24,7 @@ export class GetManagerProfileService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) {}
+  ) { }
 
   async execute({
     managerId,

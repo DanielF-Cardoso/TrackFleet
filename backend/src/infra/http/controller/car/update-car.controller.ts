@@ -15,7 +15,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { UpdateCarService } from '@/domain/cars/application/services/update-car.service'
 import { UpdateCarDTO } from '../../dto/car/update-car.dto'
 import { CarAlreadyExistsError } from '@/domain/cars/application/services/errors/car-already-exists-error'
-import { CarNotFoundError } from '@/domain/cars/application/services/errors/car-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 @ApiTags('Carros')
 @Controller('cars')
@@ -80,7 +80,7 @@ export class UpdateCarController {
       const error = result.value
 
       switch (error.constructor) {
-        case CarNotFoundError:
+        case ResourceNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.car.notFound'),
           )
