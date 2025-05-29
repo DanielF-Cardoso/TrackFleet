@@ -16,12 +16,9 @@
 
 </head>
 
-
 <body>
 
-    <div 
-    
-    id="preloader">
+    <div id="preloader">
         <div class="loader">
             <svg class="circular" viewBox="25 25 50 50">
                 <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
@@ -29,9 +26,8 @@
         </div>
     </div>
 
-
     <div id="main-wrapper">
-
+        
         <div class="nav-header">
             <div class="brand-logo">
                 <a href="index.html">
@@ -84,8 +80,8 @@
                         </a>
                     </li>
                     <li>
-                        <a class="has-arrow" href="gestor.html" aria-expanded="false">
-                            <i class="fa fa-user-circle-o menu-icon"></i><span class="nav-text">Gestor</span>
+                        <a class="has-arrow" href="Motorista.html" aria-expanded="false">
+                            <i class="fa fa-user-circle-o menu-icon"></i><span class="nav-text">Motorista</span>
                         </a>
                     </li>          
                     <li>
@@ -107,64 +103,52 @@
             </div>
         </div>
 
-         <div class="content-body">
+        <div class="content-body">
             <div class="container-fluid mt-3">
-                <h1 class="text-3xl font-bold mb-6">Gestão de Motorista</h1>
+                <h1 class="text-3xl font-bold mb-6">Gestão de Motoristas</h1>
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="section-title">Motorista Cadastrados</h2>
-                    <button onclick="abrirModal()" class="bg-blue-600 text-white font-bold px-4 py-2 rounded hover:bg-blue-700 transition"><i class="fa fa-plus mr-2"></i>Adicionar Gestor</button>
+                    <h2 class="section-title">Motoristas Cadastrados</h2>
+                    <button onclick="abrirModal()" class="bg-blue-600 text-white font-bold px-4 py-2 rounded hover:bg-blue-700 transition"><i class="fa fa-plus mr-2"></i>Adicionar Motorista</button>
                 </div>
                 <table class="w-full bg-white rounded-lg shadow-lg">
                     <thead>
                         <tr style="background-color: #2563eb; color: #ffffff; border-radius: 0.25rem;">
-                            <th class="py-3 px-4 text-left">Nome</th>
+                            <th class="py-3 px-4 text-left">Nome do motorista</th>
                             <th class="py-3 px-4 text-left">Email</th>
-                            <th class="py-3 px-4 text-left">Código</th>
                             <th class="py-3 px-4 text-left">Último Login</th>
                             <th class="py-3 px-4 text-left">Status</th>
-                            <th class="py-3 px-4 text-center">Ações</th>
-                            <th class="py-3 px-4 text-center">Editar</th>
                         </tr>
                     </thead>
-                    <tbody id="tabela-gestores"></tbody>
+                    <tbody id="tabela-Motoristaes"></tbody>
                 </table>
             </div>
         </div>
-
-        <div class="content-body">
-            <div class="container-fluid mt-3">
-              
-            </div>
-        </div>
-
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
-            </div>
-        </div>
-
-       
                                                                                       
 </div>
 
-        
-        <div id="alerta-sucesso" style="
-         display: none;
-         position: fixed;
-         top: 20px;
-         left: 50%;
-         transform: translateX(-50%);
-         background-color: #38a169;
-         color: white;
-         padding: 12px 20px;
-         border-radius: 5px;
-         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-         font-weight: bold;
-        z-index: 1000;
-          ">
-       </div>
+<div class="footer">
+    <div class="copyright">
+        <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
+    </div>
+</div>
 
-<!-- Modal para adicionar motorista -->
+<div id="alerta-sucesso" style="
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #38a169;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-weight: bold;
+    z-index: 1000;
+">
+</div>
+
+<!-- Modal para adicionar Motorista -->
 <div id="add-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
@@ -173,30 +157,27 @@
         </div>
         <div class="error-message" id="error-message" style="display:none; color: red;">Preencha todos os campos corretamente!</div>
 
-       <div class="modal-body">
-                <label>ID: <input type="text" id="edit-motorista-id" class="border p-1 w-full mb-2 rounded-md" readonly></label>
-                <label>Primeiro Nome: <input type="text" id="edit-motorista-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Sobrenome: <input type="text" id="edit-motorista-sobrenome" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>CNH: <input type="text" id="edit-motorista-cnh" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Telefone: <input type="text" id="edit-motorista-telefone" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Endereço: <input type="text" id="edit-motorista-endereco" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Cidade: <input type="text" id="edit-motorista-cidade" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Estado: <input type="text" id="edit-motorista-estado" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>CEP: <input type="text" id="edit-motorista-cep" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Status:
-                    <select id="edit-motorista-status" class="border p-1 w-full mb-2 rounded-md">
-                        <option value="Ativo">Ativo</option>
-                        <option value="Inativo">Inativo</option>
-                        <option value="Férias">Férias</option>
-                    </select>
-                </label>
-            </div>
-            <div class="modal-footer">
-                <button onclick="salvarEdicaoMotorista()" class="modal-button-add">Salvar</button>
-                <button onclick="fecharModalEdit()" class="modal-button-cancel">Cancelar</button>
-            </div>
-
+        <div class="modal-body">
+            <label>Primeiro Nome: <input type="text" id="add-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Segundo Nome: <input type="text" id="add-segundo-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Email: <input type="email" id="add-email" class="border p-1 w-full mb-2 rounded-md" placeholder="exemplo@exemplo.com"></label>
+            <label>Senha: <input type="password" id="add-senha" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Telefone: <input type="tel" id="add-telefone" class="border p-1 w-full mb-2 rounded-md" placeholder="(99) 99999-9999" maxlength="11" inputmode="numeric" pattern="[0-9]*"></label>
+            <label>CNH: <input type="text" id="add-numero" class="border p-1 w-full mb-2 rounded-md" maxlength="10" inputmode="numeric" pattern="[0-9]*"></label>
+            <label>Código: <input type="number" id="add-codigo" class="border p-1 w-full mb-2 rounded-md"></label>
         </div>
+        
+        <select id="add-status" class="modal-input">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+        </select>
+
+        <div class="modal-footer">
+            <button id="btn-add-Motorista" class="modal-button-add">Adicionar</button>
+            <button onclick="fecharModalAdd()" class="modal-button-cancel">Cancelar</button>
+        </div>
+               
+    </div>
 </div>
 
 <!-- Modal para editar Motorista -->
@@ -206,29 +187,24 @@
             <h3 class="text-xl font-semibold">Editar Motorista</h3>
             <span class="modal-close" onclick="fecharModalEdit()">&times;</span>
         </div>
-     <div class="modal-body">
-          <label>ID: <input type="text" id="edit-motorista-id" class="border p-1 w-full mb-2 rounded-md" readonly></label>
-                <label>Primeiro Nome: <input type="text" id="edit-motorista-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Sobrenome: <input type="text" id="edit-motorista-sobrenome" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>CNH: <input type="text" id="edit-motorista-cnh" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Telefone: <input type="text" id="edit-motorista-telefone" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Endereço: <input type="text" id="edit-motorista-endereco" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Cidade: <input type="text" id="edit-motorista-cidade" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>Estado: <input type="text" id="edit-motorista-estado" class="border p-1 w-full mb-2 rounded-md"></label>
-                <label>CEP: <input type="text" id="edit-motorista-cep" class="border p-1 w-full mb-2 rounded-md"></label>
+         <div class="modal-body">
+                <label>ID: <input type="text" id="add-motorista-id" class="border p-1 w-full mb-2 rounded-md" maxlength="10"></label>
+                <label>Primeiro Nome: <input type="text" id="add-motorista-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Sobrenome: <input type="text" id="add-motorista-sobrenome" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>CNH: <input type="text" id="add-motorista-CNH" class="border p-1 w-full mb-2 rounded-md" maxlength="11" inputmode="numeric" pattern="[0-9]*"></label>
+                <label>Telefone: <input type="text" id="add-motorista-telefone" class="border p-1 w-full mb-2 rounded-md" placeholder="(99) 99999-9999" maxlength="11" inputmode="numeric" pattern="[0-9]*"></label>
                 <label>Status:
-                    <select id="edit-motorista-status" class="border p-1 w-full mb-2 rounded-md">
-                        <option value="Ativo">Ativo</option>
-                        <option value="Inativo">Inativo</option>
-                        <option value="Férias">Férias</option>
-                    </select>
-                </label>
-            </div>
-            <div class="modal-footer">
-                <button onclick="salvarEdicaoMotorista()" class="modal-button-add">Salvar</button>
-                <button onclick="fecharModalEdit()" class="modal-button-cancel">Cancelar</button>
-            </div>
-     </div>
+                <select id="edit-status" class="border p-1 w-full mb-2 rounded-md">
+                    <option value="Ativo">Ativo</option>
+                    <option value="Inativo">Inativo</option>
+                </select>
+            </label>
+        </div>
+        <div class="modal-footer">
+            <button onclick="salvarEdicaoMotorista()" class="modal-button-add">Salvar</button>
+            <button onclick="fecharModalEdit()" class="modal-button-cancel">Cancelar</button>
+        </div>
+    </div>
 </div>
 <style>
    body { background-color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; margin: 0; font-family: sans-serif; }
@@ -296,11 +272,12 @@
         .btn-editar:hover {background-color: #1e40af;}
         
 </style>
+
 <script>
     function abrirModal() {
         const modal = document.getElementById('add-modal');
         modal.style.display = 'flex';
-        limparCamposAdicionarGestor();
+        limparCamposAdicionarMotorista();
     }
 
     function fecharModalAdd() {
@@ -308,299 +285,307 @@
         modal.style.display = 'none';
         document.getElementById('error-message').style.display = 'none';
         document.getElementById('success-message').style.display = 'none';
-        limparCamposAdicionarGestor();
+        limparCamposAdicionarMotorista();
     }
 
     document.addEventListener('DOMContentLoaded', function () {
-        const btnAdicionar = document.getElementById('btn-add-gestor');
+        const btnAdicionar = document.getElementById('btn-add-Motorista');
     
         if (btnAdicionar) {
             btnAdicionar.addEventListener('click', function() {
                 console.log("Botão de adicionar clicado!");
-                adicionarGestor();
+                adicionarMotorista();
         });
         } else {
-            console.error("Botão Adicionar Gestor não encontrado.");
+            console.error("Botão Adicionar Motorista não encontrado.");
         }
     });
 
-    function adicionarGestor() {
-        function adicionarMotorista() {
+    function adicionarMotorista() {
             const id = document.getElementById('add-motorista-id').value.trim();
             const primeiroNome = document.getElementById('add-motorista-primeiro-nome').value.trim();
             const sobrenome = document.getElementById('add-motorista-sobrenome').value.trim();
-            const cnh = document.getElementById('add-motorista-cnh').value.trim();
+            const CNH = document.getElementById('add-motorista-CNH').value.trim();
             const telefone = document.getElementById('add-motorista-telefone').value.trim();
-            const endereco = document.getElementById('add-motorista-endereco').value.trim();
-            const cidade = document.getElementById('add-motorista-cidade').value.trim();
-            const estado = document.getElementById('add-motorista-estado').value.trim();
-            const cep = document.getElementById('add-motorista-cep').value.trim();
             const status = document.getElementById('add-motorista-status').value.trim();
 
-            if (!id || !primeiroNome || !sobrenome || !cnh || !telefone || !endereco || !cidade || !estado || !cep) {
-                document.getElementById('add-error-message').style.display = 'block';
-                mostrarAlerta('Por favor, preencha todos os campos obrigatórios.', '#dc3545'); // Red for error
-                return;
-            }
+         // Verificar se o código já existe
+        const codigoExistente = window.motorista.some(g => g.codigo === codigo);
 
-            // CNH validação (exatamente 11 dígitos)
-            if (!/^\d{11}$/.test(cnh)) {
-                document.getElementById('add-error-message').textContent = 'CNH deve conter exatamente 11 números.';
-                document.getElementById('add-error-message').style.display = 'block';
-                mostrarAlerta('CNH inválida.', '#dc3545');
-                return;
-            }
-
-           // Validação de telefone (10 ou 11 dígitos)
-            if (!/^\d{10,11}$/.test(telefone)) {
-                document.getElementById('add-error-message').textContent = 'Telefone deve conter 10 ou 11 números.';
-                document.getElementById('add-error-message').style.display = 'block';
-                mostrarAlerta('Telefone inválido.', '#dc3545');
-                return;
-            }
-
-            // Validação de CEP (exatamente 8 dígitos)
-            if (!/^\d{8}$/.test(cep)) {
-                document.getElementById('add-error-message').textContent = 'CEP deve conter exatamente 8 números.';
-                document.getElementById('add-error-message').style.display = 'block';
-                mostrarAlerta('CEP inválido.', '#dc3545');
-                return;
-            }
-
-
-           // Verifique se há ID duplicado
-            if (window.motoristas.some(m => m.id === id)) {
-                document.getElementById('add-error-message').textContent = 'Já existe um motorista com este ID.';
-                document.getElementById('add-error-message').style.display = 'block';
-                mostrarAlerta('ID de motorista duplicado!', '#dc3545');
-                return;
-            }
-
-           // Adicionar novo motorista ao array global
-            window.motoristas.push({
-                id,
-                primeiroNome,
-                sobrenome,
-                cnh,
-                telefone,
-                endereco,
-                cidade,
-                estado,
-                cep,
-                status
-            });
-
-            // Atualize a tabela
-            renderizarTabelaMotoristas();
-
-            mostrarAlerta('Motorista cadastrado com sucesso!', '#38a169'); // Verde para o sucesso
-            fecharModalAdd();
+        if (codigoExistente) {
+            exibirAlerta("Já existe um motorista com esse código!", "vermelho");
+            return; // Não adiciona
         }
 
-        // Função para renderizar/re-renderizar a tabela de motoristas
-        function renderizarTabelaMotoristas() {
-            const tabelaBody = document.getElementById('tabela-motoristas');
-            tabelaBody.innerHTML = ''; // Limpar linhas existentes
-            window.motoristas.forEach(motorista => {
-                const statusClass = motorista.status === 'Ativo' ? 'status-ativo' : motorista.status === 'Inativo' ? 'status-inativo' : 'status-ferias';
-                const linha = document.createElement('tr');
-                linha.innerHTML = `
-                    <td class="py-3 px-4">${motorista.id}</td>
-                    <td class="py-3 px-4">${motorista.primeiroNome} ${motorista.sobrenome}</td>
-                    <td class="py-3 px-4">${motorista.cnh}</td>
-                    <td class="py-3 px-4">${motorista.telefone}</td>
-                    <td class="py-3 px-4"><span class="${statusClass}">${motorista.status}</span></td>
-                    <td class="py-3 px-4 text-center">
-                        <button class="btn-editar" onclick="abrirModalEdit('${motorista.id}')">Editar</button>
-                    </td>
-                    <td class="py-3 px-4 text-center">
-                        <button onclick="removerMotorista(this, '${motorista.id}')" class="btn-remover px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition">
-                            Remover
-                        </button>
-                    </td>
-                `;
-                tabelaBody.appendChild(linha);
-            });
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefoneRegex = /^\d{10,11}$/;
+        const CNHRegex = /^\d{8}$/; 
+        const numeroRegex = /^\d+$/;
+
+        if (
+            primeiroNome !== '' && 
+            segundoNome !== '' &&
+            emailRegex.test(email) &&
+            senha !== '' &&
+            telefoneRegex.test(telefone) &&
+            CNH.test(CNH) &&
+            cepRegex.test(cep) &&
+            codigo !== ''
+        ) {
+        
+        window.Motoristas.push({
+            primeiroNome,
+            segundoNome,
+            email,
+            telefone,
+            CNH,
+            codigo,
+            status
+        });
+        
+        const tabela = document.getElementById('tabela-Motoristaes');
+        const statusClasse = status === 'Ativo' ? 'status-ativo' : 'status-inativo';
+        const linha = document.createElement('tr');
+        linha.innerHTML = `
+            <td class="py-3 px-4">${primeiroNome} ${segundoNome}</td>
+            <td class="py-3 px-4">${email}</td>
+            <td class="py-3 px-4">${codigo}</td>
+            <td class="py-3 px-4">Agora</td>
+            <td class="py-3 px-4"><span class="${statusClasse}">${status}</span></td>
+            <td class="py-3 px-4 text-center">
+                <button onclick="removerMotorista(this)" class="btn-remover px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition block mx-auto">
+                    Remover
+                </button>
+            </td>
+            <td class="py-3 px-4 text-center">
+                <button class="btn-editar" onclick="abrirModalEdit('${codigo}')">Editar</button>
+                    
+                </button>
+            </td>
+        `;
+        tabela.appendChild(linha);
+        mostrarAlerta('Motorista adicionado com sucesso!', '#38a169'); // Verde
+        fecharModalAdd();
+        document.getElementById('success-message').style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+
+        document.querySelectorAll('.modal-body input').forEach(input => input.value = '');
+        document.getElementById('add-status').value = 'Ativo';
+    } else {
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('success-message').style.display = 'none';
+    }
+    }
+
+    // Função para permitir apenas números na digitação
+    function permitirSomenteNumeros(event) {
+        const tecla = event.key;
+        const campo = event.target;
+
+        // Permitir teclas de controle como backspace, delete, setas
+        if (
+            tecla === "Backspace" || 
+            tecla === "Delete" || 
+            tecla === "ArrowLeft" || 
+            tecla === "ArrowRight" || 
+            tecla === "Tab"
+        ) {
+            return;
         }
 
-        // Função para remover um motorista
-
-        function removerMotorista(botao, id) {
-            // Remover do array global
-            window.motoristas = window.motoristas.filter(motorista => motorista.id !== id);
-
-          // Remover a linha da tabela
-            botao.closest('tr').remove();
-            mostrarAlerta('Motorista removido com sucesso!', '#e53e3e'); // Vermelho para remoção
+        // Bloquear se não for número
+        if (!/[0-9]/.test(tecla)) {
+            event.preventDefault();
+            return;
         }
 
-        // Função para abrir o modal de edição
-        function abrirModalEdit(id) {
-            const modal = document.getElementById("edit-motorista-modal");
-            const motorista = window.motoristas.find(m => m.id === id);
+    }
 
-            if (!motorista) {
-                console.error("Motorista não encontrado para edição!");
-                return;
-            }
+        // Aplicar nos campos telefone, número e cep
+        document.getElementById('add-telefone').addEventListener('keydown', permitirSomenteNumeros);
+        document.getElementById('add-CNH').addEventListener('keydown', permitirSomenteNumeros);
 
-            // Preencher os campos do modal de edição
-            document.getElementById("edit-motorista-id").value = motorista.id;
-            document.getElementById("edit-motorista-primeiro-nome").value = motorista.primeiroNome;
-            document.getElementById("edit-motorista-sobrenome").value = motorista.sobrenome;
-            document.getElementById("edit-motorista-cnh").value = motorista.cnh;
-            document.getElementById("edit-motorista-telefone").value = motorista.telefone;
-            document.getElementById("edit-motorista-endereco").value = motorista.endereco;
-            document.getElementById("edit-motorista-cidade").value = motorista.cidade;
-            document.getElementById("edit-motorista-estado").value = motorista.estado;
-            document.getElementById("edit-motorista-cep").value = motorista.cep;
-            document.getElementById("edit-motorista-status").value = motorista.status;
+    function permitirSomenteLetras(input) {
+    input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+    }
 
-            modal.style.display = "flex";
-            modal.classList.add("modal-open");
-        }
-
-        // Função para salvar dados do motorista editados
-        function salvarEdicaoMotorista() {
-            const id = document.getElementById('edit-motorista-id').value.trim();
-            const motoristaIndex = window.motoristas.findIndex(m => m.id === id);
-
-            if (motoristaIndex === -1) {
-                console.error("Motorista não encontrado para salvar edição!");
-                return;
-            }
-
-           // Atualizar dados do driver no array global
-            const motorista = window.motoristas[motoristaIndex];
-            motorista.primeiroNome = document.getElementById('edit-motorista-primeiro-nome').value.trim();
-            motorista.sobrenome = document.getElementById('edit-motorista-sobrenome').value.trim();
-            motorista.cnh = document.getElementById('edit-motorista-cnh').value.trim();
-            motorista.telefone = document.getElementById('edit-motorista-telefone').value.trim();
-            motorista.endereco = document.getElementById('edit-motorista-endereco').value.trim();
-            motorista.cidade = document.getElementById('edit-motorista-cidade').value.trim();
-            motorista.estado = document.getElementById('edit-motorista-estado').value.trim();
-            motorista.cep = document.getElementById('edit-motorista-cep').value.trim();
-            motorista.status = document.getElementById('edit-motorista-status').value.trim();
-
-           // Validação da CNH (exatamente 11 dígitos)
-            if (!/^\d{11}$/.test(motorista.cnh)) {
-                mostrarAlerta('CNH deve conter exatamente 11 números.', '#dc3545');
-                return;
-            }
-
-            // Validação de telefone (10 ou 11 dígitos)
-            if (!/^\d{10,11}$/.test(motorista.telefone)) {
-                mostrarAlerta('Telefone deve conter 10 ou 11 números.', '#dc3545');
-                return;
-            }
-
-
-            // Validação de CEP (exatamente 8 dígitos)
-            if (!/^\d{8}$/.test(motorista.cep)) {
-                mostrarAlerta('CEP deve conter exatamente 8 números.', '#dc3545');
-                return;
-            }
-
-            // Re-renderizar a tabela para mostrar dados atualizados
-            renderizarTabelaMotoristas();
-
-            mostrarAlerta('Motorista editado com sucesso!', '#38a169'); // Verde para o sucesso
-            fecharModalEdit();
-        }
-
-        // Função para fechar o modal de edição
-        function fecharModalEdit() {
-            const modal = document.getElementById('edit-motorista-modal');
-            if (modal) {
-                modal.style.display = 'none';
-                modal.classList.remove("modal-open");
-                limparCamposEditMotorista(); // Limpar campos ao fechar 
-                
-
-            }
-        }
-
-        // Limpar campos no modal de adição
-        function limparCamposAddMotorista() {
-            document.getElementById("add-motorista-id").value = "";
-            document.getElementById("add-motorista-primeiro-nome").value = "";
-            document.getElementById("add-motorista-sobrenome").value = "";
-            document.getElementById("add-motorista-cnh").value = "";
-            document.getElementById("add-motorista-telefone").value = "";
-            document.getElementById("add-motorista-endereco").value = "";
-            document.getElementById("add-motorista-cidade").value = "";
-            document.getElementById("add-motorista-estado").value = "";
-            document.getElementById("add-motorista-cep").value = "";
-            document.getElementById("add-motorista-status").value = "Ativo";
-        }
-
-        // Limpar campos na modal de edição
-        function limparCamposEditMotorista() {
-            document.getElementById("edit-motorista-id").value = "";
-            document.getElementById("edit-motorista-primeiro-nome").value = "";
-            document.getElementById("edit-motorista-sobrenome").value = "";
-            document.getElementById("edit-motorista-cnh").value = "";
-            document.getElementById("edit-motorista-telefone").value = "";
-            document.getElementById("edit-motorista-endereco").value = "";
-            document.getElementById("edit-motorista-cidade").value = "";
-            document.getElementById("edit-motorista-estado").value = "";
-            document.getElementById("edit-motorista-cep").value = "";
-            document.getElementById("edit-motorista-status").value = "Ativo";
-        }
-
-
-        // Função universal para mostrar alertas
-        function mostrarAlerta(mensagem, corFundo) {
-            const alerta = document.getElementById('alerta-sucesso');
-            alerta.textContent = mensagem;
-            alerta.style.backgroundColor = corFundo;
-            alerta.style.display = 'block';
-
-            setTimeout(() => {
-                alerta.style.display = 'none';
-            }, 3000); // Ocultar após 3 segundos
-        }
-
-        // Fechar modais ao clicar fora
-        window.addEventListener('click', function (event) {
-            const modalAdd = document.getElementById('add-motorista-modal');
-            const modalEdit = document.getElementById('edit-motorista-modal');
-            if (event.target === modalAdd) {
-                fecharModalAdd();
-            }
-            if (event.target === modalEdit) {
-                fecharModalEdit();
-            }
+        // Modal Adicionar
+        document.getElementById('add-primeiro-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('add-segundo-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('add-estado').addEventListener('input', function() {
+            permitirSomenteLetras(this);
         });
 
-       
-        // Funções de validação de entrada
-        function permitirSomenteNumeros(event) {
-            const tecla = event.key;
-            if (
-                tecla === "Backspace" ||
-                tecla === "Delete" ||
-                tecla === "ArrowLeft" ||
-                tecla === "ArrowRight" ||
-                tecla === "Tab"
-            ) {
-                return;
-            }
-            if (!/[0-9]/.test(tecla)) {
-                event.preventDefault();
-            }
+        // Modal Editar
+        document.getElementById('edit-primeiro-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('edit-segundo-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('edit-estado').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+
+    function removerMotorista(botao) {
+        botao.closest('tr').remove();
+        mostrarAlerta('Motorista removido com sucesso!', '#e53e3e');  // Vermelho
+    }
+
+    // Lista global para armazenar os Motoristaes
+    window.Motoristaes = [];
+
+    // Função para abrir o modal de edição com os dados do Motorista selecionado
+    function abrirModalEdit(codigo) {
+        const modal = document.getElementById("edit-modal");
+    
+        // Encontrando o Motorista pelo código
+        const Motorista = window.Motoristaes.find(g => g.codigo === codigo);
+        if (!Motorista) {
+            console.error("Motorista não encontrado!");
+            return;
         }
 
-        function permitirSomenteLetras(input) {
-            input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+        // Preenchendo os campos do modal
+        document.getElementById("edit-primeiro-nome").value = Motorista.primeiroNome;
+        document.getElementById("edit-segundo-nome").value = Motorista.segundoNome;
+        document.getElementById("edit-email").value = Motorista.email;
+        document.getElementById("edit-telefone").value = Motorista.telefone;
+        document.getElementById("edit-rua").value = Motorista.rua;
+        document.getElementById("edit-numero").value = Motorista.numero;
+        document.getElementById("edit-CNH").value = Motorista.bairro;
+        document.getElementById("edit-estado").value = Motorista.estado;
+        document.getElementById("edit-codigo").value = Motorista.codigo;
+        document.getElementById("edit-status").value = Motorista.status;
+
+        // Exibindo o modal
+        modal.style.display = "flex";
+        modal.classList.add("modal-open");
         }
 
+    // Função para salvar as edições
+    function salvarEdicaoMotorista() {
+        const codigo = document.getElementById('edit-codigo').value.trim();
+
+        // Encontrando o Motorista na lista global
+        const MotoristaIndex = window.Motoristaes.findIndex(g => g.codigo === codigo);
+        if (MotoristaIndex === -1) {
+            console.error("Motorista não encontrado para edição!");
+            return;
+        }
+
+    // Atualizando os dados do Motorista
+    const Motorista = window.Motoristaes[MotoristaIndex];
+    Motorista.primeiroNome = document.getElementById('edit-primeiro-nome').value.trim();
+    Motorista.segundoNome = document.getElementById('edit-segundo-nome').value.trim();
+    Motorista.email = document.getElementById('edit-email').value.trim();
+    Motorista.telefone = document.getElementById('edit-telefone').value.trim();
+    Motorista.CNH = document.getElementById('edit-CNH').value.trim();
+   
+    // Atualiza a linha da tabela correspondente
+    const tabela = document.getElementById('tabela-Motoristaes');
+    const linhas = tabela.getElementsByTagName('tr');
+    for (let i = 0; i < linhas.length; i++) {
+        const linha = linhas[i];
+        const codigoTd = linha.cells[2].textContent.trim();
+        
+        if (codigoTd === codigo) {
+            linha.cells[0].textContent = `${Motorista.primeiroNome} ${Motorista.segundoNome}`;
+            linha.cells[1].textContent = Motorista.email;
+            linha.cells[4].innerHTML = `<span class="${Motorista.status === 'Ativo' ? 'status-ativo' : 'status-inativo'}">${Motorista.status}</span>`;
+            break;
+        }
+    }
+
+    // Fecha o modal de edição
+    mostrarAlerta('Motorista editado com sucesso!', '#38a169');  // Verde
+    fecharModalEdit();
+    }
+
+    // Função para fechar o modal de edição
+    function fecharModalEdit() {
+        const modal = document.getElementById('edit-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove("modal-open");
+            // Limpa os campos do modal ao fechar
+            document.querySelectorAll('#edit-modal input').forEach(input => input.value = '');
+            document.getElementById('edit-status').value = 'Ativo';
+        }
+    }
+
+
+        // Fechar o modal de Adicionar ao clicar fora
+    window.addEventListener('click', function(event) {
+        const modalAdd = document.getElementById('add-modal');
+        if (event.target === modalAdd) {
+            fecharModalAdd();
+        }
+    });
+
+    // Fechar o modal de Editar ao clicar fora
+    window.addEventListener('click', function(event) {
+        const modalEdit = document.getElementById('edit-modal');
+        if (event.target === modalEdit) {
+            fecharModalEdit();
+        }
+    });
+
+    function mostrarAlerta(mensagem, corFundo) {
+        const alerta = document.getElementById('alerta-sucesso');
+        alerta.textContent = mensagem;
+        alerta.style.backgroundColor = corFundo;
+        alerta.style.display = 'block';
     
+        setTimeout(() => {
+            alerta.style.display = 'none';
+        }, 3000);  // Esconde após 3 segundos
+        }
+
+    function limparCamposAdicionarMotorista() {
+        document.getElementById("add-primeiro-nome").value = "";
+        document.getElementById("add-segundo-nome").value = "";
+        document.getElementById("add-email").value = "";
+        document.getElementById("add-senha").value = "";
+        document.getElementById("add-telefone").value = "";
+        document.getElementById("add-rua").value = "";
+        document.getElementById("add-numero").value = "";
+        document.getElementById("add-bairro").value = "";
+        document.getElementById("add-cep").value = "";
+        document.getElementById("add-estado").value = "";
+        document.getElementById("add-codigo").value = "";
+        document.getElementById("add-status").value = "Ativo";  // Ou o padrão desejado
+        }
 
 
+    function exibirAlerta(mensagem, cor) {
+        const alerta = document.createElement('div');
+        alerta.textContent = mensagem;
+        alerta.style.position = 'fixed';
+        alerta.style.top = '20px';
+        alerta.style.left = '50%';
+        alerta.style.transform = 'translateX(-50%)';
+        alerta.style.padding = '10px 20px';
+        alerta.style.backgroundColor = cor === "verde" ? '#4CAF50' : '#f44336';
+        alerta.style.color = '#fff';
+        alerta.style.borderRadius = '5px';
+        alerta.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+        alerta.style.zIndex = '9999';
+
+        document.body.appendChild(alerta);
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 3000);
+        }
+
+</script>
     
-
-
+</div>
 
     <script src="plugins/common/common.min.js"></script>
     <script src="js/custom.min.js"></script>
