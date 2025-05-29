@@ -11,18 +11,24 @@
     <title>TrackFleet - Gerenciador de Rota</title>
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <link href="css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
 
 </head>
 
+
 <body>
 
-    <div id="preloader">
+    <div 
+    
+    id="preloader">
         <div class="loader">
             <svg class="circular" viewBox="25 25 50 50">
                 <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="3" stroke-miterlimit="10" />
             </svg>
         </div>
     </div>
+
 
     <div id="main-wrapper">
 
@@ -101,9 +107,33 @@
             </div>
         </div>
 
+         <div class="content-body">
+            <div class="container-fluid mt-3">
+                <h1 class="text-3xl font-bold mb-6">Gestão de Motorista</h1>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="section-title">Motorista Cadastrados</h2>
+                    <button onclick="abrirModal()" class="bg-blue-600 text-white font-bold px-4 py-2 rounded hover:bg-blue-700 transition"><i class="fa fa-plus mr-2"></i>Adicionar Gestor</button>
+                </div>
+                <table class="w-full bg-white rounded-lg shadow-lg">
+                    <thead>
+                        <tr style="background-color: #2563eb; color: #ffffff; border-radius: 0.25rem;">
+                            <th class="py-3 px-4 text-left">Nome</th>
+                            <th class="py-3 px-4 text-left">Email</th>
+                            <th class="py-3 px-4 text-left">Código</th>
+                            <th class="py-3 px-4 text-left">Último Login</th>
+                            <th class="py-3 px-4 text-left">Status</th>
+                            <th class="py-3 px-4 text-center">Ações</th>
+                            <th class="py-3 px-4 text-center">Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gestores"></tbody>
+                </table>
+            </div>
+        </div>
+
         <div class="content-body">
             <div class="container-fluid mt-3">
-               <!-- ADICIONAR AQUI -->
+              
             </div>
         </div>
 
@@ -113,14 +143,470 @@
             </div>
         </div>
 
-    </div>
+       
+                                                                                      
+</div>
+
+        
+        <div id="alerta-sucesso" style="
+         display: none;
+         position: fixed;
+         top: 20px;
+         left: 50%;
+         transform: translateX(-50%);
+         background-color: #38a169;
+         color: white;
+         padding: 12px 20px;
+         border-radius: 5px;
+         box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+         font-weight: bold;
+        z-index: 1000;
+          ">
+       </div>
+
+<!-- Modal para adicionar motorista -->
+<div id="add-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="text-xl font-semibold">Adicionar Motorista</h3>
+            <span class="modal-close" onclick="fecharModalAdd()">&times;</span>
+        </div>
+        <div class="error-message" id="error-message" style="display:none; color: red;">Preencha todos os campos corretamente!</div>
+
+       <div class="modal-body">
+                <label>ID: <input type="text" id="edit-motorista-id" class="border p-1 w-full mb-2 rounded-md" readonly></label>
+                <label>Primeiro Nome: <input type="text" id="edit-motorista-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Sobrenome: <input type="text" id="edit-motorista-sobrenome" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>CNH: <input type="text" id="edit-motorista-cnh" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Telefone: <input type="text" id="edit-motorista-telefone" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Endereço: <input type="text" id="edit-motorista-endereco" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Cidade: <input type="text" id="edit-motorista-cidade" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Estado: <input type="text" id="edit-motorista-estado" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>CEP: <input type="text" id="edit-motorista-cep" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Status:
+                    <select id="edit-motorista-status" class="border p-1 w-full mb-2 rounded-md">
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                        <option value="Férias">Férias</option>
+                    </select>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button onclick="salvarEdicaoMotorista()" class="modal-button-add">Salvar</button>
+                <button onclick="fecharModalEdit()" class="modal-button-cancel">Cancelar</button>
+            </div>
+
+        </div>
+</div>
+
+<!-- Modal para editar Motorista -->
+<div id="edit-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="text-xl font-semibold">Editar Motorista</h3>
+            <span class="modal-close" onclick="fecharModalEdit()">&times;</span>
+        </div>
+     <div class="modal-body">
+          <label>ID: <input type="text" id="edit-motorista-id" class="border p-1 w-full mb-2 rounded-md" readonly></label>
+                <label>Primeiro Nome: <input type="text" id="edit-motorista-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Sobrenome: <input type="text" id="edit-motorista-sobrenome" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>CNH: <input type="text" id="edit-motorista-cnh" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Telefone: <input type="text" id="edit-motorista-telefone" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Endereço: <input type="text" id="edit-motorista-endereco" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Cidade: <input type="text" id="edit-motorista-cidade" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Estado: <input type="text" id="edit-motorista-estado" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>CEP: <input type="text" id="edit-motorista-cep" class="border p-1 w-full mb-2 rounded-md"></label>
+                <label>Status:
+                    <select id="edit-motorista-status" class="border p-1 w-full mb-2 rounded-md">
+                        <option value="Ativo">Ativo</option>
+                        <option value="Inativo">Inativo</option>
+                        <option value="Férias">Férias</option>
+                    </select>
+                </label>
+            </div>
+            <div class="modal-footer">
+                <button onclick="salvarEdicaoMotorista()" class="modal-button-add">Salvar</button>
+                <button onclick="fecharModalEdit()" class="modal-button-cancel">Cancelar</button>
+            </div>
+     </div>
+</div>
+<style>
+   body { background-color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; margin: 0; font-family: sans-serif; }
+        #main-wrapper { flex: 1; display: flex; flex-direction: column; }
+        .content-body { flex: 1; padding: 1.5rem; }
+        .section-title { display:inline-block; background-color:#2563eb; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1rem; font-weight:600; }
+        .footer { background-color: #e5e7eb; text-align: center; padding: 0.75rem; border-top: 1px solid #d1d5db; }
+        
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; overflow: auto; }
+        .modal-content { background-color: #fff; padding: 20px 30px; border-radius: 15px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 80vh; overflow: auto; }
+        .modal-header { font-size: 1.5rem; margin-bottom: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .modal-close { position: absolute; top: 0.5rem; right: 0.5rem; cursor: pointer; font-size: 30px; border-radius: 50%; background: transparent; justify-content: center; align-items: center;box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: background-color 0.3s; }
+        .modal-close:hover { color: #374151; }
+        .modal-input, .status-select { width: 100%; padding: 12px 15px; margin-top: 5px; border-radius: 8px; border: 1px solid #d1d5db; transition: border-color 0.3s; font-size: 1rem; }
+        .modal-input:focus, .status-select:focus { border-color: #2563eb; outline: none; }
+        .modal-footer { display: flex; justify-content: space-between; gap: 15px; margin-top: 15px; }
+        .modal-button { flex: 1; background-color: #2563eb; color: #ffffff; padding: 10px 15px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.3s; }
+        .modal-button:hover { background-color: #1d4ed8; color: #333;}
+        .modal-button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .modal-body p { margin: 0.5rem 0; }
+        .modal-open {display: flex !important;opacity: 1 !important; visibility: visible !important; z-index: 9999 !important;}
+        .modal-button-add {flex: 1; background-color: #2563eb; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);}
+        .modal-button-add:hover {background-color: #1e40af; transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 32px rgba(37, 99, 235, 0.6);}
+        .modal-button-cancel {flex: 1; background-color: #f8f9fa; color: #495057; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: 1px solid #ced4da; cursor: pointer; transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;}
+        .modal-button-cancel:hover {background-color: #e9ecef; transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);}
+        .modal-button-save {flex: 1; background-color: #34d399; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 8px 20px rgba(52, 211, 153, 0.5);}
+        .modal-button-save:hover {background-color: #059669; transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 32px rgba(52, 211, 153, 0.6);}
+        .modal-button-edit {background-color: #3b82f6; color: #ffffff; padding: 8px 12px; border-radius: 50%; font-weight: bold; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.2s;}
+        .modal-button-edit:hover {background-color: #2563eb; transform: scale(1.1);}
+        .modal-button-edit i {font-size: 1.2rem;}
+        .table-actions {display: flex; gap: 8px; align-items: center;}
+
+        td.text-center.flex {display: flex; justify-content: center; align-items: center; gap: 10px; /* Espaço entre os botões */}
+
+        .btn-remover {background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: background-color 0.3s;}
+        .btn-remover:hover {background-color: #b91c1c;}
+
+        .arrow-button {display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; line-height: 32px; text-align: center; border-radius: 50%; border: 2px solid #000000; background-color: white; color: #a1a1a1; cursor: pointer; font-weight: bold; font-size: 20px; transition: background-color 0.3s, transform 0.2s; padding: 0; box-sizing: border-box;}
+        .arrow-button:hover {background-color: #000000; color: white; transform: scale(1.1);}
+        .arrow-icon::before {content: '\2192'; font-size: 20px;}
+
+        .error-message { color: #d9534f; font-size: 0.875rem; margin-bottom: 10px; display: none; }
+        .success-message { color: #5cb85c; font-size: 0.875rem; margin-bottom: 10px; display: none; background-color: #d4edda; border-radius: 4px; padding: 10px; border: 1px solid #c3e6cb; }
+        
+        .table-wrapper { background-color: #ffffff; overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background-color: #2563eb; }
+        thead th { color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.1em; text-align: left; padding: 0.1rem 1.25rem; border-bottom: 2px solid #ffffff; }
+        tbody tr:nth-child(even) { background-color: #f9fafb; }
+        tbody tr:hover { background-color: #f3f4f6; }
+        td { padding: 0.75rem 1rem; color: #374151; font-size: 0.875rem; }
+    
+        .actions-button { color: #f44336; cursor: pointer; font-weight: bold; transition: color 0.3s; border-radius: 4px; padding: 6px 12px; border: 1px solid #ddd;}
+        .actions-button:hover { color: #d32f2f;}
+        
+        .status-ativo { background-color: #28a745; color: white; padding: 6px 12px; border-radius: 4px; text-align: center; font-weight: bold;}
+        .status-inativo { background-color: #dc3545; color: white; padding: 6px 12px; border-radius: 4px; text-align: center; font-weight: bold;}
+        .status-select { border-radius: 8px; padding: 10px; border: 1px solid #ddd; width: 100%; margin-bottom: 15px; transition: border-color 0.3s, background-color 0.3s; }
+        .status-select:focus { border-color: #007bff; outline: none; }
+        
+        .btn-remove { background-color: #dc3545; color: #fff; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;}
+        .btn-remove:hover { background-color: #c82333;}
+
+        .btn-editar {background-color: #2563eb; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;}
+        .btn-editar:hover {background-color: #1e40af;}
+        
+</style>
+<script>
+    function abrirModal() {
+        const modal = document.getElementById('add-modal');
+        modal.style.display = 'flex';
+        limparCamposAdicionarGestor();
+    }
+
+    function fecharModalAdd() {
+        const modal = document.getElementById('add-modal');
+        modal.style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+        document.getElementById('success-message').style.display = 'none';
+        limparCamposAdicionarGestor();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnAdicionar = document.getElementById('btn-add-gestor');
+    
+        if (btnAdicionar) {
+            btnAdicionar.addEventListener('click', function() {
+                console.log("Botão de adicionar clicado!");
+                adicionarGestor();
+        });
+        } else {
+            console.error("Botão Adicionar Gestor não encontrado.");
+        }
+    });
+
+    function adicionarGestor() {
+        function adicionarMotorista() {
+            const id = document.getElementById('add-motorista-id').value.trim();
+            const primeiroNome = document.getElementById('add-motorista-primeiro-nome').value.trim();
+            const sobrenome = document.getElementById('add-motorista-sobrenome').value.trim();
+            const cnh = document.getElementById('add-motorista-cnh').value.trim();
+            const telefone = document.getElementById('add-motorista-telefone').value.trim();
+            const endereco = document.getElementById('add-motorista-endereco').value.trim();
+            const cidade = document.getElementById('add-motorista-cidade').value.trim();
+            const estado = document.getElementById('add-motorista-estado').value.trim();
+            const cep = document.getElementById('add-motorista-cep').value.trim();
+            const status = document.getElementById('add-motorista-status').value.trim();
+
+            if (!id || !primeiroNome || !sobrenome || !cnh || !telefone || !endereco || !cidade || !estado || !cep) {
+                document.getElementById('add-error-message').style.display = 'block';
+                mostrarAlerta('Por favor, preencha todos os campos obrigatórios.', '#dc3545'); // Red for error
+                return;
+            }
+
+            // CNH validação (exatamente 11 dígitos)
+            if (!/^\d{11}$/.test(cnh)) {
+                document.getElementById('add-error-message').textContent = 'CNH deve conter exatamente 11 números.';
+                document.getElementById('add-error-message').style.display = 'block';
+                mostrarAlerta('CNH inválida.', '#dc3545');
+                return;
+            }
+
+           // Validação de telefone (10 ou 11 dígitos)
+            if (!/^\d{10,11}$/.test(telefone)) {
+                document.getElementById('add-error-message').textContent = 'Telefone deve conter 10 ou 11 números.';
+                document.getElementById('add-error-message').style.display = 'block';
+                mostrarAlerta('Telefone inválido.', '#dc3545');
+                return;
+            }
+
+            // Validação de CEP (exatamente 8 dígitos)
+            if (!/^\d{8}$/.test(cep)) {
+                document.getElementById('add-error-message').textContent = 'CEP deve conter exatamente 8 números.';
+                document.getElementById('add-error-message').style.display = 'block';
+                mostrarAlerta('CEP inválido.', '#dc3545');
+                return;
+            }
+
+
+           // Verifique se há ID duplicado
+            if (window.motoristas.some(m => m.id === id)) {
+                document.getElementById('add-error-message').textContent = 'Já existe um motorista com este ID.';
+                document.getElementById('add-error-message').style.display = 'block';
+                mostrarAlerta('ID de motorista duplicado!', '#dc3545');
+                return;
+            }
+
+           // Adicionar novo motorista ao array global
+            window.motoristas.push({
+                id,
+                primeiroNome,
+                sobrenome,
+                cnh,
+                telefone,
+                endereco,
+                cidade,
+                estado,
+                cep,
+                status
+            });
+
+            // Atualize a tabela
+            renderizarTabelaMotoristas();
+
+            mostrarAlerta('Motorista cadastrado com sucesso!', '#38a169'); // Verde para o sucesso
+            fecharModalAdd();
+        }
+
+        // Função para renderizar/re-renderizar a tabela de motoristas
+        function renderizarTabelaMotoristas() {
+            const tabelaBody = document.getElementById('tabela-motoristas');
+            tabelaBody.innerHTML = ''; // Limpar linhas existentes
+            window.motoristas.forEach(motorista => {
+                const statusClass = motorista.status === 'Ativo' ? 'status-ativo' : motorista.status === 'Inativo' ? 'status-inativo' : 'status-ferias';
+                const linha = document.createElement('tr');
+                linha.innerHTML = `
+                    <td class="py-3 px-4">${motorista.id}</td>
+                    <td class="py-3 px-4">${motorista.primeiroNome} ${motorista.sobrenome}</td>
+                    <td class="py-3 px-4">${motorista.cnh}</td>
+                    <td class="py-3 px-4">${motorista.telefone}</td>
+                    <td class="py-3 px-4"><span class="${statusClass}">${motorista.status}</span></td>
+                    <td class="py-3 px-4 text-center">
+                        <button class="btn-editar" onclick="abrirModalEdit('${motorista.id}')">Editar</button>
+                    </td>
+                    <td class="py-3 px-4 text-center">
+                        <button onclick="removerMotorista(this, '${motorista.id}')" class="btn-remover px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition">
+                            Remover
+                        </button>
+                    </td>
+                `;
+                tabelaBody.appendChild(linha);
+            });
+        }
+
+        // Função para remover um motorista
+
+        function removerMotorista(botao, id) {
+            // Remover do array global
+            window.motoristas = window.motoristas.filter(motorista => motorista.id !== id);
+
+          // Remover a linha da tabela
+            botao.closest('tr').remove();
+            mostrarAlerta('Motorista removido com sucesso!', '#e53e3e'); // Vermelho para remoção
+        }
+
+        // Função para abrir o modal de edição
+        function abrirModalEdit(id) {
+            const modal = document.getElementById("edit-motorista-modal");
+            const motorista = window.motoristas.find(m => m.id === id);
+
+            if (!motorista) {
+                console.error("Motorista não encontrado para edição!");
+                return;
+            }
+
+            // Preencher os campos do modal de edição
+            document.getElementById("edit-motorista-id").value = motorista.id;
+            document.getElementById("edit-motorista-primeiro-nome").value = motorista.primeiroNome;
+            document.getElementById("edit-motorista-sobrenome").value = motorista.sobrenome;
+            document.getElementById("edit-motorista-cnh").value = motorista.cnh;
+            document.getElementById("edit-motorista-telefone").value = motorista.telefone;
+            document.getElementById("edit-motorista-endereco").value = motorista.endereco;
+            document.getElementById("edit-motorista-cidade").value = motorista.cidade;
+            document.getElementById("edit-motorista-estado").value = motorista.estado;
+            document.getElementById("edit-motorista-cep").value = motorista.cep;
+            document.getElementById("edit-motorista-status").value = motorista.status;
+
+            modal.style.display = "flex";
+            modal.classList.add("modal-open");
+        }
+
+        // Função para salvar dados do motorista editados
+        function salvarEdicaoMotorista() {
+            const id = document.getElementById('edit-motorista-id').value.trim();
+            const motoristaIndex = window.motoristas.findIndex(m => m.id === id);
+
+            if (motoristaIndex === -1) {
+                console.error("Motorista não encontrado para salvar edição!");
+                return;
+            }
+
+           // Atualizar dados do driver no array global
+            const motorista = window.motoristas[motoristaIndex];
+            motorista.primeiroNome = document.getElementById('edit-motorista-primeiro-nome').value.trim();
+            motorista.sobrenome = document.getElementById('edit-motorista-sobrenome').value.trim();
+            motorista.cnh = document.getElementById('edit-motorista-cnh').value.trim();
+            motorista.telefone = document.getElementById('edit-motorista-telefone').value.trim();
+            motorista.endereco = document.getElementById('edit-motorista-endereco').value.trim();
+            motorista.cidade = document.getElementById('edit-motorista-cidade').value.trim();
+            motorista.estado = document.getElementById('edit-motorista-estado').value.trim();
+            motorista.cep = document.getElementById('edit-motorista-cep').value.trim();
+            motorista.status = document.getElementById('edit-motorista-status').value.trim();
+
+           // Validação da CNH (exatamente 11 dígitos)
+            if (!/^\d{11}$/.test(motorista.cnh)) {
+                mostrarAlerta('CNH deve conter exatamente 11 números.', '#dc3545');
+                return;
+            }
+
+            // Validação de telefone (10 ou 11 dígitos)
+            if (!/^\d{10,11}$/.test(motorista.telefone)) {
+                mostrarAlerta('Telefone deve conter 10 ou 11 números.', '#dc3545');
+                return;
+            }
+
+
+            // Validação de CEP (exatamente 8 dígitos)
+            if (!/^\d{8}$/.test(motorista.cep)) {
+                mostrarAlerta('CEP deve conter exatamente 8 números.', '#dc3545');
+                return;
+            }
+
+            // Re-renderizar a tabela para mostrar dados atualizados
+            renderizarTabelaMotoristas();
+
+            mostrarAlerta('Motorista editado com sucesso!', '#38a169'); // Verde para o sucesso
+            fecharModalEdit();
+        }
+
+        // Função para fechar o modal de edição
+        function fecharModalEdit() {
+            const modal = document.getElementById('edit-motorista-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.classList.remove("modal-open");
+                limparCamposEditMotorista(); // Limpar campos ao fechar 
+                
+
+            }
+        }
+
+        // Limpar campos no modal de adição
+        function limparCamposAddMotorista() {
+            document.getElementById("add-motorista-id").value = "";
+            document.getElementById("add-motorista-primeiro-nome").value = "";
+            document.getElementById("add-motorista-sobrenome").value = "";
+            document.getElementById("add-motorista-cnh").value = "";
+            document.getElementById("add-motorista-telefone").value = "";
+            document.getElementById("add-motorista-endereco").value = "";
+            document.getElementById("add-motorista-cidade").value = "";
+            document.getElementById("add-motorista-estado").value = "";
+            document.getElementById("add-motorista-cep").value = "";
+            document.getElementById("add-motorista-status").value = "Ativo";
+        }
+
+        // Limpar campos na modal de edição
+        function limparCamposEditMotorista() {
+            document.getElementById("edit-motorista-id").value = "";
+            document.getElementById("edit-motorista-primeiro-nome").value = "";
+            document.getElementById("edit-motorista-sobrenome").value = "";
+            document.getElementById("edit-motorista-cnh").value = "";
+            document.getElementById("edit-motorista-telefone").value = "";
+            document.getElementById("edit-motorista-endereco").value = "";
+            document.getElementById("edit-motorista-cidade").value = "";
+            document.getElementById("edit-motorista-estado").value = "";
+            document.getElementById("edit-motorista-cep").value = "";
+            document.getElementById("edit-motorista-status").value = "Ativo";
+        }
+
+
+        // Função universal para mostrar alertas
+        function mostrarAlerta(mensagem, corFundo) {
+            const alerta = document.getElementById('alerta-sucesso');
+            alerta.textContent = mensagem;
+            alerta.style.backgroundColor = corFundo;
+            alerta.style.display = 'block';
+
+            setTimeout(() => {
+                alerta.style.display = 'none';
+            }, 3000); // Ocultar após 3 segundos
+        }
+
+        // Fechar modais ao clicar fora
+        window.addEventListener('click', function (event) {
+            const modalAdd = document.getElementById('add-motorista-modal');
+            const modalEdit = document.getElementById('edit-motorista-modal');
+            if (event.target === modalAdd) {
+                fecharModalAdd();
+            }
+            if (event.target === modalEdit) {
+                fecharModalEdit();
+            }
+        });
+
+       
+        // Funções de validação de entrada
+        function permitirSomenteNumeros(event) {
+            const tecla = event.key;
+            if (
+                tecla === "Backspace" ||
+                tecla === "Delete" ||
+                tecla === "ArrowLeft" ||
+                tecla === "ArrowRight" ||
+                tecla === "Tab"
+            ) {
+                return;
+            }
+            if (!/[0-9]/.test(tecla)) {
+                event.preventDefault();
+            }
+        }
+
+        function permitirSomenteLetras(input) {
+            input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+        }
+
+    
+
+
+    
+
+
 
     <script src="plugins/common/common.min.js"></script>
     <script src="js/custom.min.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>
-
     <script src="./js/dashboard/dashboard-1.js"></script>
 
 </body>
