@@ -11,6 +11,8 @@
     <title>TrackFleet - Gerenciador de Rota</title>
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <link href="css/style.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    
 
 </head>
 
@@ -25,7 +27,7 @@
     </div>
 
     <div id="main-wrapper">
-
+        
         <div class="nav-header">
             <div class="brand-logo">
                 <a href="index.html">
@@ -103,24 +105,529 @@
 
         <div class="content-body">
             <div class="container-fluid mt-3">
-               <!-- ADICIONAR AQUI -->
+                <h1 class="text-3xl font-bold mb-6">Gestão de Gestores</h1>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="section-title">Gestores Cadastrados</h2>
+                    <button onclick="abrirModal()" class="bg-blue-600 text-white font-bold px-4 py-2 rounded hover:bg-blue-700 transition"><i class="fa fa-plus mr-2"></i>Adicionar Gestor</button>
+                </div>
+                <table class="w-full bg-white rounded-lg shadow-lg">
+                    <thead>
+                        <tr style="background-color: #2563eb; color: #ffffff; border-radius: 0.25rem;">
+                            <th class="py-3 px-4 text-left">Nome</th>
+                            <th class="py-3 px-4 text-left">Email</th>
+                            <th class="py-3 px-4 text-left">Código</th>
+                            <th class="py-3 px-4 text-left">Último Login</th>
+                            <th class="py-3 px-4 text-left">Status</th>
+                            <th class="py-3 px-4 text-center">Ações</th>
+                            <th class="py-3 px-4 text-center">Editar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabela-gestores"></tbody>
+                </table>
             </div>
         </div>
+                                                                                      
+</div>
 
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
-            </div>
-        </div>
-
+<div class="footer">
+    <div class="copyright">
+        <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
     </div>
+</div>
+
+<div id="alerta-sucesso" style="
+    display: none;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #38a169;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-weight: bold;
+    z-index: 1000;
+">
+</div>
+
+<!-- Modal para adicionar gestor -->
+<div id="add-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="text-xl font-semibold">Adicionar Gestor</h3>
+            <span class="modal-close" onclick="fecharModalAdd()">&times;</span>
+        </div>
+        <div class="error-message" id="error-message" style="display:none; color: red;">Preencha todos os campos corretamente!</div>
+
+        <div class="modal-body">
+            <label>Primeiro Nome: <input type="text" id="add-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Segundo Nome: <input type="text" id="add-segundo-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Email: <input type="email" id="add-email" class="border p-1 w-full mb-2 rounded-md" placeholder="exemplo@exemplo.com"></label>
+            <label>Senha: <input type="password" id="add-senha" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Telefone: <input type="tel" id="add-telefone" class="border p-1 w-full mb-2 rounded-md" placeholder="(99) 99999-9999" maxlength="11" inputmode="numeric" pattern="[0-9]*"></label>
+            <label>Rua: <input type="text" id="add-rua" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Número: <input type="text" id="add-numero" class="border p-1 w-full mb-2 rounded-md" maxlength="10" inputmode="numeric" pattern="[0-9]*"></label>
+            <label>Bairro: <input type="text" id="add-bairro" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>CEP: <input type="text" id="add-cep" class="border p-1 w-full mb-2 rounded-md" maxlength="9" inputmode="numeric" pattern="[0-9]*"></label>
+            <label>Estado: <input type="text" id="add-estado" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Código: <input type="number" id="add-codigo" class="border p-1 w-full mb-2 rounded-md"></label>
+        </div>
+        
+        <select id="add-status" class="modal-input">
+            <option value="Ativo">Ativo</option>
+            <option value="Inativo">Inativo</option>
+        </select>
+
+        <div class="modal-footer">
+            <button id="btn-add-gestor" class="modal-button-add">Adicionar</button>
+            <button onclick="fecharModalAdd()" class="modal-button-cancel">Cancelar</button>
+        </div>
+               
+    </div>
+</div>
+
+<!-- Modal para editar gestor -->
+<div id="edit-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="text-xl font-semibold">Editar Gestor</h3>
+            <span class="modal-close" onclick="fecharModalEdit()">&times;</span>
+        </div>
+        <div class="modal-body">
+            <label>Primeiro Nome: <input type="text" id="edit-primeiro-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Segundo Nome: <input type="text" id="edit-segundo-nome" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Email: <input type="email" id="edit-email" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Telefone: <input type="text" id="edit-telefone" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Rua: <input type="text" id="edit-rua" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Número: <input type="text" id="edit-numero" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Bairro: <input type="text" id="edit-bairro" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>CEP: <input type="text" id="edit-cep" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Estado: <input type="text" id="edit-estado" class="border p-1 w-full mb-2 rounded-md"></label>
+            <label>Código: <input type="text" id="edit-codigo" class="border p-1 w-full mb-2 rounded-md" readonly></label>
+            <label>Status: 
+                <select id="edit-status" class="border p-1 w-full mb-2 rounded-md">
+                    <option value="Ativo">Ativo</option>
+                    <option value="Inativo">Inativo</option>
+                </select>
+            </label>
+        </div>
+        <div class="modal-footer">
+            <button onclick="salvarEdicaoGestor()" class="modal-button-add">Salvar</button>
+            <button onclick="fecharModalEdit()" class="modal-button-cancel">Cancelar</button>
+        </div>
+    </div>
+</div>
+<style>
+   body { background-color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; margin: 0; font-family: sans-serif; }
+        #main-wrapper { flex: 1; display: flex; flex-direction: column; }
+        .content-body { flex: 1; padding: 1.5rem; }
+        .section-title { display:inline-block; background-color:#2563eb; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1rem; font-weight:600; }
+        .footer { background-color: #e5e7eb; text-align: center; padding: 0.75rem; border-top: 1px solid #d1d5db; }
+        
+        .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; overflow: auto; }
+        .modal-content { background-color: #fff; padding: 20px 30px; border-radius: 15px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 80vh; overflow: auto; }
+        .modal-header { font-size: 1.5rem; margin-bottom: 15px; font-weight: bold; display: flex; justify-content: space-between; align-items: center; }
+        .modal-close { position: absolute; top: 0.5rem; right: 0.5rem; cursor: pointer; font-size: 30px; border-radius: 50%; background: transparent; justify-content: center; align-items: center;box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: background-color 0.3s; }
+        .modal-close:hover { color: #374151; }
+        .modal-input, .status-select { width: 100%; padding: 12px 15px; margin-top: 5px; border-radius: 8px; border: 1px solid #d1d5db; transition: border-color 0.3s; font-size: 1rem; }
+        .modal-input:focus, .status-select:focus { border-color: #2563eb; outline: none; }
+        .modal-footer { display: flex; justify-content: space-between; gap: 15px; margin-top: 15px; }
+        .modal-button { flex: 1; background-color: #2563eb; color: #ffffff; padding: 10px 15px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.3s; }
+        .modal-button:hover { background-color: #1d4ed8; color: #333;}
+        .modal-button:disabled { background-color: #ccc; cursor: not-allowed; }
+        .modal-body p { margin: 0.5rem 0; }
+        .modal-open {display: flex !important;opacity: 1 !important; visibility: visible !important; z-index: 9999 !important;}
+        .modal-button-add {flex: 1; background-color: #2563eb; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 8px 20px rgba(37, 99, 235, 0.5);}
+        .modal-button-add:hover {background-color: #1e40af; transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 32px rgba(37, 99, 235, 0.6);}
+        .modal-button-cancel {flex: 1; background-color: #f8f9fa; color: #495057; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: 1px solid #ced4da; cursor: pointer; transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;}
+        .modal-button-cancel:hover {background-color: #e9ecef; transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 32px rgba(0, 0, 0, 0.1);}
+        .modal-button-save {flex: 1; background-color: #34d399; color: #ffffff; padding: 12px 20px; border-radius: 8px; font-weight: 600; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 8px 20px rgba(52, 211, 153, 0.5);}
+        .modal-button-save:hover {background-color: #059669; transform: translateY(-3px) scale(1.03); box-shadow: 0 16px 32px rgba(52, 211, 153, 0.6);}
+        .modal-button-edit {background-color: #3b82f6; color: #ffffff; padding: 8px 12px; border-radius: 50%; font-weight: bold; border: none; cursor: pointer; transition: background-color 0.3s, transform 0.2s;}
+        .modal-button-edit:hover {background-color: #2563eb; transform: scale(1.1);}
+        .modal-button-edit i {font-size: 1.2rem;}
+        .table-actions {display: flex; gap: 8px; align-items: center;}
+
+        td.text-center.flex {display: flex; justify-content: center; align-items: center; gap: 10px; /* Espaço entre os botões */}
+
+        .btn-remover {background-color: #ef4444; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; transition: background-color 0.3s;}
+        .btn-remover:hover {background-color: #b91c1c;}
+
+        .arrow-button {display: flex; justify-content: center; align-items: center; width: 32px; height: 32px; line-height: 32px; text-align: center; border-radius: 50%; border: 2px solid #000000; background-color: white; color: #a1a1a1; cursor: pointer; font-weight: bold; font-size: 20px; transition: background-color 0.3s, transform 0.2s; padding: 0; box-sizing: border-box;}
+        .arrow-button:hover {background-color: #000000; color: white; transform: scale(1.1);}
+        .arrow-icon::before {content: '\2192'; font-size: 20px;}
+
+        .error-message { color: #d9534f; font-size: 0.875rem; margin-bottom: 10px; display: none; }
+        .success-message { color: #5cb85c; font-size: 0.875rem; margin-bottom: 10px; display: none; background-color: #d4edda; border-radius: 4px; padding: 10px; border: 1px solid #c3e6cb; }
+        
+        .table-wrapper { background-color: #ffffff; overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background-color: #2563eb; }
+        thead th { color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.1em; text-align: left; padding: 0.1rem 1.25rem; border-bottom: 2px solid #ffffff; }
+        tbody tr:nth-child(even) { background-color: #f9fafb; }
+        tbody tr:hover { background-color: #f3f4f6; }
+        td { padding: 0.75rem 1rem; color: #374151; font-size: 0.875rem; }
+    
+        .actions-button { color: #f44336; cursor: pointer; font-weight: bold; transition: color 0.3s; border-radius: 4px; padding: 6px 12px; border: 1px solid #ddd;}
+        .actions-button:hover { color: #d32f2f;}
+        
+        .status-ativo { background-color: #28a745; color: white; padding: 6px 12px; border-radius: 4px; text-align: center; font-weight: bold;}
+        .status-inativo { background-color: #dc3545; color: white; padding: 6px 12px; border-radius: 4px; text-align: center; font-weight: bold;}
+        .status-select { border-radius: 8px; padding: 10px; border: 1px solid #ddd; width: 100%; margin-bottom: 15px; transition: border-color 0.3s, background-color 0.3s; }
+        .status-select:focus { border-color: #007bff; outline: none; }
+        
+        .btn-remove { background-color: #dc3545; color: #fff; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer; transition: background-color 0.3s;}
+        .btn-remove:hover { background-color: #c82333;}
+
+        .btn-editar {background-color: #2563eb; color: white; padding: 6px 12px; border: none; border-radius: 4px; cursor: pointer; font-size: 14px;}
+        .btn-editar:hover {background-color: #1e40af;}
+        
+</style>
+
+<script>
+    function abrirModal() {
+        const modal = document.getElementById('add-modal');
+        modal.style.display = 'flex';
+        limparCamposAdicionarGestor();
+    }
+
+    function fecharModalAdd() {
+        const modal = document.getElementById('add-modal');
+        modal.style.display = 'none';
+        document.getElementById('error-message').style.display = 'none';
+        document.getElementById('success-message').style.display = 'none';
+        limparCamposAdicionarGestor();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const btnAdicionar = document.getElementById('btn-add-gestor');
+    
+        if (btnAdicionar) {
+            btnAdicionar.addEventListener('click', function() {
+                console.log("Botão de adicionar clicado!");
+                adicionarGestor();
+        });
+        } else {
+            console.error("Botão Adicionar Gestor não encontrado.");
+        }
+    });
+
+    function adicionarGestor() {
+        const primeiroNome = document.getElementById('add-primeiro-nome').value.trim();
+        const segundoNome = document.getElementById('add-segundo-nome').value.trim();
+        const email = document.getElementById('add-email').value.trim();
+        const senha = document.getElementById('add-senha').value.trim();
+        const telefone = document.getElementById('add-telefone').value.trim();
+        const rua = document.getElementById('add-rua').value.trim();
+        const numero = document.getElementById('add-numero').value.trim();
+        const bairro = document.getElementById('add-bairro').value.trim();
+        const cep = document.getElementById('add-cep').value.trim().replace(/\D/g, '');
+        const estado = document.getElementById('add-estado').value.trim();
+        const codigo = document.getElementById('add-codigo').value.trim();
+        const status = document.getElementById('add-status').value.trim();
+
+            // Verificar se o código já existe
+        const codigoExistente = window.gestores.some(g => g.codigo === codigo);
+
+        if (codigoExistente) {
+            exibirAlerta("Já existe um gestor com esse código!", "vermelho");
+            return; // Não adiciona
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefoneRegex = /^\d{10,11}$/;
+        const cepRegex = /^\d{8}$/; 
+        const numeroRegex = /^\d+$/;
+
+        if (
+            primeiroNome !== '' && 
+            segundoNome !== '' &&
+            emailRegex.test(email) &&
+            senha !== '' &&
+            telefoneRegex.test(telefone) &&
+            rua !== '' &&
+            numeroRegex.test(numero) &&
+            bairro !== '' &&
+            cepRegex.test(cep) &&
+            estado !== '' &&
+            codigo !== ''
+        ) {
+        
+        window.gestores.push({
+            primeiroNome,
+            segundoNome,
+            email,
+            telefone,
+            rua,
+            numero,
+            bairro,
+            cep,
+            estado,
+            codigo,
+            status
+        });
+        
+        const tabela = document.getElementById('tabela-gestores');
+        const statusClasse = status === 'Ativo' ? 'status-ativo' : 'status-inativo';
+        const linha = document.createElement('tr');
+        linha.innerHTML = `
+            <td class="py-3 px-4">${primeiroNome} ${segundoNome}</td>
+            <td class="py-3 px-4">${email}</td>
+            <td class="py-3 px-4">${codigo}</td>
+            <td class="py-3 px-4">Agora</td>
+            <td class="py-3 px-4"><span class="${statusClasse}">${status}</span></td>
+            <td class="py-3 px-4 text-center">
+                <button onclick="removerGestor(this)" class="btn-remover px-3 py-1 rounded bg-red-600 text-white hover:bg-red-700 transition block mx-auto">
+                    Remover
+                </button>
+            </td>
+            <td class="py-3 px-4 text-center">
+                <button class="btn-editar" onclick="abrirModalEdit('${codigo}')">Editar</button>
+                    
+                </button>
+            </td>
+        `;
+        tabela.appendChild(linha);
+        mostrarAlerta('Gestor adicionado com sucesso!', '#38a169'); // Verde
+        fecharModalAdd();
+        document.getElementById('success-message').style.display = 'block';
+        document.getElementById('error-message').style.display = 'none';
+
+        document.querySelectorAll('.modal-body input').forEach(input => input.value = '');
+        document.getElementById('add-status').value = 'Ativo';
+    } else {
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('success-message').style.display = 'none';
+    }
+    }
+
+    // Função para permitir apenas números na digitação
+    function permitirSomenteNumeros(event) {
+        const tecla = event.key;
+        const campo = event.target;
+
+        // Permitir teclas de controle como backspace, delete, setas
+        if (
+            tecla === "Backspace" || 
+            tecla === "Delete" || 
+            tecla === "ArrowLeft" || 
+            tecla === "ArrowRight" || 
+            tecla === "Tab"
+        ) {
+            return;
+        }
+
+        // Bloquear se não for número
+        if (!/[0-9]/.test(tecla)) {
+            event.preventDefault();
+            return;
+        }
+
+        // Se for o campo CEP, limitar a 8 caracteres
+        if (campo.id === 'add-cep' && campo.value.length >= 8) {
+            event.preventDefault();
+        }
+    }
+
+        // Aplicar nos campos telefone, número e cep
+        document.getElementById('add-telefone').addEventListener('keydown', permitirSomenteNumeros);
+        document.getElementById('add-numero').addEventListener('keydown', permitirSomenteNumeros);
+        document.getElementById('add-cep').addEventListener('keydown', permitirSomenteNumeros);
+
+    function permitirSomenteLetras(input) {
+    input.value = input.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+    }
+
+        // Modal Adicionar
+        document.getElementById('add-primeiro-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('add-segundo-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('add-estado').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+
+        // Modal Editar
+        document.getElementById('edit-primeiro-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('edit-segundo-nome').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+        document.getElementById('edit-estado').addEventListener('input', function() {
+            permitirSomenteLetras(this);
+        });
+
+    function removerGestor(botao) {
+        botao.closest('tr').remove();
+        mostrarAlerta('Gestor removido com sucesso!', '#e53e3e');  // Vermelho
+    }
+
+    // Lista global para armazenar os gestores
+    window.gestores = [];
+
+    // Função para abrir o modal de edição com os dados do gestor selecionado
+    function abrirModalEdit(codigo) {
+        const modal = document.getElementById("edit-modal");
+    
+        // Encontrando o gestor pelo código
+        const gestor = window.gestores.find(g => g.codigo === codigo);
+        if (!gestor) {
+            console.error("Gestor não encontrado!");
+            return;
+        }
+
+        // Preenchendo os campos do modal
+        document.getElementById("edit-primeiro-nome").value = gestor.primeiroNome;
+        document.getElementById("edit-segundo-nome").value = gestor.segundoNome;
+        document.getElementById("edit-email").value = gestor.email;
+        document.getElementById("edit-telefone").value = gestor.telefone;
+        document.getElementById("edit-rua").value = gestor.rua;
+        document.getElementById("edit-numero").value = gestor.numero;
+        document.getElementById("edit-bairro").value = gestor.bairro;
+        document.getElementById("edit-cep").value = gestor.cep;
+        document.getElementById("edit-estado").value = gestor.estado;
+        document.getElementById("edit-codigo").value = gestor.codigo;
+        document.getElementById("edit-status").value = gestor.status;
+
+        // Exibindo o modal
+        modal.style.display = "flex";
+        modal.classList.add("modal-open");
+        }
+
+    // Função para salvar as edições
+    function salvarEdicaoGestor() {
+        const codigo = document.getElementById('edit-codigo').value.trim();
+
+        // Encontrando o gestor na lista global
+        const gestorIndex = window.gestores.findIndex(g => g.codigo === codigo);
+        if (gestorIndex === -1) {
+            console.error("Gestor não encontrado para edição!");
+            return;
+        }
+
+    // Atualizando os dados do gestor
+    const gestor = window.gestores[gestorIndex];
+    gestor.primeiroNome = document.getElementById('edit-primeiro-nome').value.trim();
+    gestor.segundoNome = document.getElementById('edit-segundo-nome').value.trim();
+    gestor.email = document.getElementById('edit-email').value.trim();
+    gestor.telefone = document.getElementById('edit-telefone').value.trim();
+    gestor.rua = document.getElementById('edit-rua').value.trim();
+    gestor.numero = document.getElementById('edit-numero').value.trim();
+    gestor.bairro = document.getElementById('edit-bairro').value.trim();
+    gestor.cep = document.getElementById('edit-cep').value.trim();
+    gestor.estado = document.getElementById('edit-estado').value.trim();
+    gestor.status = document.getElementById('edit-status').value.trim();
+
+    // Atualiza a linha da tabela correspondente
+    const tabela = document.getElementById('tabela-gestores');
+    const linhas = tabela.getElementsByTagName('tr');
+    for (let i = 0; i < linhas.length; i++) {
+        const linha = linhas[i];
+        const codigoTd = linha.cells[2].textContent.trim();
+        
+        if (codigoTd === codigo) {
+            linha.cells[0].textContent = `${gestor.primeiroNome} ${gestor.segundoNome}`;
+            linha.cells[1].textContent = gestor.email;
+            linha.cells[4].innerHTML = `<span class="${gestor.status === 'Ativo' ? 'status-ativo' : 'status-inativo'}">${gestor.status}</span>`;
+            break;
+        }
+    }
+
+    // Fecha o modal de edição
+    mostrarAlerta('Gestor editado com sucesso!', '#38a169');  // Verde
+    fecharModalEdit();
+    }
+
+    // Função para fechar o modal de edição
+    function fecharModalEdit() {
+        const modal = document.getElementById('edit-modal');
+        if (modal) {
+            modal.style.display = 'none';
+            modal.classList.remove("modal-open");
+            // Limpa os campos do modal ao fechar
+            document.querySelectorAll('#edit-modal input').forEach(input => input.value = '');
+            document.getElementById('edit-status').value = 'Ativo';
+        }
+    }
+
+
+        // Fechar o modal de Adicionar ao clicar fora
+    window.addEventListener('click', function(event) {
+        const modalAdd = document.getElementById('add-modal');
+        if (event.target === modalAdd) {
+            fecharModalAdd();
+        }
+    });
+
+    // Fechar o modal de Editar ao clicar fora
+    window.addEventListener('click', function(event) {
+        const modalEdit = document.getElementById('edit-modal');
+        if (event.target === modalEdit) {
+            fecharModalEdit();
+        }
+    });
+
+    function mostrarAlerta(mensagem, corFundo) {
+        const alerta = document.getElementById('alerta-sucesso');
+        alerta.textContent = mensagem;
+        alerta.style.backgroundColor = corFundo;
+        alerta.style.display = 'block';
+    
+        setTimeout(() => {
+            alerta.style.display = 'none';
+        }, 3000);  // Esconde após 3 segundos
+        }
+
+    function limparCamposAdicionarGestor() {
+        document.getElementById("add-primeiro-nome").value = "";
+        document.getElementById("add-segundo-nome").value = "";
+        document.getElementById("add-email").value = "";
+        document.getElementById("add-senha").value = "";
+        document.getElementById("add-telefone").value = "";
+        document.getElementById("add-rua").value = "";
+        document.getElementById("add-numero").value = "";
+        document.getElementById("add-bairro").value = "";
+        document.getElementById("add-cep").value = "";
+        document.getElementById("add-estado").value = "";
+        document.getElementById("add-codigo").value = "";
+        document.getElementById("add-status").value = "Ativo";  // Ou o padrão desejado
+        }
+
+
+    function exibirAlerta(mensagem, cor) {
+        const alerta = document.createElement('div');
+        alerta.textContent = mensagem;
+        alerta.style.position = 'fixed';
+        alerta.style.top = '20px';
+        alerta.style.left = '50%';
+        alerta.style.transform = 'translateX(-50%)';
+        alerta.style.padding = '10px 20px';
+        alerta.style.backgroundColor = cor === "verde" ? '#4CAF50' : '#f44336';
+        alerta.style.color = '#fff';
+        alerta.style.borderRadius = '5px';
+        alerta.style.boxShadow = '0 0 10px rgba(0,0,0,0.3)';
+        alerta.style.zIndex = '9999';
+
+        document.body.appendChild(alerta);
+
+        setTimeout(() => {
+            alerta.remove();
+        }, 3000);
+        }
+
+</script>
+    
+</div>
 
     <script src="plugins/common/common.min.js"></script>
     <script src="js/custom.min.js"></script>
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>
-
     <script src="./js/dashboard/dashboard-1.js"></script>
 
 </body>
