@@ -416,10 +416,7 @@
         document.getElementById('add-segundo-nome').addEventListener('input', function() {
             permitirSomenteLetras(this);
         });
-        document.getElementById('add-estado').addEventListener('input', function() {
-            permitirSomenteLetras(this);
-        });
-
+    
         // Modal Editar
         document.getElementById('edit-primeiro-nome').addEventListener('input', function() {
             permitirSomenteLetras(this);
@@ -427,9 +424,7 @@
         document.getElementById('edit-segundo-nome').addEventListener('input', function() {
             permitirSomenteLetras(this);
         });
-        document.getElementById('edit-estado').addEventListener('input', function() {
-            permitirSomenteLetras(this);
-        });
+        
 
     function removerMotorista(botao) {
         botao.closest('tr').remove();
@@ -455,10 +450,8 @@
         document.getElementById("edit-segundo-nome").value = Motorista.segundoNome;
         document.getElementById("edit-email").value = Motorista.email;
         document.getElementById("edit-telefone").value = Motorista.telefone;
-        document.getElementById("edit-rua").value = Motorista.rua;
         document.getElementById("edit-numero").value = Motorista.numero;
         document.getElementById("edit-CNH").value = Motorista.bairro;
-        document.getElementById("edit-estado").value = Motorista.estado;
         document.getElementById("edit-codigo").value = Motorista.codigo;
         document.getElementById("edit-status").value = Motorista.status;
 
@@ -552,11 +545,7 @@
         document.getElementById("add-email").value = "";
         document.getElementById("add-senha").value = "";
         document.getElementById("add-telefone").value = "";
-        document.getElementById("add-rua").value = "";
-        document.getElementById("add-numero").value = "";
-        document.getElementById("add-bairro").value = "";
-        document.getElementById("add-cep").value = "";
-        document.getElementById("add-estado").value = "";
+        document.getElementById("add-cnh").value = "";
         document.getElementById("add-codigo").value = "";
         document.getElementById("add-status").value = "Ativo";  // Ou o padrão desejado
         }
