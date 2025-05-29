@@ -106,9 +106,12 @@
         <div class="content-body">
             <div class="container-fluid mt-3">
                 <h1 class="text-3xl font-bold mb-6">Gestão de Gestores</h1>
-                <div class="flex justify-between items-center mb-4">
-                    <h2 class="section-title">Gestores Cadastrados</h2>
-                    <button onclick="abrirModal()" class="bg-blue-600 text-white font-bold px-4 py-2 rounded hover:bg-blue-700 transition"><i class="fa fa-plus mr-2"></i>Adicionar Gestor</button>
+                <div class="flex items-center mb-4 bg-blue-600 text-white px-4 py-3 rounded">
+                    <h2 class="section-title font-bold text-3xl mr-4">Gestores Cadastrados</h2>
+                    <div class="flex-grow"></div>
+                    <button onclick="abrirModal()" class="font-bold bg-blue-700 hover:bg-blue-800 transition px-4 py-2 rounded">
+                        <i class="fa fa-plus mr-2"></i>Adicionar Gestor
+                    </button>
                 </div>
                 <table class="w-full bg-white rounded-lg shadow-lg">
                     <thead>
@@ -222,7 +225,7 @@
    body { background-color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; margin: 0; font-family: sans-serif; }
         #main-wrapper { flex: 1; display: flex; flex-direction: column; }
         .content-body { flex: 1; padding: 1.5rem; }
-        .section-title { display:inline-block; background-color:#2563eb; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1rem; font-weight:600; }
+        .section-title { display:inline-block; background-color:#2563eb; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1.5rem; font-weight:600; margin-left: -20px; }
         .footer { background-color: #e5e7eb; text-align: center; padding: 0.75rem; border-top: 1px solid #d1d5db; }
         
         .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; overflow: auto; }
