@@ -5,9 +5,9 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    
+
     <meta name="theme-name" content="quixlab" />
-  
+
     <title>TrackFleet - Gerenciador de Rota</title>
     <link rel="icon" type="image/png" sizes="16x16" href="images/favicon.png">
     <link href="css/style.css" rel="stylesheet">
@@ -38,9 +38,9 @@
             </div>
         </div>
 
-        <div class="header">    
+        <div class="header">
             <div class="header-content clearfix">
-                
+
                 <div class="nav-control">
                     <div class="hamburger">
                         <span class="toggle-icon"><i class="icon-menu"></i></span>
@@ -49,27 +49,28 @@
                 <div class="header-right">
                     <ul class="clearfix">
                         <li class="icons dropdown">
-                            <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
+                            <div class="user-img c-pointer position-relative" data-toggle="dropdown">
                                 <span class="activity active"></span>
                                 <img src="images/avatar/form-user.png" height="40" width="40" alt="">
                             </div>
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Sair</span></a></li>
+                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Sair</span></a>
+                                        </li>
                                     </ul>
                                 </div>
                             </div>
                         </li>
                         <li class="icons d-none d-md-flex">
-                                <span>Seu Nome</span>
+                            <span>Seu Nome</span>
                         </li>
                     </ul>
                 </div>
             </div>
         </div>
 
-        <div class="nk-sidebar">           
+        <div class="nk-sidebar">
             <div class="nk-nav-scroll">
                 <ul class="metismenu" id="menu">
                     <li>
@@ -81,7 +82,7 @@
                         <a class="has-arrow" href="gestor.html" aria-expanded="false">
                             <i class="fa fa-user-circle-o menu-icon"></i><span class="nav-text">Gestor</span>
                         </a>
-                    </li>          
+                    </li>
                     <li>
                         <a class="has-arrow" href="motorista.html" aria-expanded="false">
                             <i class="fa fa-id-card menu-icon"></i><span class="nav-text">Motorista</span>
@@ -91,27 +92,425 @@
                         <a class="has-arrow" href="frota.html" aria-expanded="false">
                             <i class="fa fa-car menu-icon"></i><span class="nav-text">Frotas</span>
                         </a>
-                    </li>                    
+                    </li>
                     <li>
                         <a class="has-arrow" href="evento.html" aria-expanded="false">
                             <i class="fa fa-list-alt menu-icon"></i><span class="nav-text">Eventos</span>
                         </a>
-                    </li>                                                          
+                    </li>
                 </ul>
             </div>
         </div>
 
         <div class="content-body">
             <div class="container-fluid mt-3">
-               <!-- ADICIONAR AQUI -->
-            </div>
-        </div>
 
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
+                <meta charset="UTF-8">
+                <title>Controle de Veículos</title>
+                <style>
+                    /* Fonte e estilo base da página */
+                    body {font-family: 'Segoe UI', Tahoma, sans-serif;margin: 0;padding: 0;background-color: #f0f4f8;}
+                    .container {width: 90%;max-width: 1000px;margin: 20px auto;padding: 0 10px;}
+                    .top-bar {
+                        background-color: #2563eb;
+                        color: #fff;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 15px 20px;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                    }
+                    .top-bar h1 {margin: 0;font-size: 1.5rem;color: #fff;font-weight: bold;}
+                    .top-bar button {
+                        background-color: #2563eb;
+                        color: #fff;
+                        border: none;
+                        padding: 10px 20px;
+                        font-size: 1rem;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        transition: background-color 0.3s ease;
+                        font-weight: bold;
+                    }
+                    .top-bar button:hover {background-color: #004080;}
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 20px;
+                        background-color: #fff;
+                        border-radius: 8px;
+                        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;
+                        border-spacing: 0 10px;
+                        font-family: Arial, sans-serif;
+                    }
+                    th,
+                    td {padding: 12px 16px;text-align: center;border-bottom: 1px solid #ddd;}
+                    th {background-color: #2563eb;color: #fff;font-weight: bold;text-transform: uppercase;font-size: 14px;border-bottom: 2px solid #fdfdfd;}
+                    tbody tr:hover {background-color: #f1f1f1;}
+                    @media (max-width: 600px) {
+                        .top-bar { flex-direction: column;align-items: flex-start;}
+                        .top-bar button { margin-top: 10px; width: 100%;}
+                        th,td {font-size: 0.9rem;}
+                    }
+                    .edit-btn,
+                    .delete-btn {
+                        border: none;
+                        padding: 6px 12px;
+                        border-radius: 6px;
+                        font-size: 13px;
+                        font-weight: 500;
+                        cursor: pointer;
+                        transition: background-color 0.2s;
+                    }
+                    .edit-btn { background-color: #2563eb;color: white;}
+                    .edit-btn:hover { background-color: #004080;}
+                    .delete-btn {background-color: #f56565; color: white; }
+                    .delete-btn:hover {background-color: #e53e3e;}
+                    .modal {
+                        display: none;
+                        position: fixed;
+                        z-index: 1000;
+                        left: 0;
+                        top: 0;
+                        width: 100%;
+                        height: 100%;
+                        overflow: auto;
+                        background-color: rgba(0, 0, 0, 0.5);
+                    }
+                    .modal-content-wide {
+                        background-color: white;
+                        margin: 30px auto;
+                        padding: 30px;
+                        border-radius: 16px;
+                        width: 60%;
+                        max-width: 1200px;
+                        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+                        position: relative;
+                    }
+                    .form-grid-horizontal { display: grid; grid-template-columns: repeat(3, 1fr);gap: 20px;align-items: end;}
+                    .form-grid-horizontal label { display: block; margin-bottom: 6px; font-weight: 600; color: #3f4254;}
+                    .form-grid-horizontal input,
+                    .form-grid-horizontal select {
+                        width: 100%;
+                        padding: 10px;
+                        border-radius: 8px;
+                        border: 1px solid #d1d5db;
+                        background-color: #f9fafb;
+                    }
+                    .form-actions { grid-column: span 3; text-align: right; margin-top: 20px;}
+                    .form-actions button {
+                        padding: 12px 24px;
+                        background: linear-gradient(90deg, #2563eb, #004080);
+                        color: white;
+                        border: none;
+                        border-radius: 8px;
+                        font-weight: 600;
+                        font-size: 14px;
+                        cursor: pointer;
+                    }
+                    .form-actions button:hover { opacity: 0.95;}
+                    .close-btn {
+                        position: absolute;
+                        top: 10px;
+                        right: 15px;
+                        font-size: 24px;
+                        color: #999;
+                        cursor: pointer;
+                    }
+                    .close-btn:hover {color: #000;}
+                    @media (max-width: 768px) {
+                        .form-grid-horizontal {
+                            grid-template-columns: 1fr 1fr;} }
+                    @media (max-width: 500px) {
+                        .form-grid-horizontal {grid-template-columns: 1fr;}
+                        .form-actions { text-align: center;} }
+
+                    .alerta {
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background-color: #38a169;
+                        color: white;
+                        padding: 14px 28px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                        font-weight: bold;
+                        z-index: 2000;
+                        animation: fadeInOut 3s ease-in-out;
+                    }
+                    .alertaletras {
+                        position: fixed;
+                        top: 20px;
+                        left: 50%;
+                        transform: translateX(-50%);
+                        background-color: #b40c23;
+                        color: white;
+                        padding: 14px 28px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+                        font-weight: bold;
+                        z-index: 2000;
+                        animation: fadeInOut 3s ease-in-out;
+                       
+                    }
+                    @keyframes fadein {from { opacity: 0; } to { opacity: 1; } }
+                    @keyframes fadeInOut {
+                        0% {opacity: 0; transform: translateX(-50%) translateY(-10px);}10%,90% {opacity: 1;
+                       transform: translateX(-50%) translateY(0);}
+                        100% {opacity: 0; transform: translateX(-50%) translateY(-10px);} }
+                </style>
+                </head>
+
+                <body>
+                    <div class="barra-titulo">
+                        <header class="top-bar">
+                            <h1>Controle de Veículos</h1>
+                            <button onclick="abrirModal()"><i class="fa fa-plus mr-2"></i> Cadastrar Veículo</button>
+                        </header>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Placa</th>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Cor</th>
+                                <th>Editar</th>
+                                <th>Excluir</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tabela-veiculos">
+                            
+                        </tbody>
+                    </table>
             </div>
+            <div id="alerta-exclusao" class="alertaletras" style="display: none;">
+                Veículo excluído com sucesso.
+            </div>
+            <div id="alerta-letras" class="alertaletras" style="display: none;">
+                Apenas letras são permitidas!
+            </div>
+            <div id="alerta-sucesso" class="alerta" style="display: none;">
+                Veículo cadastrado/atualizado com sucesso.
+            </div>
+
+            <div id="modalCadastro" class="modal">
+                <div class="modal-content-wide">
+                    <span class="close-btn" onclick="fecharModal()">&times;</span>
+                    <h2>Cadastrar Veículo</h2>
+                    <form id="formCadastro" class="form-grid-horizontal">
+                        <div>
+                            <label>Placa</label>
+                            <input type="text" id="placa" placeholder="Digite a Placa do Veículo" required>
+                        </div>
+                        <div>
+                            <label>Marca</label>
+                            <input type="text" id="marca" placeholder="Digite a Marca do Veículo" required>
+                        </div>
+                        <div>
+                            <label>Modelo</label>
+                            <input type="text" id="modelo" placeholder="Digite o Modelo do Veículo" required>
+                        </div>
+                        <div>
+                            <label>Ano de Fabricação</label>
+                            <input type="number" id="ano" placeholder="Digite o Ano de Fabricação" required>
+                        </div>
+                        <div>
+                            <label>Cor</label>
+                            <input type="text" id="cor" placeholder="Digite a Cor" required>
+                        </div>
+                        <div>
+                            <label>Odometro</label>
+                            <input type="number" id="odometro" placeholder="Digite A Quilometragem" required>
+                        </div>
+                        <div>
+                            <label>Renavam</label>
+                            <input type="text" id="renavam" placeholder="Digite o RENAVAM" required>
+                        </div>
+                        <div id="alerta-renavam" class="alertaletras" style="display: none;">
+                            RENAVAM inválido! Digite um número válido.
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit">Salvar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <script>
+                let proximoId = 1;
+                let linhaEditando = null;
+                let veiculos = [];
+
+                function abrirModal() {
+                    document.getElementById('modalCadastro').style.display = 'block';
+                    const botao = document.querySelector('#formCadastro button[type="submit"]');
+                    botao.textContent = linhaEditando !== null ? 'Salvar Alterações' : 'Salvar';
+                }
+
+                function fecharModal() {
+                    document.getElementById('modalCadastro').style.display = 'none';
+                    linhaEditando = null;
+                    document.getElementById("formCadastro").reset();
+                    document.querySelector('#formCadastro button[type="submit"]').textContent = 'Salvar';
+                }
+
+                function preencherFormulario(dados) {
+                    document.getElementById('placa').value = dados.placa;
+                    document.getElementById('marca').value = dados.marca;
+                    document.getElementById('modelo').value = dados.modelo;
+                    document.getElementById('ano').value = dados.ano;
+                    document.getElementById('cor').value = dados.cor;
+                    document.getElementById('odometro').value = dados.odometro;
+                    document.getElementById('renavam').value = dados.renavam;
+                }
+
+                function coletarFormulario() {
+                    return {
+                        id: linhaEditando !== null ? veiculos[linhaEditando].id : proximoId,
+                        placa: document.getElementById('placa').value,
+                        marca: document.getElementById('marca').value,
+                        modelo: document.getElementById('modelo').value,
+                        ano: document.getElementById('ano').value,
+                        cor: document.getElementById('cor').value,
+                        odometro: document.getElementById('odometro').value,
+                        renavam: document.getElementById('renavam').value,
+                    };
+                }
+
+                function atualizarTabela() {
+                    const tabela = document.getElementById('tabela-veiculos');
+                    tabela.innerHTML = '';
+
+                    veiculos.forEach((v, index) => {
+                        const linha = tabela.insertRow();
+                        linha.innerHTML = `
+                                <td>${v.id}</td>
+                                <td>${v.placa}</td>
+                                <td>${v.marca}</td>
+                                <td>${v.modelo}</td>
+                                <td>${v.cor}</td>
+                                <td><button class="edit-btn" onclick="editarVeiculo(${index})">Editar</button></td>
+                                <td><button class="delete-btn" onclick="excluirVeiculo(${index})">Excluir</button></td>
+                            `;
+                    });
+                }
+
+                function editarVeiculo(index) {
+                    linhaEditando = index;
+                    preencherFormulario(veiculos[index]);
+                    abrirModal();
+
+                }
+                function excluirVeiculo(index) {
+                    veiculos.splice(index, 1);
+                    atualizarTabela();
+                    const alerta = document.getElementById('alerta-exclusao');
+                    alerta.style.display = 'block';
+
+                    setTimeout(() => {
+                        alerta.style.display = 'none';
+                    }, 3000);
+                }
+                    function validarRenavam(renavam) {
+                        renavam = renavam.replace(/\D/g, '');
+
+                        if (renavam.length !== 9 && renavam.length !== 11) return false;
+                        if (renavam.length === 9) renavam = renavam.padStart(11, '0');
+
+                        const renavamSemDigito = renavam.slice(0, -1);
+                        const digitoInformado = parseInt(renavam.slice(-1));
+                        let soma = 0;
+                        let multiplicador = 2;
+
+                        for (let i = renavamSemDigito.length - 1; i >= 0; i--) {
+                            soma += parseInt(renavamSemDigito[i]) * multiplicador;
+                            multiplicador = multiplicador === 9 ? 2 : multiplicador + 1;
+                        }
+
+                        const resto = soma % 11;
+                        const digitoCalculado = resto === 0 || resto === 1 ? 0 : 11 - resto;
+                        return digitoCalculado === digitoInformado;
+                    }
+                document.getElementById("formCadastro").addEventListener("submit", function (e) {
+                    e.preventDefault();
+                    const dados = coletarFormulario();
+                    if (!validarRenavam(dados.renavam)) {
+                        const alerta = document.getElementById('alerta-renavam');
+                        alerta.textContent = "RENAVAM inválido! Digite um número válido.";
+                        alerta.style.display='block';
+
+                        setTimeout(() => {
+                            alerta.style.display='none';
+                        }, 3000);
+
+                        return; 
+                    }
+                    if (linhaEditando !== null) {
+                        veiculos[linhaEditando] = dados;
+                    } else {
+                        veiculos.push(dados);
+                        proximoId++;
+                    }
+                    atualizarTabela();
+                    fecharModal();
+                    const alerta = document.getElementById('alerta-sucesso');
+                    alerta.style.display = 'block';
+                    setTimeout(() => {
+                        alerta.style.display = 'none';
+                    }, 3000);
+                });
+                document.querySelectorAll("#marca, #cor").forEach(input => {
+                    input.addEventListener("input", function () {
+                        const valorAntigo = this.value;
+                        this.value = this.value.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+
+                        if (valorAntigo !== this.value) {
+                            // Exibir alerta
+                            const alertaLetras = document.getElementById('alerta-letras');
+                            alertaLetras.style.display = 'block';
+
+                            setTimeout(() => {
+                                alertaLetras.style.display = 'none';
+                            }, 3000);
+                        }
+                    });
+                    document.getElementById("renavam").addEventListener("input", function () {
+                        const valorAntigo = this.value;
+                        this.value = this.value.replace(/\D/g, '');
+
+                        if (valorAntigo !== this.value) {
+                            const alerta = document.getElementById('alerta-renavam');
+                            alerta.textContent = 'Apenas números são permitidos no campo RENAVAM!';
+                            alerta.style.display = 'block';
+
+                            setTimeout(() => {
+                                alerta.style.display = 'none';
+                            }, 3000);
+                        }
+                    });
+
+                });
+                window.onclick = function (event) {
+                    const modal = document.getElementById('modalCadastro');
+                    if (event.target === modal) {
+                        fecharModal();
+                    }
+                }
+            </script>
+
         </div>
+    </div>
+
+    <div class="footer">
+        <div class="copyright">
+            <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
+        </div>
+    </div>
 
     </div>
 
@@ -120,7 +519,6 @@
     <script src="js/settings.js"></script>
     <script src="js/gleek.js"></script>
     <script src="js/styleSwitcher.js"></script>
-
     <script src="./js/dashboard/dashboard-1.js"></script>
 
 </body>
