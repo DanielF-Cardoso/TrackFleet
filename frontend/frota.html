@@ -56,7 +56,7 @@
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Sair</span></a>
+                                        <li><a href="login.html"><i class="icon-key"></i> <span>Sair</span></a>
                                         </li>
                                     </ul>
                                 </div>
@@ -305,7 +305,10 @@
                     <form id="formCadastro" class="form-grid-horizontal">
                         <div>
                             <label>Placa</label>
-                            <input type="text" id="placa" placeholder="Digite a Placa do Veículo" required>
+                      <input type="text" id="placa" placeholder="Digite a Placa do Veículo" required>
+                        <div id="alerta-placa" class="alertaletras" style="display: none;">
+                         Placa inválida! Digite uma placa válida.
+                        </div>
                         </div>
                         <div>
                             <label>Marca</label>
@@ -391,8 +394,8 @@
                         linha.innerHTML = `
                                 <td>${v.id}</td>
                                 <td>${v.placa}</td>
-                                <td>${v.marca}</td>
                                 <td>${v.modelo}</td>
+                                <td>${v.marca}</td>
                                 <td>${v.cor}</td>
                                 <td><button class="edit-btn" onclick="editarVeiculo(${index})">Editar</button></td>
                                 <td><button class="delete-btn" onclick="excluirVeiculo(${index})">Excluir</button></td>
@@ -436,9 +439,26 @@
                         const digitoCalculado = resto === 0 || resto === 1 ? 0 : 11 - resto;
                         return digitoCalculado === digitoInformado;
                     }
+                    function validarPlaca(placa) {
+                    placa = placa.toUpperCase().replace(/[^A-Z0-9]/g, '');
+                     const padraoAntigo = /^[A-Z]{3}[0-9]{4}$/;
+                     const padraoMercosul = /^[A-Z]{3}[0-9][A-Z][0-9]{2}$/;
+                    return padraoAntigo.test(placa) || padraoMercosul.test(placa);
+                    }
                 document.getElementById("formCadastro").addEventListener("submit", function (e) {
                     e.preventDefault();
                     const dados = coletarFormulario();
+                        if (!validarPlaca(dados.placa)) {
+                const alerta = document.getElementById('alerta-placa');
+                alerta.textContent = "Placa inválida! Digite uma placa válida (ex: ABC1234 ou ABC1D23).";
+                alerta.style.display = 'block';
+
+                setTimeout(() => {
+                  alerta.style.display = 'none';
+                 }, 3000);
+                 return;
+                 }
+
                     if (!validarRenavam(dados.renavam)) {
                         const alerta = document.getElementById('alerta-renavam');
                         alerta.textContent = "RENAVAM inválido! Digite um número válido.";
@@ -464,6 +484,7 @@
                         alerta.style.display = 'none';
                     }, 3000);
                 });
+                
                 document.querySelectorAll("#marca, #cor").forEach(input => {
                     input.addEventListener("input", function () {
                         const valorAntigo = this.value;
@@ -479,6 +500,7 @@
                             }, 3000);
                         }
                     });
+                    
                     document.getElementById("renavam").addEventListener("input", function () {
                         const valorAntigo = this.value;
                         this.value = this.value.replace(/\D/g, '');
