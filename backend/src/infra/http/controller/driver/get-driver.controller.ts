@@ -12,7 +12,7 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { DriverPresenter } from '../../presenters/driver.presenter'
 import { I18nService } from 'nestjs-i18n'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
-import { DriverNotFoundError } from '@/domain/driver/application/services/errors/driver-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -65,7 +65,7 @@ export class GetDriverController {
       const error = result.value
 
       switch (error.constructor) {
-        case DriverNotFoundError:
+        case ResourceNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.driver.notFound'),
           )

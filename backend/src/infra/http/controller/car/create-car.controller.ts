@@ -9,11 +9,12 @@ import {
   UseGuards,
   Request,
 } from '@nestjs/common'
-import { CarAlreadyExistsError } from '@/domain/cars/application/services/errors/car-already-exists-error'
 import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { CreateCarDto } from '../../dto/car/create-car.dto'
 import { CarPresenter } from '../../presenters/car.presenter'
+import { LicensePlateAlreadyExistsError } from '@/domain/cars/application/services/errors/license-plate-already-exists.error'
+import { RenavamAlreadyExistsError } from '@/domain/cars/application/services/errors/renavam-already-exists.error'
 
 @ApiTags('Veículos')
 @Controller('cars')
@@ -81,9 +82,13 @@ export class CreateCarController {
       const error = result.value
 
       switch (error.constructor) {
-        case CarAlreadyExistsError:
+        case LicensePlateAlreadyExistsError:
           throw new ConflictException(
-            await this.i18n.translate('errors.car.alreadyExists'),
+            await this.i18n.translate('errors.car.licensePlateAlreadyExists'),
+          )
+        case RenavamAlreadyExistsError:
+          throw new ConflictException(
+            await this.i18n.translate('errors.car.renavamAlreadyExists'),
           )
         default:
           throw new InternalServerErrorException(

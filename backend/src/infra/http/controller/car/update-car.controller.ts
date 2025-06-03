@@ -14,8 +14,9 @@ import { I18nService } from 'nestjs-i18n'
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { UpdateCarService } from '@/domain/cars/application/services/update-car.service'
 import { UpdateCarDTO } from '../../dto/car/update-car.dto'
-import { CarAlreadyExistsError } from '@/domain/cars/application/services/errors/car-already-exists-error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { LicensePlateAlreadyExistsError } from '@/domain/cars/application/services/errors/license-plate-already-exists.error'
+import { RenavamAlreadyExistsError } from '@/domain/cars/application/services/errors/renavam-already-exists.error'
 
 @ApiTags('Carros')
 @Controller('cars')
@@ -84,9 +85,13 @@ export class UpdateCarController {
           throw new NotFoundException(
             await this.i18n.translate('errors.car.notFound'),
           )
-        case CarAlreadyExistsError:
+        case LicensePlateAlreadyExistsError:
           throw new ConflictException(
-            await this.i18n.translate('errors.generic.sameEmail'),
+            await this.i18n.translate('errors.car.licensePlateAlreadyExists'),
+          )
+        case RenavamAlreadyExistsError:
+          throw new ConflictException(
+            await this.i18n.translate('errors.car.renavamAlreadyExists'),
           )
         default:
           throw new BadRequestException(

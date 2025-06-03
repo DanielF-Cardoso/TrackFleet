@@ -10,7 +10,7 @@ import { I18nService } from 'nestjs-i18n'
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
 import { ListDriversService } from '@/domain/driver/application/services/list-driver.service'
 import { DriverPresenter } from '../../presenters/driver.presenter'
-import { DriverNotFoundError } from '@/domain/driver/application/services/errors/driver-not-found'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 @ApiTags('Motoristas')
 @Controller('drivers')
@@ -64,7 +64,7 @@ export class ListDriversController {
       const error = result.value
 
       switch (error.constructor) {
-        case DriverNotFoundError:
+        case ResourceNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.driver.notFoundAll'),
           )

@@ -16,8 +16,8 @@ import { SamePhoneError } from '@/core/errors/same-phone.error'
 import { UpdateDriverProfileService } from '@/domain/driver/application/services/update-driver-profile.service'
 import { UpdateDriverDTO } from '../../dto/driver/update-driver.dto'
 import { DriverPresenter } from '../../presenters/driver.presenter'
-import { DriverNotFoundError } from '@/domain/driver/application/services/errors/driver-not-found'
 import { SameCnhError } from '@/domain/driver/application/services/errors/same-cnh.error.error'
+import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 
 @ApiTags('Motoristas')
 @Controller('drivers')
@@ -25,7 +25,7 @@ export class UpdateDriverController {
   constructor(
     private updateDriverProfileService: UpdateDriverProfileService,
     private readonly i18n: I18nService,
-  ) { }
+  ) {}
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
@@ -88,7 +88,7 @@ export class UpdateDriverController {
       const error = result.value
 
       switch (error.constructor) {
-        case DriverNotFoundError:
+        case ResourceNotFoundError:
           throw new NotFoundException(
             await this.i18n.translate('errors.manager.notFound'),
           )
