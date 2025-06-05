@@ -105,17 +105,17 @@
 
         <div class="content-body">
             <div class="container-fluid mt-3">
-                
-                <div class="flex items-center mb-4 bg-blue-600 text-white px-4 py-2 rounded-lg">
+                <meta charset="UTF-8">
+                <div class="flex items-center mb-4 text-white px-4 py-2 rounded-lg" style="background-image: linear-gradient(230deg, #0e4cfd, #6a8eff);">
                     <h2 class="section-title font-bold text-3xl mr-4">Gestores Cadastrados</h2>
                     <div class="flex-grow"></div>
-                    <button onclick="abrirModal()" class="font-bold bg-blue-700 hover:bg-blue-800 transition px-4 py-2 rounded">
+                    <button onclick="abrirModal()" class="font-bold bg-white-700 hover:bg-blue-800 transition px-4 py-2 rounded text-base">
                         <i class="fa fa-plus mr-2"></i>Adicionar Gestor
                     </button>
                 </div>
                 <table class="w-full bg-white rounded-lg shadow-lg" style="overflow: hidden;">
                     <thead>
-                        <tr style="background-color: #2563eb; color: #ffffff;" >
+                        <tr style="background-image: linear-gradient(230deg, #0e4cfd, #6a8eff);" >
                             <th class="py-3 px-4 text-left">Nome</th>
                             <th class="py-3 px-4 text-left">Email</th>
                             <th class="py-3 px-4 text-left">Código</th>
@@ -130,12 +130,6 @@
             </div>
         </div>
                                                                                       
-</div>
-
-<div class="footer">
-    <div class="copyright">
-        <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
-    </div>
 </div>
 
 <div id="alerta-sucesso" style="
@@ -225,8 +219,7 @@
    body { background-color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; margin: 0; font-family: sans-serif; }
         #main-wrapper { flex: 1; display: flex; flex-direction: column; }
         .content-body { flex: 1; padding: 1.5rem; }
-        .section-title { display:inline-block; background-color:#2563eb; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1.5rem; font-weight:600; margin-left: -20px; }
-        .footer { background-color: #e5e7eb; text-align: center; padding: 0.75rem; border-top: 1px solid #d1d5db; }
+        .section-title { display:inline-block; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1.5rem; font-weight:600; margin-left: -20px; }
         
         .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; overflow: auto; }
         .modal-content { background-color: #fff; padding: 20px 30px; border-radius: 15px; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); max-height: 80vh; overflow: auto; }
@@ -624,6 +617,12 @@
 
 </script>
     
+<div class="footer">
+        <div class="copyright">
+            <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
+        </div>
+    </div>
+
 </div>
 
     <script src="plugins/common/common.min.js"></script>
