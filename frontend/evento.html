@@ -56,7 +56,7 @@
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        <li><a href="page-login.html"><i class="icon-key"></i> <span>Sair</span></a></li>
+                                        <li><a href="login.html"><i class="icon-key"></i> <span>Sair</span></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -73,7 +73,7 @@
             <div class="nk-nav-scroll">
                 <ul class="metismenu" id="menu">
                     <li>
-                        <a class="has-arrow" href="/" aria-expanded="false">
+                        <a class="has-arrow" href="index.html" aria-expanded="false">
                             <i class="fa fa-tachometer menu-icon"></i><span class="nav-text">Ínicio</span>
                         </a>
                     </li>
@@ -103,7 +103,443 @@
 
         <div class="content-body">
             <div class="container-fluid mt-3">
-               <!-- ADICIONAR AQUI -->
+               <meta charset="UTF-8">
+        <title>Controle de Eventos</title>
+    <style>
+        body {font-family: 'Segoe UI', Tahoma, sans-serif; margin: 0; padding: 0; background-color: #f0f4f8;}
+        .container {width: 90%; max-width: 1000px; margin: 20px auto; padding: 0 10px;}
+        .top-bar {
+            background-image: linear-gradient(230deg, #ffc480, #ff763b); color: #fff; display: flex; justify-content: space-between;
+            align-items: center; padding: 15px 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .top-bar h1 {margin: 0; font-size: 1.5rem; color:#fff; font-weight: bold; }
+        .top-bar button {
+            background-color: #ffc480; color: #fff; border: none; padding: 10px 20px;
+            font-size: 1rem; border-radius: 6px; cursor: pointer; transition: background-color 0.3s ease;
+            font-weight: bold; 
+        }
+        .top-bar button:hover {background-color: #ff763b;}
+        table {
+            width: 100%; border-collapse: collapse; margin-top: 20px; background-image: linear-gradient(230deg, #ffc480, #ff763b);
+            border-radius: 8px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden;
+            font-family: Arial, sans-serif; border: none;
+        }
+        th, td {padding: 12px 16px; text-align: center; border: none; }
+        th {
+            color: #fff; font-weight: bold; text-transform: uppercase;
+            font-size: 14px; border-bottom: 2px solid #ffffff;
+        }
+        tbody tr:hover {background-color: #f1f1f1;}
+        .delete-btn, .view-btn {
+            border: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-right: 4px;
+        }
+        .view-btn { background-color: #4caf50; color: white; }
+        .view-btn:hover { background-color: #388e3c; }
+        .delete-btn { background-color: #f56565; color: white; }
+        .delete-btn:hover { background-color: #c53030; }
+        .modal {
+            display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0, 0, 0, 0.5);
+        }
+        .modal-content-wide {
+            background-color: white; margin: 30px auto; padding: 30px; border-radius: 16px;
+            width: 60%; max-width: 1200px; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1); position: relative; justify-content: center; align-items: center;
+        }
+
+    .btn-finalizar {
+      background-color: #dc3545;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .btn-finalizar:hover {
+      background-color: #c82333;
+    }
+
+        /* Modal */
+    #modalFinalizarEvento {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+
+    #modalFinalizarEvento.ativo {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #fff;
+      padding: 20px 30px;
+      border-radius: 8px;
+      width: 90%;
+      max-width: 400px;
+      text-align: center;
+    }
+
+    .modal-content input {
+      margin-top: 10px;
+      padding: 10px;
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .modal-actions {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .modal-actions button {
+      padding: 8px 14px;
+      width: 48%;
+    }
+
+    .botoes {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.botoes button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+  background-color: #4caf50;
+  color: white;
+}
+
+.botoes button:last-child {
+  background-color: #aaa;
+}
+
+    .alerta-erro {
+      margin-top: 10px;
+      background-color: #ffebee;
+      color: #c62828;
+      padding: 10px 12px;
+      border-left: 4px solid #c62828;
+      border-radius: 4px;
+      font-size: 0.9em;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { transform: scale(0.95); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+        .form-grid-horizontal {
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; align-items: end;
+        }
+        .form-grid-horizontal label {
+            display: block; margin-bottom: 6px; font-weight: 600; color: #3f4254;
+        }
+        .form-grid-horizontal input, .form-grid-horizontal select {
+            width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #d1d5db; background-color: #f9fafb;
+        }
+        .form-actions {grid-column: span 3; text-align: right; margin-top: 20px;}
+        .form-actions button {
+            padding: 12px 24px; background-image: linear-gradient(230deg, #ffc480, #ff763b);
+            color: white; border: none; border-radius: 8px; font-weight: 600; font-size: 14px; cursor: pointer;
+        }
+        .form-actions button:hover {opacity: 0.95;}
+        .close-btn {
+            position: absolute; top: 10px; right: 15px; font-size: 24px; color: #999; cursor: pointer;
+        }
+        .close-btn:hover {color: #000;}
+        @media (max-width: 768px) {
+            .form-grid-horizontal {grid-template-columns: 1fr 1fr;}
+        }
+        @media (max-width: 500px) {
+            .form-grid-horizontal {grid-template-columns: 1fr;}
+            .form-actions {text-align: center;}
+        }
+        .alerta, .alertaletras {
+            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+            color: white; padding: 14px 28px; border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); font-weight: bold; z-index: 2000;
+            animation: fadeInOut 3s ease-in-out;
+        }
+        .alerta {background-color: #38a169;}
+        .alertaletras {background-color: #b40c23;}
+        @keyframes fadeInOut {
+            0% {opacity: 0; transform: translateX(-50%) translateY(-10px);}
+            10%,90% {opacity: 1; transform: translateX(-50%) translateY(0);}
+            100% {opacity: 0; transform: translateX(-50%) translateY(-10px);}
+        }
+    </style>
+</head>
+<body>
+    <div class="barra-titulo">
+        <header class="top-bar">
+            <h1>Controle de Eventos</h1>
+            <button onclick="abrirModal()"><i class="fa fa-plus mr-2"></i>Cadastrar Evento</button>
+        </header>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Gestor</th>
+                <th>Motorista</th>
+                <th>Carro</th>
+                <th>Status</th>
+                <th>Odômetro</th>
+                <th>Início</th>
+                <th>Fim</th>
+                <th>Ações</th>
+                
+            </tr>
+        </thead>
+        <tbody id="tabela-eventos">
+            <!-- Dados dinâmicos -->
+        </tbody>
+    </table>
+
+    <div id="alerta-sucesso" class="alerta" style="display: none;">
+        Evento adicionado com sucesso.
+    </div>
+
+    <div id="modalCadastro" class="modal">
+        <div class="modal-content-wide">
+            <span class="close-btn" onclick="fecharModal()">&times;</span>
+            <h2>Cadastrar Evento</h2>
+            <form id="formCadastro" class="form-grid-horizontal">
+                <div>
+                    <label>Gestor Responsável</label>
+                    <input type="text" id="gestor" placeholder="Nome do Gestor" required>
+                </div>
+                <div>
+                    <label>Motorista</label>
+                    <input type="text" id="motorista" placeholder="Nome do Motorista" required>
+                </div>
+                <div>
+                    <label>Carro</label>
+                    <input type="text" id="carro" placeholder="Identificação do Carro" required>
+                </div>
+                <div>
+                    <label>Status</label>
+                    <select id="status" required>
+                        <option value="Entrada">Entrada</option>
+                        <option value="Saída">Saída</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Odômetro</label>
+                    <input type="number" id="odometro" placeholder="Quilometragem" required>
+                </div>
+                <div>
+                    <label>Data de Início</label>
+                    <input type="datetime-local" id="dataInicio" required>
+                </div>
+                <div>
+                    <label>Data Final</label>
+                    <input type="datetime-local" id="dataFim" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de Finalização -->
+<div id="modalFinalizarEvento" class="modal">
+  <div class="modal-content">
+    <h3>Finalizar Evento</h3>
+    <p>Odômetro atual do carro: <strong id="odometroAtualModal">0</strong> km</p>
+    <input type="number" id="odometroFinalInput" placeholder="Digite o odômetro final">
+    <div id="erroFinalizacao" style="display: none; margin-top: 10px; border-radius: 5px; padding: 10px; background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;">
+        ⚠️ O odômetro final não pode ser menor que o inicial!
+    </div>
+    <div class="botoes">
+      <button onclick="confirmarFinalizacao()">Confirmar</button>
+      <button onclick="fecharModalFinalizar()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+    // Abrir o modal
+    function abrirModal() {
+        document.getElementById('modalCadastro').style.display = 'block';
+    }
+
+    // Fechar o modal
+    function fecharModal() {
+        document.getElementById('modalCadastro').style.display = 'none';
+    }
+
+    // Fechar modal ao clicar fora do conteúdo
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalCadastro');
+        if (event.target === modal) {
+            fecharModal();
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const camposTexto = [document.getElementById('gestor'), document.getElementById('motorista')];
+
+        camposTexto.forEach(campo => {
+            // Bloquear números digitados
+            campo.addEventListener('keypress', function (e) {
+                if (/\d/.test(e.key)) {
+                    e.preventDefault();
+                }
+            });
+
+            // Bloquear colagem de texto com números
+            campo.addEventListener('paste', function (e) {
+                const textoColado = (e.clipboardData || window.clipboardData).getData('text');
+                if (/\d/.test(textoColado)) {
+                    e.preventDefault();
+                }
+            });
+        });
+    });
+
+    let contadorId = 1; // contador simples de ID
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('formCadastro');
+    const tabelaEventos = document.getElementById('tabela-eventos');
+
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Captura dos valores
+        const gestor = document.getElementById('gestor').value;
+        const motorista = document.getElementById('motorista').value;
+        const carro = document.getElementById('carro').value;
+        const status = document.getElementById('status').value;
+        const odometro = document.getElementById('odometro').value;
+        const dataInicio = document.getElementById('dataInicio').value;
+        const dataFim = document.getElementById('dataFim').value;
+
+        // Criação da nova linha
+        const novaLinha = document.createElement('tr');
+        const idAtual = contadorId++;
+
+        novaLinha.innerHTML = `
+            <td>${idAtual}</td>
+            <td>${gestor}</td>
+            <td>${motorista}</td>
+            <td>${carro}</td>
+            <td>${status}</td>
+            <td>${odometro}</td>
+            <td>${dataInicio}</td>
+            <td>${dataFim}</td>
+            <td>
+                <button class="btn-finalizar" onclick="abrirModalFinalizar(this)">Finalizar</button>
+            </td>
+        `;
+
+        tabelaEventos.appendChild(novaLinha);
+
+        // Limpa o formulário e fecha o modal
+        form.reset();
+        fecharModal();
+        mostrarAlerta('alerta-sucesso');
+    });
+    });
+
+    // Função para excluir a linha
+    function excluirEvento(botao) {
+        const linha = botao.closest('tr');
+        linha.remove();
+        mostrarAlerta('alerta-exclusao');
+    }
+
+    function mostrarAlerta(idAlerta, duracao = 3000) {
+    const alerta = document.getElementById(idAlerta);
+    if (!alerta) return;
+
+    alerta.style.display = 'block';
+
+    // Após 'duracao' ms, esconde o alerta
+    setTimeout(() => {
+        alerta.style.display = 'none';
+    }, duracao);
+    }
+
+    // Exemplo de uso:
+    // mostrarAlerta('alerta-sucesso');
+    // mostrarAlerta('alerta-exclusao');
+
+     let linhaSelecionada = null;
+     let odometroInicial = 0;
+
+  let linhaEventoSelecionada = null;
+let odometroAtual = 0;
+
+function abrirModalFinalizar(botao) {
+  linhaEventoSelecionada = botao.closest('tr');
+
+  // Corrigido: Coluna 6 = índice 5 = odômetro
+  odometroAtual = parseFloat(linhaEventoSelecionada.cells[5].innerText);
+  document.getElementById('odometroAtualModal').innerText = odometroAtual;
+
+  document.getElementById('odometroFinalInput').value = '';
+  document.getElementById('erroFinalizacao').style.display = 'none';
+
+  document.getElementById('modalFinalizarEvento').classList.add('ativo');
+}
+
+function fecharModalFinalizar() {
+  document.getElementById('modalFinalizarEvento').classList.remove('ativo');
+
+  // Esconde o alerta ao fechar
+  document.getElementById('erroFinalizacao').style.display = 'none';
+}
+
+function confirmarFinalizacao() {
+  const inputFinal = document.getElementById('odometroFinalInput').value;
+  const odometroFinal = parseFloat(inputFinal);
+  const erro = document.getElementById('erroFinalizacao');
+
+  if (isNaN(odometroFinal) || odometroFinal < odometroAtual) {
+    erro.innerText = '⚠️ O odômetro final não pode ser menor que o inicial!';
+    erro.style.display = 'block';
+    erro.style.backgroundColor = '#f8d7da';
+    erro.style.color = '#721c24';
+    erro.style.border = '1px solid #f5c6cb';
+    erro.style.padding = '10px';
+    erro.style.marginTop = '10px';
+    erro.style.borderRadius = '5px';
+    return;
+  }
+
+  // Remove a linha da tabela
+  if (linhaEventoSelecionada) {
+    linhaEventoSelecionada.remove();
+  }
+
+  // Esconde o alerta se estava aparecendo
+  erro.style.display = 'none';
+
+  fecharModalFinalizar();
+}
+</script>
+
             </div>
         </div>
 
