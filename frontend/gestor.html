@@ -106,14 +106,14 @@
         <div class="content-body">
             <div class="container-fluid mt-3">
                 <meta charset="UTF-8">
-                <div class="flex items-center mb-4 text-white px-4 py-2 rounded-lg" style="background-image: linear-gradient(230deg, #0e4cfd, #6a8eff);">
-                    <h2 class="section-title font-bold text-3xl mr-4">Gestores Cadastrados</h2>
+                <div class="flex items-center mb-4 text-white px-4 py-2.5 rounded-lg" style="background-image: linear-gradient(230deg, #0e4cfd, #6a8eff);">
+                    <h2 class="section-title font-bold text-3xl mr-4">Controle de Gestores</h2>
                     <div class="flex-grow"></div>
                     <button onclick="abrirModal()" class="font-bold bg-white-700 hover:bg-blue-800 transition px-4 py-2 rounded text-base">
                         <i class="fa fa-plus mr-2"></i>Adicionar Gestor
                     </button>
                 </div>
-                <table class="w-full bg-white rounded-lg shadow-lg" style="overflow: hidden;">
+                <table>
                     <thead>
                         <tr style="background-image: linear-gradient(230deg, #0e4cfd, #6a8eff);" >
                             <th class="py-3 px-4 text-left">Nome</th>
@@ -216,9 +216,9 @@
     </div>
 </div>
 <style>
-   body { background-color: #ffffff; display: flex; flex-direction: column; min-height: 100vh; margin: 0; font-family: sans-serif; }
+   body { background-color: #f0f4f8; padding: 0;  margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; }
         #main-wrapper { flex: 1; display: flex; flex-direction: column; }
-        .content-body { flex: 1; padding: 1.5rem; }
+        .content-body { flex: 1; padding: 0.10px; }
         .section-title { display:inline-block; color:#fff; padding:0.5rem 1rem; border-radius:0.25rem; font-size:1.5rem; font-weight:600; margin-left: -20px; }
         
         .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.5); display: flex; justify-content: center; align-items: center; z-index: 999; overflow: auto; }
@@ -257,10 +257,11 @@
         .error-message { color: #d9534f; font-size: 0.875rem; margin-bottom: 10px; display: none; }
         .success-message { color: #5cb85c; font-size: 0.875rem; margin-bottom: 10px; display: none; background-color: #d4edda; border-radius: 4px; padding: 10px; border: 1px solid #c3e6cb; }
         
-        .table-wrapper { background-color: #ffffff; overflow-x: auto; border: 1px solid #e5e7eb; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-        table { width: 100%; border-collapse: collapse; }
+        h2.section-title{font-weight: bold;}
+
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; border-radius: 8px;box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); overflow: hidden; border-spacing: 0 10px; font-family: Arial, sans-serif;}
         thead { background-color: #2563eb; }
-        thead th { color: #ffffff; font-weight: 700; text-transform: uppercase; font-size: 1rem; letter-spacing: 0.1em; text-align: left; padding: 0.1rem 1.25rem; border-bottom: 2px solid #ffffff; }
+        thead th { color: #ffffff; font-weight: bold; text-transform: uppercase; font-size: 14px;  border-bottom: 2px solid #fdfdfd; }
         tbody tr:nth-child(even) { background-color: #f9fafb; }
         tbody tr:hover { background-color: #f3f4f6; }
         td { padding: 0.75rem 1rem; color: #374151; font-size: 0.875rem; }
