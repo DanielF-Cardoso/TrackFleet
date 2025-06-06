@@ -104,15 +104,15 @@
         <div class="content-body">
             <div class="container-fluid mt-3">
             <div class="card-body">
-                <div class="barra-topo">
+                <div class="barra-topo" style="background-image: linear-gradient(230deg, #759bff, #843cf6);">
                         <h2 class="titulo">Gestão de Motoristas</h2>
-                        <button class="btn-adicionar" id="btnAddMotorista">
+                        <button class="btn-adicionar" id="btnAddMotorista" style="background-color: #759bff";>
                             <i class="fa fa-plus mr-2"></i> Adicionar Motorista</button>
                     </div>
                 <div class="table-responsive">
                     <table class="w-full bg-white rounded-lg shadow-lg">
                         <thead>
-                            <tr>
+                            <tr style="background-image: linear-gradient(230deg, #759bff, #843cf6);">
                                 <th>ID</th>
                                 <th>NOME</th>
                                 <th>SOBRENOME</th>
@@ -222,11 +222,7 @@
             </div>
         </div>
 
-        <div class="footer">
-            <div class="copyright">
-                <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
-            </div>
-        </div>
+        
 
 <style>
     body {
@@ -236,29 +232,33 @@
     }
         
         table {
-        border-collapse: collapse;
+        border-collapse: separate;
         border-spacing: 0;
         width: 100%;
-        border: 3px solid #2563eb;
+        border: none;
         border-radius: 10px;
         color: #004085;
         font-family: Arial, sans-serif;
         overflow: hidden;
-        background-color: transparent; /* fundo transparente */
         line-height: 1.7;
-        font-size: 16px;;
+        font-size: 16px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     table th, table td {
         border: none !important;
-        padding: 15px 20px;
+        padding: 12px 16px;
         text-align: center;
         vertical-align: middle; /* para alinhar verticalmente ao centro */
+        background: none !important;   /* Garante que não tenha nenhuma cor residual */
     }
+    th {
+            color: #fff; font-weight: bold; text-transform: uppercase;
+            font-size: 14px; border-bottom: 2px solid #ffffff;
+        }
 
     table thead th {
-        border-bottom: 3px solid #0056b3;
-        background-color: #2563eb;
+        background-image: linear-gradient(230deg, #759bff, #843cf6);
         color: white;
         font-weight: bold;
     }
@@ -353,8 +353,8 @@
     }
 
     .barra-topo .btn-adicionar {
-    background-color: white;
-    color: #2563eb;
+    background-color: #2563eb;
+    color: #ffffff;
     border: none;
     padding: 10px 20px;
     font-size: 1rem;
@@ -377,7 +377,7 @@
     }
 
     .btn-salvar {
-    background-color: #2563eb; /* azul normal */
+    background-color: #759bff; /* azul normal */
     color: white;
     border: none;
     padding: 10px 20px;
@@ -387,11 +387,11 @@
     }
 
     .btn-salvar:hover {
-    background-color: #0d3894; /* azul mais escuro ao passar o mouse */
+    background-color: #843cf6; /* azul mais escuro ao passar o mouse */
     }
 
     .btn-editar {
-    background-color: #2563eb; /* azul */
+    background-color: #759bff; /* azul */
     color: white;
     border: none;
     padding: 8px 12px;
@@ -401,7 +401,7 @@
     }
 
     .btn-editar:hover {
-    background-color: #0d3894; /* azul mais escuro no hover */
+    background-color: #843cf6; /* azul mais escuro no hover */
     }
 
     .btn-excluir {
@@ -667,6 +667,12 @@
     }
 
 </script>
+
+<div class="footer">
+        <div class="copyright">
+            <p>Copyright &copy; Todos os Direitos Reservardos TrackFleet 2025</p>
+        </div>
+    </div>
 
 </div>
 
