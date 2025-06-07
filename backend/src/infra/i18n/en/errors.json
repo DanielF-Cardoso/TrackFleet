@@ -13,9 +13,12 @@
     "notFound": "Manager not found.",
     "notFoundAll": "No managers found."
   },
+  "driver": {
+    "notFound": "Driver not found."
+  },
   "event": {
     "invalidOdometer": "The odometer cannot be decreased.",
-    "odometerTooHigh": "The odometer cannot be increased more than 10%.",
+    "odometerTooHigh": "The odometer increase exceeds the allowed limit.",
     "carInUse": "The car is already in use.",
     "alreadyFinalized": "The event is already finalized.",
     "notFound": "Event not found.",
@@ -34,7 +37,7 @@
     "sameEmail": "The new email cannot be the same as the current email.",
     "samePhone": "The new phone cannot be the same as the current phone.",
     "samePassword": "The new password cannot be the same as the current password.",
-    "unexpectedError": "An unexpected error occurred. Please try again later.",
+    "unexpectedError": "An unexpected error occurred.",
     "serviceHealthy": "The service is healthy.",
     "serviceUnhealthy": "The service is unhealthy.",
     "databaseConnected": "Database connected.",

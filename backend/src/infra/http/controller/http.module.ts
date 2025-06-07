@@ -38,6 +38,8 @@ import { GetDriverController } from './driver/get-driver.controller'
 import { GetDriverProfileService } from '@/domain/driver/application/services/get-driver-profile.service'
 import { UpdateDriverController } from './driver/update-driver.controller'
 import { UpdateDriverProfileService } from '@/domain/driver/application/services/update-driver-profile.service'
+import { CreateEventController } from './event/create-event.controller'
+import { CreateEventService } from '@/domain/event/application/services/create-event.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -59,6 +61,7 @@ import { UpdateDriverProfileService } from '@/domain/driver/application/services
     ListDriversController,
     GetDriverController,
     UpdateDriverController,
+    CreateEventController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -79,6 +82,7 @@ import { UpdateDriverProfileService } from '@/domain/driver/application/services
     ListDriversService,
     GetDriverProfileService,
     UpdateDriverProfileService,
+    CreateEventService,
   ],
 })
 export class HttpModule {}

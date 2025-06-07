@@ -8,14 +8,17 @@
     "manager": {
       "alreadyExists": "Ya existe un gestor con este correo electrónico.",
       "alreadyExistsByPhone": "Ya existe un gestor con este teléfono.",
-      "notFound": "Gestor no encontrado.",
       "cannotInactivateLast": "No se puede inactivar el último gestor.",
       "cannotInactivateOwn": "No se puede inactivar su propia cuenta.",
+      "notFound": "Gestor no encontrado.",
       "notFoundAll": "No se encontraron gestores."
+    },
+    "driver": {
+      "notFound": "Conductor no encontrado."
     },
     "event": {
       "invalidOdometer": "El odómetro no puede disminuir.",
-      "odometerTooHigh": "El odómetro no puede aumentar más de un 10%.",
+      "odometerTooHigh": "El aumento del odómetro excede el límite permitido.",
       "carInUse": "El vehículo ya está en uso.",
       "alreadyFinalized": "El evento ya está finalizado.",
       "notFound": "Evento no encontrado.",
@@ -25,6 +28,7 @@
       "invalidCredentials": "Correo electrónico o contraseña inválidos.",
       "invalidPassword": "Contraseña actual inválida.",
       "unauthorized": "No estás autorizado para realizar esta acción.",
+      "inactiveUser": "Usuario inactivo. Por favor contacte al administrador.",
       "tokenRequestTooSoon": "Se ha solicitado un token demasiado pronto. Por favor, espera un minuto antes de solicitar otro token.",
       "invalidToken": "Token inválido.",
       "passwordReset": "Contraseña restablecida correctamente."
@@ -33,7 +37,7 @@
       "sameEmail": "El nuevo correo electrónico no puede ser igual al actual.",
       "samePhone": "El nuevo teléfono no puede ser igual al actual.",
       "samePassword": "La nueva contraseña no puede ser igual a la actual.",
-      "unexpectedError": "Ocurrió un error inesperado. Por favor, inténtalo de nuevo más tarde.",
+      "unexpectedError": "Ocurrió un error inesperado.",
       "serviceHealthy": "El servicio está saludable.",
       "serviceUnhealthy": "El servicio tiene problemas.",
       "databaseConnected": "Base de datos conectada.",

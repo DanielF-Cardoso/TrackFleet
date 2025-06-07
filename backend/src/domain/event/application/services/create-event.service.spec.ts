@@ -10,19 +10,27 @@ import { makeEvent } from 'test/factories/event/make-event'
 import { makeEventInput } from 'test/factories/event/make-event-input'
 import { CarNotFoundError } from './errors/car-not-found.error'
 import { DriverNotFoundError } from './errors/driver-not-found.error'
-import { InvalidEventError } from './errors/invalid-event.error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { InvalidOdometerError } from './errors/invalid-odometer.error'
+import { OdometerToHighError } from './errors/odometer-to-high.error'
+import { CarInUseError } from './errors/car-in-use.error'
+import { LoggerService } from '@nestjs/common'
 
 let sut: CreateEventService
 let eventRepository: InMemoryEventRepository
 let carRepository: InMemoryCarRepository
 let driverRepository: InMemoryDriverRepository
 let i18n: I18nService
+let logger: LoggerService
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
   carRepository = new InMemoryCarRepository()
   driverRepository = new InMemoryDriverRepository()
+  logger = {
+    log: vi.fn(),
+    warn: vi.fn(),
+  } as unknown as LoggerService
 
   i18n = {
     translate: vi.fn(),
@@ -33,10 +41,11 @@ beforeEach(() => {
     carRepository,
     driverRepository,
     i18n,
+    logger,
   )
 })
 
-describe('CreateEventService', () => {
+describe('Create Event Service', () => {
   it('should be able to create a new event and update car status to IN_USE', async () => {
     const car = makeCar({ odometer: 1000 })
     const driver = makeDriver()
@@ -126,16 +135,16 @@ describe('CreateEventService', () => {
     )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(InvalidOdometerError)
+    if (result.value instanceof InvalidOdometerError) {
       expect(result.value.message).toBe('Invalid odometer value.')
     }
   })
 
-  it('should not be able to create an event with odometer too high for a low mileage car', async () => {
+  it('should not be able to create an event with odometer increase above 10% for cars under 1000km', async () => {
     vi.spyOn(i18n, 'translate').mockResolvedValue('Odometer value is too high.')
 
-    const car = makeCar({ odometer: 100 })
+    const car = makeCar({ odometer: 500 })
     const driver = makeDriver()
 
     await carRepository.create(car)
@@ -145,18 +154,18 @@ describe('CreateEventService', () => {
       makeEventInput({
         carId: car.id.toValue(),
         driverId: driver.id.toValue(),
-        odometer: 150,
+        odometer: 600,
       }),
     )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(OdometerToHighError)
+    if (result.value instanceof OdometerToHighError) {
       expect(result.value.message).toBe('Odometer value is too high.')
     }
   })
 
-  it('should not be able to create an event with odometer too high for a high mileage car', async () => {
+  it('should not be able to create an event with odometer increase above 5% for cars over 1000km', async () => {
     vi.spyOn(i18n, 'translate').mockResolvedValue('Odometer value is too high.')
 
     const car = makeCar({ odometer: 100000 })
@@ -174,16 +183,15 @@ describe('CreateEventService', () => {
     )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(OdometerToHighError)
+    if (result.value instanceof OdometerToHighError) {
       expect(result.value.message).toBe('Odometer value is too high.')
     }
   })
 
-  it('should be able to create an event with reasonable odometer increase for a low mileage car', async () => {
-    const car = makeCar({ odometer: 100 })
+  it('should be able to create an event with valid odometer increase (under 10%) for cars under 1000km', async () => {
+    const car = makeCar({ odometer: 500 })
     const driver = makeDriver()
-    const managerId = 'manager-1'
 
     await carRepository.create(car)
     await driverRepository.create(driver)
@@ -192,23 +200,16 @@ describe('CreateEventService', () => {
       makeEventInput({
         carId: car.id.toValue(),
         driverId: driver.id.toValue(),
-        managerId,
-        odometer: 110,
+        odometer: 550,
       }),
     )
 
-    expect(result.isRight()).toBeTruthy()
-
-    if (result.isRight()) {
-      const updatedCar = await carRepository.findById(car.id.toValue())
-      expect(updatedCar?.status).toBe('IN_USE')
-    }
+    expect(result.isRight()).toBe(true)
   })
 
-  it('should be able to create an event with reasonable odometer increase for a high mileage car', async () => {
+  it('should be able to create an event with valid odometer increase (under 5%) for cars over 1000km', async () => {
     const car = makeCar({ odometer: 100000 })
     const driver = makeDriver()
-    const managerId = 'manager-1'
 
     await carRepository.create(car)
     await driverRepository.create(driver)
@@ -217,17 +218,11 @@ describe('CreateEventService', () => {
       makeEventInput({
         carId: car.id.toValue(),
         driverId: driver.id.toValue(),
-        managerId,
         odometer: 105000,
       }),
     )
 
-    expect(result.isRight()).toBeTruthy()
-
-    if (result.isRight()) {
-      const updatedCar = await carRepository.findById(car.id.toValue())
-      expect(updatedCar?.status).toBe('IN_USE')
-    }
+    expect(result.isRight()).toBe(true)
   })
 
   it('should not be able to create an event for a car that is already in use', async () => {
@@ -247,7 +242,7 @@ describe('CreateEventService', () => {
       driverId: driver1.id,
       managerId: new UniqueEntityID(managerId),
       odometer: 1000,
-      status: 'ENTRY',
+      status: 'EXIT',
     })
 
     await eventRepository.create(firstEvent)
@@ -262,8 +257,8 @@ describe('CreateEventService', () => {
     )
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidEventError)
-    if (result.value instanceof InvalidEventError) {
+    expect(result.value).toBeInstanceOf(CarInUseError)
+    if (result.value instanceof CarInUseError) {
       expect(result.value.message).toBe('Car is already in use.')
     }
   })
