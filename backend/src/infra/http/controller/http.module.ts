@@ -42,6 +42,8 @@ import { CreateEventController } from './event/create-event.controller'
 import { CreateEventService } from '@/domain/event/application/services/create-event.service'
 import { ListEventsController } from './event/list-events.controller'
 import { ListEventsService } from '@/domain/event/application/services/list-events.service'
+import { FinalizeEventService } from '@/domain/event/application/services/finalize-event.service'
+import { FinalizeEventController } from './event/finalize-event.controller'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -65,6 +67,7 @@ import { ListEventsService } from '@/domain/event/application/services/list-even
     UpdateDriverController,
     CreateEventController,
     ListEventsController,
+    FinalizeEventController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -87,6 +90,7 @@ import { ListEventsService } from '@/domain/event/application/services/list-even
     UpdateDriverProfileService,
     CreateEventService,
     ListEventsService,
+    FinalizeEventService,
   ],
 })
 export class HttpModule {}

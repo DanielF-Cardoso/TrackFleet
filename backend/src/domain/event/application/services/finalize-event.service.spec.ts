@@ -8,11 +8,13 @@ import { makeEvent } from 'test/factories/event/make-event'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { EventAlreadyFinalizedError } from './errors/event-already-finalized.error'
 import { InvalidOdometerError } from './errors/invalid-odometer.error'
+import { LoggerService } from '@nestjs/common'
 
 let sut: FinalizeEventService
 let eventRepository: InMemoryEventRepository
 let carRepository: InMemoryCarRepository
 let i18n: I18nService
+let logger: LoggerService
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
@@ -22,7 +24,11 @@ beforeEach(() => {
     translate: vi.fn(),
   } as unknown as I18nService
 
-  sut = new FinalizeEventService(eventRepository, carRepository, i18n)
+  sut = new FinalizeEventService(eventRepository, carRepository, i18n, logger)
+  logger = {
+    log: vi.fn(),
+    warn: vi.fn(),
+  } as unknown as LoggerService
 })
 
 describe('FinalizeEventService', () => {
