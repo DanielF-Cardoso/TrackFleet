@@ -1,19 +1,22 @@
-import { Injectable } from '@nestjs/common'
+import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { EventRepository } from '../repositories/event-repository'
 import { Either, left, right } from '@/core/errors/either'
 import { I18nService } from 'nestjs-i18n'
-import { CarRepository } from '@/domain/cars/application/repositories/car-repository'
-import { CannotDeleteFinalizedEventError } from './errors/cannot-delete-finalized-event.error'
-import { CarNotFoundError } from './errors/car-not-found.error'
+import { Event } from '../../enterprise/entities/event.entity'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { CarRepository } from '@/domain/cars/application/repositories/car-repository'
+import { InvalidEventStatusError } from './errors/invalid-event-status.error'
 
 interface DeleteEventServiceRequest {
   eventId: string
 }
 
 type DeleteEventServiceResponse = Either<
-  ResourceNotFoundError | CannotDeleteFinalizedEventError | CarNotFoundError,
-  void
+  ResourceNotFoundError | InvalidEventStatusError,
+  {
+    event: Event
+  }
 >
 
 @Injectable()
@@ -22,35 +25,54 @@ export class DeleteEventService {
     private eventRepository: EventRepository,
     private carRepository: CarRepository,
     private i18n: I18nService,
+    @Inject(LOGGER_SERVICE)
+    private readonly logger: LoggerService,
   ) {}
 
   async execute({
     eventId,
   }: DeleteEventServiceRequest): Promise<DeleteEventServiceResponse> {
+    this.logger.log(
+      `Attempting to delete event ${eventId}`,
+      'DeleteEventService',
+    )
+
     const event = await this.eventRepository.findById(eventId)
+
     if (!event) {
-      const errorMessage = await this.i18n.translate('event.notFound')
+      const errorMessage = await this.i18n.translate('errors.event.notFound')
+      this.logger.warn(`Event not found: ${eventId}`, 'DeleteEventService')
       return left(new ResourceNotFoundError(errorMessage))
     }
 
-    const car = await this.carRepository.findById(event.carId.toValue())
-    if (!car) {
-      const errorMessage = await this.i18n.translate('car.notFound')
-      return left(new CarNotFoundError(errorMessage))
-    }
-
     if (event.status === 'ENTRY') {
-      const errorMessage = await this.i18n.translate(
-        'event.cannotDeleteFinalized',
+      const errorMessage = await this.i18n.translate('errors.event.cannotDeleteFinalized')
+      this.logger.warn(
+        `Cannot delete finalized event ${eventId}`,
+        'DeleteEventService',
       )
-      return left(new CannotDeleteFinalizedEventError(errorMessage))
+      return left(new InvalidEventStatusError(errorMessage))
     }
 
-    car.updateStatus('AVAILABLE')
-    await this.carRepository.save(car)
+    const car = await this.carRepository.findById(event.carId.toString())
+    if (car) {
+      car.updateStatus('AVAILABLE')
+      await this.carRepository.save(car)
+      this.logger.log(
+        `Updated car ${car.id.toString()} status to AVAILABLE`,
+        'DeleteEventService',
+      )
+    }
 
-    await this.eventRepository.delete(eventId)
+    await this.eventRepository.delete(event.id.toString())
 
-    return right(undefined)
+    this.logger.log(
+      `Successfully deleted event ${eventId}`,
+      'DeleteEventService',
+    )
+
+    return right({
+      event,
+    })
   }
 }

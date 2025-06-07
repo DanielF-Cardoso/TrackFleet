@@ -44,6 +44,8 @@ import { ListEventsController } from './event/list-events.controller'
 import { ListEventsService } from '@/domain/event/application/services/list-events.service'
 import { FinalizeEventService } from '@/domain/event/application/services/finalize-event.service'
 import { FinalizeEventController } from './event/finalize-event.controller'
+import { DeleteEventController } from './event/delete-event.controller'
+import { DeleteEventService } from '@/domain/event/application/services/delete-event.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -68,6 +70,7 @@ import { FinalizeEventController } from './event/finalize-event.controller'
     CreateEventController,
     ListEventsController,
     FinalizeEventController,
+    DeleteEventController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -91,6 +94,7 @@ import { FinalizeEventController } from './event/finalize-event.controller'
     CreateEventService,
     ListEventsService,
     FinalizeEventService,
+    DeleteEventService,
   ],
 })
 export class HttpModule {}
