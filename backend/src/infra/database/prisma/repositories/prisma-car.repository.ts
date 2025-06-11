@@ -61,6 +61,14 @@ export class PrismaCarRepository implements CarRepository {
     return PrismaCarMapper.toDomain(car)
   }
 
+  async findManyByIds(ids: string[]): Promise<Car[]> {
+    const cars = await this.prisma.cars.findMany({
+      where: { id: { in: ids } },
+    })
+
+    return cars.map(PrismaCarMapper.toDomain)
+  }
+
   async save(car: Car): Promise<Car> {
     const data = PrismaCarMapper.toPersistence(car)
 

@@ -31,6 +31,27 @@ export class InMemoryEventRepository implements EventRepository {
     return this.items.filter((item) => item.driverId.toValue() === driverId)
   }
 
+  async findManyByPeriod(startDate: Date, endDate: Date): Promise<Event[]> {
+    return this.items.filter(
+      (item) =>
+        item.startAt >= startDate && item.startAt <= endDate && !item.endAt,
+    )
+  }
+
+  async findManyByDriverAndPeriod(
+    driverId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Event[]> {
+    return this.items.filter(
+      (item) =>
+        item.driverId.toValue() === driverId &&
+        item.startAt >= startDate &&
+        item.startAt <= endDate &&
+        !item.endAt,
+    )
+  }
+
   async create(event: Event): Promise<void> {
     this.items.push(event)
   }

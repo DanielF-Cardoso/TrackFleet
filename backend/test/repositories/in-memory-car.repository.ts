@@ -16,6 +16,10 @@ export class InMemoryCarRepository implements CarRepository {
     return car ?? null
   }
 
+  async findManyByIds(ids: string[]): Promise<Car[]> {
+    return this.items.filter((item) => ids.includes(item.id.toString()))
+  }
+
   async findByRenavam(renavam: string): Promise<Car | null> {
     const car = this.items.find((item) => item.renavam.toValue() === renavam)
     return car ?? null

@@ -51,6 +51,37 @@ export class PrismaEventRepository implements EventRepository {
     return events.map(PrismaEventMapper.toDomain)
   }
 
+  async findManyByPeriod(startDate: Date, endDate: Date): Promise<Event[]> {
+    const events = await this.prisma.event.findMany({
+      where: {
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    })
+
+    return events.map(PrismaEventMapper.toDomain)
+  }
+
+  async findManyByDriverAndPeriod(
+    driverId: string,
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Event[]> {
+    const events = await this.prisma.event.findMany({
+      where: {
+        driverId,
+        createdAt: {
+          gte: startDate,
+          lte: endDate,
+        },
+      },
+    })
+
+    return events.map(PrismaEventMapper.toDomain)
+  }
+
   async findActiveEventByDriverId(driverId: string): Promise<Event | null> {
     const event = await this.prisma.event.findFirst({
       where: {
