@@ -54,6 +54,8 @@ import { ListDriverCarsByPeriodController } from './event/list-driver-cars-by-pe
 import { ListDriverCarsByPeriodService } from '@/domain/event/application/services/list-driver-cars-by-period.service'
 import { ListUsedCarsByPeriodController } from './event/list-used-cars-by-period.controller'
 import { ListUsedCarsByPeriodService } from '@/domain/event/application/services/list-used-cars-by-period.service'
+import { UpdateOtherManagerProfileController } from './manager/update-other-manager-profile.controller'
+import { UpdateOtherManagerProfileService } from '@/domain/manager/application/services/update-other-manager-profile.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -83,6 +85,7 @@ import { ListUsedCarsByPeriodService } from '@/domain/event/application/services
     InactivateDriverController,
     ListDriverCarsByPeriodController,
     ListUsedCarsByPeriodController,
+    UpdateOtherManagerProfileController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -111,6 +114,7 @@ import { ListUsedCarsByPeriodService } from '@/domain/event/application/services
     InactivateDriverService,
     ListDriverCarsByPeriodService,
     ListUsedCarsByPeriodService,
+    UpdateOtherManagerProfileService,
   ],
 })
 export class HttpModule {}
