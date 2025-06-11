@@ -18,7 +18,7 @@ interface UpdateManagerPasswordRequest {
 
 type UpdateManagerPasswordResponse = Either<
   InvalidCredentialsError | ResourceNotFoundError | SamePasswordError,
-  { success: true }
+  null
 >
 
 @Injectable()
@@ -30,7 +30,7 @@ export class UpdateManagerPasswordService {
     private i18n: I18nService,
     @Inject(LOGGER_SERVICE)
     private readonly logger: LoggerService,
-  ) { }
+  ) {}
 
   async execute({
     managerId,
@@ -90,6 +90,6 @@ export class UpdateManagerPasswordService {
       'UpdateManagerPasswordService',
     )
 
-    return right({ success: true })
+    return right(null)
   }
 }

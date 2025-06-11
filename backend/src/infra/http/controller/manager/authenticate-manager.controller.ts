@@ -10,8 +10,10 @@ import { AuthenticateManagerService } from '@/domain/manager/application/service
 import { InvalidCredentialsError } from '@/domain/manager/application/services/errors/invalid-credentials.error'
 import { AuthenticateManagerDTO } from '../../dto/manager/authenticate-manager.dto'
 import { I18nService } from 'nestjs-i18n'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { InactiveManagerError } from '@/domain/manager/application/services/errors/inactive-manager.error'
+import { AuthenticateManagerDocs } from '@/infra/docs/manager/authenticate-manager.doc'
+
 @ApiTags('Gestores')
 @Controller('login')
 export class AuthenticateManagerController {
@@ -21,31 +23,7 @@ export class AuthenticateManagerController {
   ) {}
 
   @Post()
-  @ApiOperation({
-    summary: 'Autenticar gestor',
-    description: 'Autentica um gestor e retorna um token de acesso.',
-  })
-  @ApiBody({
-    description: 'Dados para autenticação do gestor.',
-    type: AuthenticateManagerDTO,
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Autenticação realizada com sucesso.',
-    schema: {
-      example: {
-        accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
-      },
-    },
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Credenciais inválidas.',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Gestor inativo.',
-  })
+  @AuthenticateManagerDocs()
   async login(@Body() body: AuthenticateManagerDTO) {
     const { email, password } = body
 

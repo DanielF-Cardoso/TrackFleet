@@ -17,7 +17,10 @@ interface FinalizeEventServiceRequest {
 }
 
 type FinalizeEventServiceResponse = Either<
-  ResourceNotFoundError | InvalidOdometerError | OdometerToHighError | InvalidEventStatusError,
+  | ResourceNotFoundError
+  | InvalidOdometerError
+  | OdometerToHighError
+  | InvalidEventStatusError,
   {
     event: Event
   }
@@ -51,7 +54,9 @@ export class FinalizeEventService {
     }
 
     if (event.status !== 'EXIT') {
-      const errorMessage = await this.i18n.translate('errors.event.invalidStatus')
+      const errorMessage = await this.i18n.translate(
+        'errors.event.invalidStatus',
+      )
       this.logger.warn(
         `Cannot finalize event ${eventId} with status ${event.status}`,
         'FinalizeEventService',
@@ -70,7 +75,9 @@ export class FinalizeEventService {
     }
 
     if (odometer < car.odometer) {
-      const errorMessage = await this.i18n.translate('errors.event.invalidOdometer')
+      const errorMessage = await this.i18n.translate(
+        'errors.event.invalidOdometer',
+      )
       this.logger.warn(
         `Invalid odometer value: ${odometer} (current: ${car.odometer})`,
         'FinalizeEventService',
@@ -79,7 +86,9 @@ export class FinalizeEventService {
     }
 
     if (!OdometerValidation.validate(car.odometer, odometer)) {
-      const errorMessage = await this.i18n.translate('errors.event.odometerTooHigh')
+      const errorMessage = await this.i18n.translate(
+        'errors.event.odometerTooHigh',
+      )
       this.logger.warn(
         `Odometer increase too high: ${odometer} (current: ${car.odometer})`,
         'FinalizeEventService',

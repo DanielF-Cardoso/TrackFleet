@@ -15,6 +15,7 @@ interface MakeCarOverrides {
   color?: string
   odometer?: number
   status?: CarStatus
+  isActive?: boolean
 }
 
 export function makeCar(overrides: MakeCarOverrides = {}): Car {
@@ -36,6 +37,7 @@ export function makeCar(overrides: MakeCarOverrides = {}): Car {
       color: overrides.color ?? faker.color.human(),
       odometer: overrides.odometer ?? faker.number.int({ min: 0, max: 100000 }),
       status: overrides.status ?? 'AVAILABLE',
+      isActive: overrides.isActive ?? true,
       renavam: renavamVo,
     },
     overrides.carId ? new UniqueEntityID(overrides.carId) : undefined,

@@ -7,22 +7,25 @@ import { makeCar } from 'test/factories/car/make-car'
 import { makeDriver } from 'test/factories/driver/make-driver'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { I18nService } from 'nestjs-i18n'
+import { FakeLogger } from 'test/fake/logs-mocks'
+import { InvalidEventStatusError } from './errors/invalid-event-status.error'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
-import { CannotDeleteFinalizedEventError } from './errors/cannot-delete-finalized-event.error'
-import { CarNotFoundError } from './errors/car-not-found.error'
 
 let sut: DeleteEventService
 let eventRepository: InMemoryEventRepository
 let carRepository: InMemoryCarRepository
 let i18n: I18nService
+let logger: FakeLogger
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
   carRepository = new InMemoryCarRepository()
+  logger = new FakeLogger()
+
   i18n = {
     translate: vi.fn(),
   } as unknown as I18nService
-  sut = new DeleteEventService(eventRepository, carRepository, i18n)
+  sut = new DeleteEventService(eventRepository, carRepository, i18n, logger)
 })
 
 describe('DeleteEventService', () => {
@@ -96,8 +99,8 @@ describe('DeleteEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CannotDeleteFinalizedEventError)
-    if (result.value instanceof CannotDeleteFinalizedEventError) {
+    expect(result.value).toBeInstanceOf(InvalidEventStatusError)
+    if (result.value instanceof InvalidEventStatusError) {
       expect(result.value.message).toBe('Cannot delete a finalized event.')
     }
   })
@@ -109,10 +112,11 @@ describe('DeleteEventService', () => {
     const managerId = 'manager-1'
 
     const event = makeEvent({
+      carId: new UniqueEntityID('non-existent-car-id'),
       driverId: driver.id,
       managerId: new UniqueEntityID(managerId),
       odometer: 1000,
-      status: 'ENTRY',
+      status: 'EXIT',
     })
 
     await eventRepository.create(event)
@@ -122,8 +126,8 @@ describe('DeleteEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(CarNotFoundError)
-    if (result.value instanceof CarNotFoundError) {
+    expect(result.value).toBeInstanceOf(ResourceNotFoundError)
+    if (result.value instanceof ResourceNotFoundError) {
       expect(result.value.message).toBe('Car not found.')
     }
   })

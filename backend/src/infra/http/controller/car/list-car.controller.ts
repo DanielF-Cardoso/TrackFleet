@@ -2,17 +2,19 @@ import {
   Controller,
   Get,
   UseGuards,
-  NotFoundException,
   InternalServerErrorException,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { I18nService } from 'nestjs-i18n'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { ListCarService } from '@/domain/cars/application/services/list-car.service'
 import { CarPresenter } from '../../presenters/car.presenter'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { ListCarDocs } from '@/infra/docs/car/list-car.doc'
 
-@ApiTags('Gestores')
+@ApiTags('Frota')
 @Controller('cars')
 export class ListCarsController {
   constructor(
@@ -22,40 +24,7 @@ export class ListCarsController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Listar carros',
-    description: 'Retorna uma lista de todos os carros cadastrados no sistema.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de carros retornada com sucesso.',
-    schema: {
-      example: {
-        cars: [
-          {
-            id: '12345',
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'john.doe@example.com',
-          },
-          {
-            id: '67890',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            email: 'jane.smith@example.com',
-          },
-        ],
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Nenhum carro encontrado.',
-  })
+  @ListCarDocs()
   async handle() {
     const result = await this.listCarsService.execute()
 
@@ -64,9 +33,7 @@ export class ListCarsController {
 
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new NotFoundException(
-            await this.i18n.translate('errors.car.notFoundAll'),
-          )
+          throw new HttpException('', HttpStatus.NO_CONTENT)
         default:
           throw new InternalServerErrorException(
             await this.i18n.translate('errors.generic.unexpectedError'),

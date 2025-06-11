@@ -14,23 +14,22 @@ import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { InvalidOdometerError } from './errors/invalid-odometer.error'
 import { OdometerToHighError } from './errors/odometer-to-high.error'
 import { CarInUseError } from './errors/car-in-use.error'
-import { LoggerService } from '@nestjs/common'
+import { FakeLogger } from 'test/fake/logs-mocks'
+import { InactiveCarError } from './errors/inactive-car.error'
+import { InactiveDriverError } from './errors/inactive-driver.error'
 
 let sut: CreateEventService
 let eventRepository: InMemoryEventRepository
 let carRepository: InMemoryCarRepository
 let driverRepository: InMemoryDriverRepository
 let i18n: I18nService
-let logger: LoggerService
+let logger: FakeLogger
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
   carRepository = new InMemoryCarRepository()
   driverRepository = new InMemoryDriverRepository()
-  logger = {
-    log: vi.fn(),
-    warn: vi.fn(),
-  } as unknown as LoggerService
+  logger = new FakeLogger()
 
   i18n = {
     translate: vi.fn(),
@@ -260,6 +259,52 @@ describe('Create Event Service', () => {
     expect(result.value).toBeInstanceOf(CarInUseError)
     if (result.value instanceof CarInUseError) {
       expect(result.value.message).toBe('Car is already in use.')
+    }
+  })
+
+  it('should not be able to create an event with an inactive car', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Car is inactive.')
+
+    const car = makeCar({ isActive: false })
+    const driver = makeDriver()
+
+    await carRepository.create(car)
+    await driverRepository.create(driver)
+
+    const result = await sut.execute(
+      makeEventInput({
+        carId: car.id.toValue(),
+        driverId: driver.id.toValue(),
+      }),
+    )
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(InactiveCarError)
+    if (result.value instanceof InactiveCarError) {
+      expect(result.value.message).toBe('Car is inactive.')
+    }
+  })
+
+  it('should not be able to create an event with an inactive driver', async () => {
+    vi.spyOn(i18n, 'translate').mockResolvedValue('Driver is inactive.')
+
+    const car = makeCar()
+    const driver = makeDriver({ isActive: false })
+
+    await carRepository.create(car)
+    await driverRepository.create(driver)
+
+    const result = await sut.execute(
+      makeEventInput({
+        carId: car.id.toValue(),
+        driverId: driver.id.toValue(),
+      }),
+    )
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(InactiveDriverError)
+    if (result.value instanceof InactiveDriverError) {
+      expect(result.value.message).toBe('Driver is inactive.')
     }
   })
 })

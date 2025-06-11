@@ -35,6 +35,22 @@ export class PrismaEventRepository implements EventRepository {
     return PrismaEventMapper.toDomain(event)
   }
 
+  async findManyByCarId(carId: string): Promise<Event[]> {
+    const events = await this.prisma.event.findMany({
+      where: { carId },
+    })
+
+    return events.map(PrismaEventMapper.toDomain)
+  }
+
+  async findManyByDriverId(driverId: string): Promise<Event[]> {
+    const events = await this.prisma.event.findMany({
+      where: { driverId },
+    })
+
+    return events.map(PrismaEventMapper.toDomain)
+  }
+
   async findActiveEventByDriverId(driverId: string): Promise<Event | null> {
     const event = await this.prisma.event.findFirst({
       where: {
@@ -78,4 +94,4 @@ export class PrismaEventRepository implements EventRepository {
 
     return events.map(PrismaEventMapper.toDomain)
   }
-} 
+}

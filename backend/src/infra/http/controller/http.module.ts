@@ -20,7 +20,7 @@ import { ListCarService } from '@/domain/cars/application/services/list-car.serv
 import { DeleteCarController } from './car/delete-car.controller'
 import { DeleteCarService } from '@/domain/cars/application/services/delete-car.service'
 import { GetCarByLicensePlateService } from '@/domain/cars/application/services/get-car-by-license-plate'
-import { GetCarProfileController } from './car/get-car-by-licence-plate.controller'
+import { GetCarProfileController } from './car/get-car-by-license-plate.controller'
 import { InactivateManagerController } from './manager/inactivate-manager.controller'
 import { InactivateManagerService } from '@/domain/manager/application/services/inactivate-manager.service'
 import { EmailModule } from '@/infra/email/mailer.module'
@@ -34,7 +34,7 @@ import { CreateDriverController } from './driver/create-driver.controller'
 import { CreateDriverService } from '@/domain/driver/application/services/create-driver.service'
 import { ListDriversController } from './driver/list-drivers.controller'
 import { ListDriversService } from '@/domain/driver/application/services/list-driver.service'
-import { GetDriverController } from './driver/get-driver.controller'
+import { GetDriverProfileController } from './driver/get-driver-profile.controller'
 import { GetDriverProfileService } from '@/domain/driver/application/services/get-driver-profile.service'
 import { UpdateDriverController } from './driver/update-driver.controller'
 import { UpdateDriverProfileService } from '@/domain/driver/application/services/update-driver-profile.service'
@@ -46,6 +46,10 @@ import { FinalizeEventService } from '@/domain/event/application/services/finali
 import { FinalizeEventController } from './event/finalize-event.controller'
 import { DeleteEventController } from './event/delete-event.controller'
 import { DeleteEventService } from '@/domain/event/application/services/delete-event.service'
+import { InactivateCarController } from './car/inactivate-car.controller'
+import { InactivateCarService } from '@/domain/cars/application/services/inactivate-car.service'
+import { InactivateDriverController } from './driver/inactivate-driver.controller'
+import { InactivateDriverService } from '@/domain/driver/application/services/inactivate-driver.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -65,12 +69,14 @@ import { DeleteEventService } from '@/domain/event/application/services/delete-e
     UpdateCarController,
     CreateDriverController,
     ListDriversController,
-    GetDriverController,
+    GetDriverProfileController,
     UpdateDriverController,
     CreateEventController,
     ListEventsController,
     FinalizeEventController,
     DeleteEventController,
+    InactivateCarController,
+    InactivateDriverController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -95,6 +101,8 @@ import { DeleteEventService } from '@/domain/event/application/services/delete-e
     ListEventsService,
     FinalizeEventService,
     DeleteEventService,
+    InactivateCarService,
+    InactivateDriverService,
   ],
 })
 export class HttpModule {}

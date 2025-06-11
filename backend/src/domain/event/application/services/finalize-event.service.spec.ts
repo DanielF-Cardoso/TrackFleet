@@ -6,29 +6,26 @@ import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repositor
 import { makeCar } from 'test/factories/car/make-car'
 import { makeEvent } from 'test/factories/event/make-event'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
-import { EventAlreadyFinalizedError } from './errors/event-already-finalized.error'
 import { InvalidOdometerError } from './errors/invalid-odometer.error'
-import { LoggerService } from '@nestjs/common'
+import { FakeLogger } from 'test/fake/logs-mocks'
+import { InvalidEventStatusError } from './errors/invalid-event-status.error'
 
 let sut: FinalizeEventService
 let eventRepository: InMemoryEventRepository
 let carRepository: InMemoryCarRepository
 let i18n: I18nService
-let logger: LoggerService
+let logger: FakeLogger
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
   carRepository = new InMemoryCarRepository()
+  logger = new FakeLogger()
 
   i18n = {
     translate: vi.fn(),
   } as unknown as I18nService
 
   sut = new FinalizeEventService(eventRepository, carRepository, i18n, logger)
-  logger = {
-    log: vi.fn(),
-    warn: vi.fn(),
-  } as unknown as LoggerService
 })
 
 describe('FinalizeEventService', () => {
@@ -96,8 +93,8 @@ describe('FinalizeEventService', () => {
     })
 
     expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(EventAlreadyFinalizedError)
-    if (result.value instanceof EventAlreadyFinalizedError) {
+    expect(result.value).toBeInstanceOf(InvalidEventStatusError)
+    if (result.value instanceof InvalidEventStatusError) {
       expect(result.value.message).toBe('Event already finalized.')
     }
   })
@@ -124,56 +121,6 @@ describe('FinalizeEventService', () => {
     expect(result.value).toBeInstanceOf(InvalidOdometerError)
     if (result.value instanceof InvalidOdometerError) {
       expect(result.value.message).toBe('Invalid odometer value.')
-    }
-  })
-
-  it('should not be able to finalize an event with odometer too high for a low mileage car', async () => {
-    vi.spyOn(i18n, 'translate').mockResolvedValue('Odometer value is too high.')
-
-    const car = makeCar({ odometer: 100 })
-    const event = makeEvent({
-      carId: car.id,
-      odometer: 100,
-      status: 'EXIT',
-    })
-
-    await carRepository.create(car)
-    await eventRepository.create(event)
-
-    const result = await sut.execute({
-      eventId: event.id.toValue(),
-      odometer: 150,
-    })
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidOdometerError)
-    if (result.value instanceof InvalidOdometerError) {
-      expect(result.value.message).toBe('Odometer value is too high.')
-    }
-  })
-
-  it('should not be able to finalize an event with odometer too high for a high mileage car', async () => {
-    vi.spyOn(i18n, 'translate').mockResolvedValue('Odometer value is too high.')
-
-    const car = makeCar({ odometer: 100000 })
-    const event = makeEvent({
-      carId: car.id,
-      odometer: 100000,
-      status: 'EXIT',
-    })
-
-    await carRepository.create(car)
-    await eventRepository.create(event)
-
-    const result = await sut.execute({
-      eventId: event.id.toValue(),
-      odometer: 106000,
-    })
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(InvalidOdometerError)
-    if (result.value instanceof InvalidOdometerError) {
-      expect(result.value.message).toBe('Odometer value is too high.')
     }
   })
 

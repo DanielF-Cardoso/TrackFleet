@@ -2,7 +2,6 @@ import { Inject, Injectable, LoggerService } from '@nestjs/common'
 import { EventRepository } from '../repositories/event-repository'
 import { Either, left, right } from '@/core/errors/either'
 import { I18nService } from 'nestjs-i18n'
-import { Event } from '../../enterprise/entities/event.entity'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { CarRepository } from '@/domain/cars/application/repositories/car-repository'
@@ -14,9 +13,7 @@ interface DeleteEventServiceRequest {
 
 type DeleteEventServiceResponse = Either<
   ResourceNotFoundError | InvalidEventStatusError,
-  {
-    event: Event
-  }
+  null
 >
 
 @Injectable()
@@ -46,7 +43,9 @@ export class DeleteEventService {
     }
 
     if (event.status === 'ENTRY') {
-      const errorMessage = await this.i18n.translate('errors.event.cannotDeleteFinalized')
+      const errorMessage = await this.i18n.translate(
+        'errors.event.cannotDeleteFinalized',
+      )
       this.logger.warn(
         `Cannot delete finalized event ${eventId}`,
         'DeleteEventService',
@@ -55,14 +54,16 @@ export class DeleteEventService {
     }
 
     const car = await this.carRepository.findById(event.carId.toString())
-    if (car) {
-      car.updateStatus('AVAILABLE')
-      await this.carRepository.save(car)
-      this.logger.log(
-        `Updated car ${car.id.toString()} status to AVAILABLE`,
+    if (!car) {
+      const errorMessage = await this.i18n.translate('errors.car.notFound')
+      this.logger.warn(
+        `Car not found for event ${eventId}: ${event.carId.toString()}`,
         'DeleteEventService',
       )
+      return left(new ResourceNotFoundError(errorMessage))
     }
+
+    car.updateStatus('AVAILABLE')
 
     await this.eventRepository.delete(event.id.toString())
 
@@ -71,8 +72,6 @@ export class DeleteEventService {
       'DeleteEventService',
     )
 
-    return right({
-      event,
-    })
+    return right(null)
   }
 }

@@ -12,7 +12,8 @@ import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
+import { GetManagerProfileDocs } from '@/infra/docs/manager/get-manager-profile.doc'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -26,36 +27,11 @@ export class GetManagerProfileController {
   constructor(
     private getManagerProfile: GetManagerProfileService,
     private i18n: I18nService,
-  ) { }
+  ) {}
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Obter perfil do gestor',
-    description: 'Retorna os dados do perfil do gestor autenticado.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Perfil do gestor retornado com sucesso.',
-    schema: {
-      example: {
-        manager: {
-          id: '12345',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Gestor não encontrado.',
-  })
+  @GetManagerProfileDocs()
   async getProfile(@Req() req: AuthenticatedRequest) {
     const managerId = req.user.sub
 

@@ -14,11 +14,18 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   })
-
+  const envService = app.get(EnvService)
   const logger = app.get(AppLogger)
+
   app.useLogger(logger)
 
-  const envService = app.get(EnvService)
+  app.enableCors({
+    origin: "http://localhost:3000",
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+    credentials: true,
+  });
+
   const port = envService.get('PORT')
   const nodeEnv = envService.get('NODE_ENV')
 

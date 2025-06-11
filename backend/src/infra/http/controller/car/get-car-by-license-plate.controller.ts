@@ -2,18 +2,20 @@ import {
   Controller,
   Get,
   UseGuards,
-  NotFoundException,
   InternalServerErrorException,
   Query,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { CarPresenter } from '../../presenters/car.presenter'
 import { I18nService } from 'nestjs-i18n'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { GetCarByLicensePlateService } from '@/domain/cars/application/services/get-car-by-license-plate'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { GetCarByLicensePlateDocs } from '@/infra/docs/car/get-car-by-license-plate.doc'
 
-@ApiTags('Gestores')
+@ApiTags('Frota')
 @Controller('car')
 export class GetCarProfileController {
   constructor(
@@ -23,32 +25,7 @@ export class GetCarProfileController {
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Obter perfil do carro',
-    description: 'Retorna os dados do perfil do carro.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Perfil do carro retornado com sucesso.',
-    schema: {
-      example: {
-        car: {
-          id: '12345',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Carro não encontrado.',
-  })
+  @GetCarByLicensePlateDocs()
   async getProfile(@Query('licensePlate') licensePlate: string) {
     const result = await this.getCarProfile.execute({
       licensePlate,
@@ -59,9 +36,7 @@ export class GetCarProfileController {
 
       switch (error.constructor) {
         case ResourceNotFoundError:
-          throw new NotFoundException(
-            await this.i18n.translate('errors.car.notFound'),
-          )
+          throw new HttpException('', HttpStatus.NO_CONTENT)
         default:
           throw new InternalServerErrorException(
             await this.i18n.translate('errors.generic.unexpectedError'),

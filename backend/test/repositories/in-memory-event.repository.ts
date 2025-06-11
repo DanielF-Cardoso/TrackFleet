@@ -23,6 +23,14 @@ export class InMemoryEventRepository implements EventRepository {
     return event || null
   }
 
+  async findManyByCarId(carId: string): Promise<Event[]> {
+    return this.items.filter((item) => item.carId.toValue() === carId)
+  }
+
+  async findManyByDriverId(driverId: string): Promise<Event[]> {
+    return this.items.filter((item) => item.driverId.toValue() === driverId)
+  }
+
   async create(event: Event): Promise<void> {
     this.items.push(event)
   }

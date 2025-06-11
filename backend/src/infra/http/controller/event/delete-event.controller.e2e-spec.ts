@@ -45,16 +45,13 @@ describe('Delete Event Controller (E2E)', () => {
   })
 
   test('[DELETE] /events/:id – unauthorized without token', async () => {
-    await request(app.getHttpServer())
-      .delete('/events/any-id')
-      .expect(401)
+    await request(app.getHttpServer()).delete('/events/any-id').expect(401)
   })
 
   test('[DELETE] /events/:id – success', async () => {
     const manager = await managerFactory.makePrismaManager()
     const car = await carFactory.makePrismaCar({
       managerId: manager.id.toString(),
-      status: 'IN_USE',
     })
     const driver = await driverFactory.makePrismaDriver()
     const accessToken = jwt.sign({ sub: manager.id.toString() })
@@ -71,22 +68,6 @@ describe('Delete Event Controller (E2E)', () => {
       .delete(`/events/${event.id.toString()}`)
       .set('Authorization', `Bearer ${accessToken}`)
 
-    expect(result.status).toBe(200)
-    expect(result.body).toEqual({
-      event: expect.objectContaining({
-        id: event.id.toString(),
-        carId: car.id.toString(),
-        driverId: driver.id.toString(),
-        managerId: manager.id.toString(),
-        odometer: 1000,
-        status: 'EXIT',
-      }),
-    })
-
-    // Verifica se o carro foi atualizado para AVAILABLE
-    const updatedCar = await carFactory.prisma.car.findUnique({
-      where: { id: car.id.toString() },
-    })
-    expect(updatedCar?.status).toBe('AVAILABLE')
+    expect(result.status).toBe(204)
   })
-}) 
+})

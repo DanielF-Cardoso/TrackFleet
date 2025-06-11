@@ -8,6 +8,7 @@ import {
   NotFoundException,
   ConflictException,
   InternalServerErrorException,
+  HttpCode,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { UpdateManagerPasswordService } from '@/domain/manager/application/services/update-manager-password.service'
@@ -17,7 +18,8 @@ import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { InvalidPasswordError } from '@/domain/manager/application/services/errors/invalid-password.error'
 import { SamePasswordError } from '@/domain/manager/application/services/errors/same-password.error'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
+import { UpdateManagerPasswordDocs } from '@/infra/docs/manager/update-manager-passowrd.doc'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -31,38 +33,12 @@ export class UpdateManagerPasswordController {
   constructor(
     private updateManagerPasswordService: UpdateManagerPasswordService,
     private readonly i18n: I18nService,
-  ) { }
+  ) {}
 
   @Patch()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Atualizar senha do gestor',
-    description: 'Permite que um gestor autenticado atualize sua senha.',
-  })
-  @ApiBody({
-    description: 'Dados necessários para atualizar a senha.',
-    type: UpdateManagerPasswordDTO,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Senha atualizada com sucesso.',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Senha atual inválida.',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Gestor não encontrado.',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'A nova senha não pode ser igual à senha atual.',
-  })
+  @HttpCode(204)
+  @UpdateManagerPasswordDocs()
   async handle(
     @Body() body: UpdateManagerPasswordDTO,
     @Req() req: AuthenticatedRequest,
@@ -98,8 +74,6 @@ export class UpdateManagerPasswordController {
       }
     }
 
-    return {
-      message: 'Password updated successfully',
-    }
+    return {}
   }
 }

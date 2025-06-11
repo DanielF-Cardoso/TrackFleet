@@ -10,7 +10,8 @@ import { ListManagersService } from '@/domain/manager/application/services/list-
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
+import { ListManagersDocs } from '@/infra/docs/manager/list-manager.doc'
 
 @ApiTags('Gestores')
 @Controller('managers')
@@ -18,45 +19,11 @@ export class ListManagersController {
   constructor(
     private listManagersService: ListManagersService,
     private i18n: I18nService,
-  ) { }
+  ) {}
 
   @Get()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Listar gestores',
-    description:
-      'Retorna uma lista de todos os gestores cadastrados no sistema.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Lista de gestores retornada com sucesso.',
-    schema: {
-      example: {
-        managers: [
-          {
-            id: '12345',
-            firstName: 'John',
-            lastName: 'Doe',
-            email: 'john.doe@example.com',
-          },
-          {
-            id: '67890',
-            firstName: 'Jane',
-            lastName: 'Smith',
-            email: 'jane.smith@example.com',
-          },
-        ],
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Nenhum gestor encontrado.',
-  })
+  @ListManagersDocs()
   async handle() {
     const result = await this.listManagersService.execute()
 

@@ -7,23 +7,20 @@ import { makeDriver } from 'test/factories/driver/make-driver'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { I18nService } from 'nestjs-i18n'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
-import { LoggerService } from '@nestjs/common'
+import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: ListEventsService
 let eventRepository: InMemoryEventRepository
 let i18n: I18nService
-let logger: LoggerService
+let logger: FakeLogger
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
+  logger = new FakeLogger()
   i18n = {
     translate: vi.fn(),
   } as unknown as I18nService
   sut = new ListEventsService(eventRepository, i18n, logger)
-  logger = {
-    log: vi.fn(),
-    warn: vi.fn(),
-  } as unknown as LoggerService
 })
 
 describe('ListEventsService', () => {

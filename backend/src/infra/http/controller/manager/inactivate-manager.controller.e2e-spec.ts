@@ -48,6 +48,6 @@ describe('Inactivate Manager Controller (E2E)', () => {
       .patch(`/managers/inactivate/${anotherManager.id.toString()}`)
       .set('Authorization', `Bearer ${accessToken}`)
 
-    expect(result.status).toBe(200)
+    expect(result.status).toBe(204)
   })
 })

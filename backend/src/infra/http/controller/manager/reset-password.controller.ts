@@ -7,9 +7,10 @@ import {
 } from '@nestjs/common'
 import { ResetManagerPasswordService } from '@/domain/manager/application/services/reset-manager-password.service'
 import { I18nService } from 'nestjs-i18n'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { InvalidTokenError } from '@/domain/manager/application/services/errors/invalid-token.error'
 import { ResetPasswordDTO } from '../../dto/manager/reset-password.dto'
+import { ResetPasswordDocs } from '@/infra/docs/manager/reset-password.doc'
 
 @ApiTags('Gestores')
 @Controller('auth')
@@ -20,15 +21,7 @@ export class ResetPasswordController {
   ) {}
 
   @Post('reset-password')
-  @ApiOperation({ summary: 'Reset manager password using token' })
-  @ApiResponse({
-    status: 200,
-    description: 'Password reset successfully',
-  })
-  @ApiResponse({
-    status: 400,
-    description: 'Invalid token or password',
-  })
+  @ResetPasswordDocs()
   async handle(@Body() body: ResetPasswordDTO) {
     const result = await this.resetManagerPasswordService.execute({
       token: body.token,

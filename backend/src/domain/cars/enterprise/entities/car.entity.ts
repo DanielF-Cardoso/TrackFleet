@@ -15,8 +15,10 @@ export interface CarProps {
   odometer: number
   status: CarStatus
   renavam: Renavam
+  isActive: boolean
   createdAt: Date
   updatedAt?: Date
+  inactiveAt?: Date
 }
 
 export class Car extends Entity<CarProps> {
@@ -26,6 +28,8 @@ export class Car extends Entity<CarProps> {
       {
         ...props,
         createdAt: now,
+        isActive: props.isActive ?? true,
+        inactiveAt: props.inactiveAt ?? undefined,
       },
       id,
     )
@@ -69,12 +73,20 @@ export class Car extends Entity<CarProps> {
     return this.props.renavam
   }
 
+  get isActive() {
+    return this.props.isActive ?? true
+  }
+
   get createdAt() {
     return this.props.createdAt
   }
 
   get updatedAt() {
     return this.props.updatedAt
+  }
+
+  get inactiveAt() {
+    return this.props.inactiveAt
   }
 
   updateStatus(status: CarStatus) {
@@ -118,6 +130,12 @@ export class Car extends Entity<CarProps> {
 
   updateRenavam(renavam: Renavam) {
     this.props.renavam = renavam
+    this.touch()
+  }
+
+  inactivate() {
+    this.props.isActive = false
+    this.props.inactiveAt = new Date()
     this.touch()
   }
 

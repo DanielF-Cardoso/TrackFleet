@@ -57,6 +57,6 @@ describe('Update Manager Password Controller (E2E)', () => {
       .set('Authorization', `Bearer ${acessToken}`)
       .send({ currentPassword, newPassword })
 
-    expect(result.status).toBe(200)
+    expect(result.status).toBe(204)
   })
 })

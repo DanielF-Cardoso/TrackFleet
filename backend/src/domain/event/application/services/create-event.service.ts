@@ -13,6 +13,8 @@ import { CarInUseError } from './errors/car-in-use.error'
 import { InvalidOdometerError } from './errors/invalid-odometer.error'
 import { OdometerToHighError } from './errors/odometer-to-high.error'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
+import { InactiveDriverError } from './errors/inactive-driver.error'
+import { InactiveCarError } from './errors/inactive-car.error'
 
 interface CreateEventServiceRequest {
   carId: string
@@ -58,12 +60,22 @@ export class CreateEventService {
       this.logger.warn(`Car not found: ${carId}`, 'CreateEventService')
       return left(new CarNotFoundError(errorMessage))
     }
+    if (car.isActive === false) {
+      const errorMessage = await this.i18n.translate('car.inactive')
+      this.logger.warn(`Car is inactive: ${carId}`, 'CreateEventService')
+      return left(new InactiveCarError(errorMessage))
+    }
 
     const driver = await this.driverRepository.findById(driverId)
     if (!driver) {
       const errorMessage = await this.i18n.translate('driver.notFound')
       this.logger.warn(`Driver not found: ${driverId}`, 'CreateEventService')
       return left(new DriverNotFoundError(errorMessage))
+    }
+    if (driver.isActive === false) {
+      const errorMessage = await this.i18n.translate('driver.inactive')
+      this.logger.warn(`Driver is inactive: ${driverId}`, 'CreateEventService')
+      return left(new InactiveDriverError(errorMessage))
     }
 
     if (odometer < car.odometer) {

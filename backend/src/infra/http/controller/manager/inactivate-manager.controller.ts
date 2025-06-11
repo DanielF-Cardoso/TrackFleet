@@ -7,15 +7,17 @@ import {
   Req,
   Patch,
   ForbiddenException,
+  HttpCode,
 } from '@nestjs/common'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { I18nService } from 'nestjs-i18n'
-import { ApiOperation, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { Request } from 'express'
 import { InactivateManagerService } from '@/domain/manager/application/services/inactivate-manager.service'
 import { LastManagerCannotBeInactivatedError } from '@/domain/manager/application/services/errors/last-manager-cannot-be-inactivated.error'
 import { OwnAccountCannotBeInactivatedError } from '@/domain/manager/application/services/errors/own-account-cannot-be-inactivated.error'
+import { InactivateManagerDocs } from '@/infra/docs/manager/inactive-manager.doc'
 
 @ApiTags('Gestores')
 @Controller('managers')
@@ -23,37 +25,12 @@ export class InactivateManagerController {
   constructor(
     private inactivateManagerService: InactivateManagerService,
     private i18n: I18nService,
-  ) { }
+  ) {}
 
   @Patch('inactivate/:id')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Inativar gestor',
-    description:
-      'Inativa um gestor do sistema. Não é possível inativar o último gestor ou sua própria conta.',
-  })
-  @ApiParam({
-    name: 'id',
-    description: 'ID do gestor a ser inativado',
-    type: String,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Gestor inativado com sucesso.',
-  })
-  @ApiResponse({
-    status: 400,
-    description:
-      'Não é possível inativar o último gestor ou sua própria conta.',
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Gestor não encontrado.',
-  })
+  @InactivateManagerDocs()
+  @HttpCode(204)
   async handle(
     @Param('id') id: string,
     @Req() req: Request & { user: { sub: string } },

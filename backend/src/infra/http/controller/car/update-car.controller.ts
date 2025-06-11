@@ -11,14 +11,15 @@ import {
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { CarPresenter } from '../../presenters/car.presenter'
 import { I18nService } from 'nestjs-i18n'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { UpdateCarService } from '@/domain/cars/application/services/update-car.service'
 import { UpdateCarDTO } from '../../dto/car/update-car.dto'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { LicensePlateAlreadyExistsError } from '@/domain/cars/application/services/errors/license-plate-already-exists.error'
 import { RenavamAlreadyExistsError } from '@/domain/cars/application/services/errors/renavam-already-exists.error'
+import { UpdateCarDocs } from '@/infra/docs/car/update-car.doc'
 
-@ApiTags('Carros')
+@ApiTags('Frota')
 @Controller('cars')
 export class UpdateCarController {
   constructor(
@@ -28,44 +29,7 @@ export class UpdateCarController {
 
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Atualizar carro',
-    description: 'Permite que um carro atualize.',
-  })
-  @ApiBody({
-    description: 'Dados necessários para atualizar o carro.',
-    type: UpdateCarDTO,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Carro atualizado com sucesso.',
-    schema: {
-      example: {
-        car: {
-          id: '12345',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Carro não encontrado.',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'O novo carro não pode ser igual ao atual.',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'Já existe um carro com este e‑mai.',
-  })
+  @UpdateCarDocs()
   async handle(@Body() body: UpdateCarDTO, @Param('id') id: string) {
     const result = await this.updateCarProfileService.execute({
       carId: id,

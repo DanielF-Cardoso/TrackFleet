@@ -16,10 +16,11 @@ import { SameEmailError } from '@/core/errors/same-email.error'
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { UpdateManagerProfileDTO } from '../../dto/manager/update-manager-profile.dto'
 import { I18nService } from 'nestjs-i18n'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { SamePhoneError } from '@/core/errors/same-phone.error'
 import { EmailAlreadyExistsError } from '@/core/errors/email-already-exists.error'
 import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
+import { UpdateManagerProfileDocs } from '@/infra/docs/manager/update-manager-profile.doc'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -33,48 +34,11 @@ export class UpdateManagerProfileController {
   constructor(
     private updateManagerProfileService: UpdateManagerProfileService,
     private readonly i18n: I18nService,
-  ) { }
+  ) {}
 
   @Patch()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Atualizar perfil do gestor',
-    description: 'Permite que um gestor autenticado atualize seu perfil.',
-  })
-  @ApiBody({
-    description: 'Dados necessários para atualizar o perfil.',
-    type: UpdateManagerProfileDTO,
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Perfil atualizado com sucesso.',
-    schema: {
-      example: {
-        manager: {
-          id: '12345',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Gestor não encontrado.',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'O novo e‑mail não pode ser igual ao atual.',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'Já existe um gestor com este e‑mail.',
-  })
+  @UpdateManagerProfileDocs()
   async handle(
     @Body() body: UpdateManagerProfileDTO,
     @Req() req: AuthenticatedRequest,

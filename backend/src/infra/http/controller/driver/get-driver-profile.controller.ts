@@ -11,8 +11,9 @@ import { Request } from 'express'
 import { JwtAuthGuard } from '@/infra/auth/jwt-auth.guard'
 import { DriverPresenter } from '../../presenters/driver.presenter'
 import { I18nService } from 'nestjs-i18n'
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
+import { GetDriverProfileDocs } from '@/infra/docs/drivers/get-driver-profile.doc'
 
 interface AuthenticatedRequest extends Request {
   user: {
@@ -20,9 +21,9 @@ interface AuthenticatedRequest extends Request {
   }
 }
 
-@ApiTags('Motoristas')
+@ApiTags('Motorista')
 @Controller('drivers')
-export class GetDriverController {
+export class GetDriverProfileController {
   constructor(
     private getDriverProfile: GetDriverProfileService,
     private i18n: I18nService,
@@ -30,32 +31,7 @@ export class GetDriverController {
 
   @Get('me')
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Obter perfil do motorista',
-    description: 'Retorna os dados do perfil do motorista autenticado.',
-  })
-  @ApiResponse({
-    status: 200,
-    description: 'Perfil do motorista retornado com sucesso.',
-    schema: {
-      example: {
-        driver: {
-          id: '12345',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 404,
-    description: 'Motorista não encontrado.',
-  })
+  @GetDriverProfileDocs()
   async getProfile(@Req() req: AuthenticatedRequest) {
     const driverId = req.user.sub
 

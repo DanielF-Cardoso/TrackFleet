@@ -48,17 +48,6 @@ describe('List Events Controller (E2E)', () => {
     await request(app.getHttpServer()).get('/events').expect(401)
   })
 
-  test('[GET] /events – empty list', async () => {
-    const manager = await managerFactory.makePrismaManager()
-    const accessToken = jwt.sign({ sub: manager.id.toString() })
-
-    const result = await request(app.getHttpServer())
-      .get('/events')
-      .set('Authorization', `Bearer ${accessToken}`)
-
-    expect(result.status).toBe(404)
-  })
-
   test('[GET] /events – success', async () => {
     const manager = await managerFactory.makePrismaManager()
     const car = await carFactory.makePrismaCar({

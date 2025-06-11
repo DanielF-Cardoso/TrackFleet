@@ -20,6 +20,7 @@ interface Override {
   zipCode?: string
   city?: string
   state?: string
+  isActive?: boolean
 }
 
 export function makeDriver(
@@ -67,6 +68,7 @@ export function makeDriver(
       cnh,
       cnhType,
       address: new Address(street, number, district, zipCode, city, state),
+      isActive: override.isActive ?? true,
     },
     id,
   )

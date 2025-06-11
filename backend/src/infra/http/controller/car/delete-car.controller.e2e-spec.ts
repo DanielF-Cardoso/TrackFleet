@@ -54,7 +54,7 @@ describe('Delete Car Controller (E2E)', () => {
       .delete(`/cars/${car.id.toString()}`)
       .set('Authorization', `Bearer ${accessToken}`)
 
-    expect(result.status).toBe(200)
+    expect(result.status).toBe(204)
     expect(result.body).toEqual({})
   })
 })

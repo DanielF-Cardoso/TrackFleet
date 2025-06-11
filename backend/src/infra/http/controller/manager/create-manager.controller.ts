@@ -12,8 +12,9 @@ import { EmailAlreadyExistsError } from '@/core/errors/email-already-exists.erro
 import { ManagerPresenter } from '../../presenters/manager.presenter'
 import { CreateManagerDTO } from '../../dto/manager/create-manager.dto'
 import { I18nService } from 'nestjs-i18n'
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger'
+import { ApiTags } from '@nestjs/swagger'
 import { PhoneAlreadyExistsError } from '@/domain/manager/application/services/errors/phone-already-exists.error'
+import { CreateManagerDocs } from '@/infra/docs/manager/create-manager.doc'
 
 @ApiTags('Gestores')
 @Controller('managers')
@@ -25,44 +26,7 @@ export class CreateManagerController {
 
   @Post()
   @UseGuards(JwtAuthGuard)
-  @ApiOperation({
-    summary: 'Criar um novo gestor',
-    description: 'Cria um novo gestor no sistema.',
-  })
-  @ApiBody({
-    description: 'Dados necessários para criar um gestor.',
-    type: CreateManagerDTO,
-  })
-  @ApiResponse({
-    status: 201,
-    description: 'Gestor criado com sucesso.',
-    schema: {
-      example: {
-        manager: {
-          id: '12345',
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john.doe@example.com',
-          password: '123456',
-          phone: '1234567890',
-          street: '123 Main St',
-          number: 123,
-          district: 'Downtown',
-          zipCode: '12345',
-          city: 'Anytown',
-          state: 'CA',
-        },
-      },
-    },
-  })
-  @ApiResponse({
-    status: 401,
-    description: 'Não autorizado.',
-  })
-  @ApiResponse({
-    status: 409,
-    description: 'O gestor já existe.',
-  })
+  @CreateManagerDocs()
   async create(@Body() body: CreateManagerDTO) {
     const {
       firstName,
