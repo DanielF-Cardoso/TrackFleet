@@ -88,6 +88,7 @@ export class CreateCarService {
       color,
       odometer,
       renavam: renavamVo,
+      isActive: true,
       status: 'AVAILABLE',
     })
 

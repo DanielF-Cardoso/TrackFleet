@@ -10,6 +10,8 @@ interface MakePrismaEventData {
   managerId?: string
   odometer?: number
   status?: 'ENTRY' | 'EXIT'
+  startAt?: Date
+  endAt?: Date
 }
 
 @Injectable()
@@ -42,7 +44,7 @@ export class EventFactory {
         managerId: event.managerId.toString(),
         odometer: event.odometer,
         status: event.status,
-        start_at: event.startAt,
+        start_at: event.startAt ?? now,
         end_at: event.endAt,
         createdAt: event.createdAt,
         updatedAt: event.updatedAt,
@@ -51,4 +53,4 @@ export class EventFactory {
 
     return event
   }
-} 
+}

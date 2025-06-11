@@ -17,6 +17,7 @@ export class PrismaCarMapper {
         odometer: raw.odometer,
         status: raw.status as 'AVAILABLE' | 'IN_USE' | 'IN_MAINTENANCE',
         renavam: new Renavam(raw.renavam),
+        isActive: raw.isActive,
         updatedAt: raw.updatedAt ?? undefined,
       },
       new UniqueEntityID(raw.id),

@@ -41,7 +41,8 @@
       "serviceHealthy": "El servicio está saludable.",
       "serviceUnhealthy": "El servicio tiene problemas.",
       "databaseConnected": "Base de datos conectada.",
-      "databaseDisconnected": "Base de datos desconectada."
+      "databaseDisconnected": "Base de datos desconectada.",
+      "invalidPeriod": "El período es inválido."
     }
   }
   

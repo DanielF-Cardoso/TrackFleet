@@ -50,6 +50,8 @@ import { InactivateCarController } from './car/inactivate-car.controller'
 import { InactivateCarService } from '@/domain/cars/application/services/inactivate-car.service'
 import { InactivateDriverController } from './driver/inactivate-driver.controller'
 import { InactivateDriverService } from '@/domain/driver/application/services/inactivate-driver.service'
+import { ListDriverCarsByPeriodController } from './event/list-driver-cars-by-period.controller'
+import { ListDriverCarsByPeriodService } from '@/domain/event/application/services/list-driver-cars-by-period.service'
 @Module({
   imports: [DatabaseModule, CryptographyModule, EmailModule],
   controllers: [
@@ -77,6 +79,7 @@ import { InactivateDriverService } from '@/domain/driver/application/services/in
     DeleteEventController,
     InactivateCarController,
     InactivateDriverController,
+    ListDriverCarsByPeriodController,
   ],
   providers: [
     AuthenticateManagerService,
@@ -103,6 +106,7 @@ import { InactivateDriverService } from '@/domain/driver/application/services/in
     DeleteEventService,
     InactivateCarService,
     InactivateDriverService,
+    ListDriverCarsByPeriodService,
   ],
 })
 export class HttpModule {}

@@ -42,6 +42,7 @@ export class CarFactory {
       odometer,
       renavam: new Renavam(renavam),
       status: 'AVAILABLE',
+      isActive: true,
     })
 
     await this.prisma.cars.create({
