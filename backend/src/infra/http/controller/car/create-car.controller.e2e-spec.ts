@@ -69,6 +69,7 @@ describe('Create Car Controller (E2E)', () => {
       year: createCarData.year,
       color: createCarData.color,
       odometer: createCarData.odometer,
+      isActive: true,
       status: 'AVAILABLE',
       renavam: createCarData.renavam,
       createdAt: expect.any(String),

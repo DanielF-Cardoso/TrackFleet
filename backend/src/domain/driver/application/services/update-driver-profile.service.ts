@@ -81,19 +81,16 @@ export class UpdateDriverProfileService {
     }
 
     let newEmail = driver.email
+    if (email && email === driver.email.toValue()) {
+      const errorMessage = await this.i18n.translate('errors.generic.sameEmail')
+      this.logger.warn(
+        `New email is the same as current email for driverId: ${driverId}`,
+        'UpdateDriverProfileService',
+      )
+      return left(new SameEmailError(errorMessage))
+    }
     if (email && email !== driver.email.toValue()) {
       const emailValueObject = new Email(email)
-
-      if (driver.email.equals(emailValueObject)) {
-        const errorMessage = await this.i18n.translate(
-          'errors.generic.sameEmail',
-        )
-        this.logger.warn(
-          `New email is the same as current email for driverId: ${driverId}`,
-          'UpdateDriverProfileService',
-        )
-        return left(new SameEmailError(errorMessage))
-      }
 
       const existingWithSameEmail = await this.driverRepository.findByEmail(
         emailValueObject.toValue(),
@@ -145,19 +142,16 @@ export class UpdateDriverProfileService {
     }
 
     let newPhone = driver.phone
+    if (phone && phone === driver.phone.toValue()) {
+      const errorMessage = await this.i18n.translate('errors.generic.samePhone')
+      this.logger.warn(
+        `New phone is the same as current phone for driverId: ${driverId}`,
+        'UpdateDriverProfileService',
+      )
+      return left(new SamePhoneError(errorMessage))
+    }
     if (phone && phone !== driver.phone.toValue()) {
       const phoneValueObject = new Phone(phone)
-
-      if (driver.phone && driver.phone.equals(phoneValueObject)) {
-        const errorMessage = await this.i18n.translate(
-          'errors.generic.samePhone',
-        )
-        this.logger.warn(
-          `New phone is the same as current phone for driverId: ${driverId}`,
-          'UpdateDriverProfileService',
-        )
-        return left(new SamePhoneError(errorMessage))
-      }
 
       const existingWithSamePhone = await this.driverRepository.findByPhone(
         phoneValueObject.toValue(),
@@ -176,7 +170,6 @@ export class UpdateDriverProfileService {
 
       newPhone = phoneValueObject
     }
-
     const newFirstName = firstName || driver.name.getFirstName()
 
     const newLastName = lastName || driver.name.getLastName()

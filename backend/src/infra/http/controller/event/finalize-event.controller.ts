@@ -15,7 +15,6 @@ import { ApiTags } from '@nestjs/swagger'
 import { EventPresenter } from '../../presenters/event.presenter'
 import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { InvalidOdometerError } from '@/domain/event/application/services/errors/invalid-odometer.error'
-import { OdometerToHighError } from '@/domain/event/application/services/errors/odometer-to-high.error'
 import { FinalizeEventDTO } from '../../dto/event/finalize-event.dto'
 import { InvalidEventStatusError } from '@/domain/event/application/services/errors/invalid-event-status.error'
 import { FinalizeEventDocs } from '@/infra/docs/event/finalize-event.controller'
@@ -54,10 +53,6 @@ export class FinalizeEventController {
         case InvalidOdometerError:
           throw new BadRequestException(
             await this.i18n.translate('errors.event.invalidOdometer'),
-          )
-        case OdometerToHighError:
-          throw new BadRequestException(
-            await this.i18n.translate('errors.event.odometerTooHigh'),
           )
         default:
           throw new InternalServerErrorException(

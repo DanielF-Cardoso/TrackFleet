@@ -68,6 +68,7 @@ describe('List Cars Controller (E2E)', () => {
           odometer: expect.any(Number),
           status: expect.any(String),
           renavam: expect.any(String),
+          isActive: expect.any(Boolean),
           createdAt: expect.any(String),
           updatedAt: expect.any(String),
         },

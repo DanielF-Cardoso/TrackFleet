@@ -7,8 +7,6 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { LOGGER_SERVICE } from '@/infra/logger/logger.module'
 import { CarRepository } from '@/domain/cars/application/repositories/car-repository'
 import { InvalidOdometerError } from './errors/invalid-odometer.error'
-import { OdometerToHighError } from './errors/odometer-to-high.error'
-import { OdometerValidation } from './validations/odometer.validation'
 import { InvalidEventStatusError } from './errors/invalid-event-status.error'
 
 interface FinalizeEventServiceRequest {
@@ -17,10 +15,7 @@ interface FinalizeEventServiceRequest {
 }
 
 type FinalizeEventServiceResponse = Either<
-  | ResourceNotFoundError
-  | InvalidOdometerError
-  | OdometerToHighError
-  | InvalidEventStatusError,
+  ResourceNotFoundError | InvalidOdometerError | InvalidEventStatusError,
   {
     event: Event
   }
@@ -83,17 +78,6 @@ export class FinalizeEventService {
         'FinalizeEventService',
       )
       return left(new InvalidOdometerError(errorMessage))
-    }
-
-    if (!OdometerValidation.validate(car.odometer, odometer)) {
-      const errorMessage = await this.i18n.translate(
-        'errors.event.odometerTooHigh',
-      )
-      this.logger.warn(
-        `Odometer increase too high: ${odometer} (current: ${car.odometer})`,
-        'FinalizeEventService',
-      )
-      return left(new OdometerToHighError(errorMessage))
     }
 
     const now = new Date()

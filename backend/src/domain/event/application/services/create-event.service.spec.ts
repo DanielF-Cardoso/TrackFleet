@@ -12,7 +12,6 @@ import { CarNotFoundError } from './errors/car-not-found.error'
 import { DriverNotFoundError } from './errors/driver-not-found.error'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { InvalidOdometerError } from './errors/invalid-odometer.error'
-import { OdometerToHighError } from './errors/odometer-to-high.error'
 import { CarInUseError } from './errors/car-in-use.error'
 import { FakeLogger } from 'test/fake/logs-mocks'
 import { InactiveCarError } from './errors/inactive-car.error'
@@ -138,90 +137,6 @@ describe('Create Event Service', () => {
     if (result.value instanceof InvalidOdometerError) {
       expect(result.value.message).toBe('Invalid odometer value.')
     }
-  })
-
-  it('should not be able to create an event with odometer increase above 10% for cars under 1000km', async () => {
-    vi.spyOn(i18n, 'translate').mockResolvedValue('Odometer value is too high.')
-
-    const car = makeCar({ odometer: 500 })
-    const driver = makeDriver()
-
-    await carRepository.create(car)
-    await driverRepository.create(driver)
-
-    const result = await sut.execute(
-      makeEventInput({
-        carId: car.id.toValue(),
-        driverId: driver.id.toValue(),
-        odometer: 600,
-      }),
-    )
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(OdometerToHighError)
-    if (result.value instanceof OdometerToHighError) {
-      expect(result.value.message).toBe('Odometer value is too high.')
-    }
-  })
-
-  it('should not be able to create an event with odometer increase above 5% for cars over 1000km', async () => {
-    vi.spyOn(i18n, 'translate').mockResolvedValue('Odometer value is too high.')
-
-    const car = makeCar({ odometer: 100000 })
-    const driver = makeDriver()
-
-    await carRepository.create(car)
-    await driverRepository.create(driver)
-
-    const result = await sut.execute(
-      makeEventInput({
-        carId: car.id.toValue(),
-        driverId: driver.id.toValue(),
-        odometer: 106000,
-      }),
-    )
-
-    expect(result.isLeft()).toBe(true)
-    expect(result.value).toBeInstanceOf(OdometerToHighError)
-    if (result.value instanceof OdometerToHighError) {
-      expect(result.value.message).toBe('Odometer value is too high.')
-    }
-  })
-
-  it('should be able to create an event with valid odometer increase (under 10%) for cars under 1000km', async () => {
-    const car = makeCar({ odometer: 500 })
-    const driver = makeDriver()
-
-    await carRepository.create(car)
-    await driverRepository.create(driver)
-
-    const result = await sut.execute(
-      makeEventInput({
-        carId: car.id.toValue(),
-        driverId: driver.id.toValue(),
-        odometer: 550,
-      }),
-    )
-
-    expect(result.isRight()).toBe(true)
-  })
-
-  it('should be able to create an event with valid odometer increase (under 5%) for cars over 1000km', async () => {
-    const car = makeCar({ odometer: 100000 })
-    const driver = makeDriver()
-
-    await carRepository.create(car)
-    await driverRepository.create(driver)
-
-    const result = await sut.execute(
-      makeEventInput({
-        carId: car.id.toValue(),
-        driverId: driver.id.toValue(),
-        odometer: 105000,
-      }),
-    )
-
-    expect(result.isRight()).toBe(true)
   })
 
   it('should not be able to create an event for a car that is already in use', async () => {
