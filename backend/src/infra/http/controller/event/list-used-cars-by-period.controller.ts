@@ -34,9 +34,14 @@ export class ListUsedCarsByPeriodController {
       )
     }
 
+    const start = new Date(startDate)
+    const end = new Date(endDate)
+
+    end.setUTCHours(23, 59, 59, 999)
+
     const result = await this.listUsedCarsByPeriodService.execute({
-      startDate: new Date(startDate),
-      endDate: new Date(endDate),
+      startDate: start,
+      endDate: end,
     })
 
     if (result.isLeft()) {
