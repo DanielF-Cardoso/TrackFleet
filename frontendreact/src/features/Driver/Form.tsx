@@ -216,10 +216,6 @@ const DriverForm: React.FC<DriverFormProps> = ({ formData, handleInputChange, ha
               <option value="C">C</option>
               <option value="D">D</option>
               <option value="E">E</option>
-              <option value="AB">AB</option>
-              <option value="AC">AC</option>
-              <option value="AD">AD</option>
-              <option value="AE">AE</option>
             </select>
             {shouldShowError('cnhType') && <div className="error-feedback">{errors.cnhType}</div>}
           </div>
