@@ -12,7 +12,8 @@ import {
   Legend,
   ArcElement
 } from 'chart.js';
-import { Line, Bar, Doughnut } from 'react-chartjs-2';
+import './styles.css';
+import { Line, Doughnut } from 'react-chartjs-2';
 import { fetchDrivers } from '../../services/driverService';
 import { fetchFleets } from '../../services/fleetService';
 import { fetchEvents } from '../../services/eventService';
@@ -157,7 +158,6 @@ const Dashboard: React.FC = () => {
   };
 
   const eventTableColumns = [
-    { label: 'Tipo', field: 'type' },
     { label: 'Motorista', field: 'driver' },
     { label: 'Veículo', field: 'car' },
     { label: 'Data de Início', field: 'startAt' },
@@ -223,7 +223,7 @@ const Dashboard: React.FC = () => {
 
       <DataTable
         columns={eventTableColumns}
-        data={eventsTableData}
+        data={eventsTableData.slice(-4)}
       />
 
       <div className="row g-4">
@@ -247,192 +247,6 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
 
-      <style>
-        {`
-          .dashboard-card {
-            border-radius: 15px;
-            padding: 20px;
-            height: 100%;
-            min-height: 120px;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.2s;
-          }
-
-          .dashboard-card:hover {
-            transform: translateY(-5px);
-          }
-
-          .dashboard-card-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            height: 100%;
-            position: relative;
-            z-index: 1;
-          }
-
-          .card-info {
-            color: white;
-          }
-
-          .card-info h6 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            opacity: 0.9;
-            font-weight: 400;
-          }
-
-          .card-info h2 {
-            font-size: 28px;
-            margin: 0;
-            font-weight: 600;
-          }
-
-          .card-icon {
-            font-size: 24px;
-            color: rgba(255, 255, 255, 0.5);
-          }
-
-          .card-icon i {
-            font-size: 28px;
-          }
-
-          .gradient-purple {
-            background: linear-gradient(135deg, #9f7aea 0%, #7c3aed 100%);
-          }
-
-          .gradient-pink {
-            background: linear-gradient(135deg, #f472b6 0%, #db2777 100%);
-          }
-
-          .gradient-orange {
-            background: linear-gradient(135deg, #fb923c 0%, #ea580c 100%);
-          }
-
-          .gradient-blue {
-            background: linear-gradient(135deg, #60a5fa 0%, #2563eb 100%);
-          }
-
-          .modern-table {
-            color: #666;
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-          }
-
-          .modern-table thead th {
-            background: #f1f5f9;
-            border: none;
-            padding: 15px 20px;
-            font-weight: 600;
-            color: #444;
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-          }
-
-          .modern-table tbody td {
-            padding: 15px 20px;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-          }
-
-          .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-          }
-
-          .status-dot.active {
-            background-color: #22c55e;
-          }
-
-          .shadow-sm {
-            box-shadow: 0 2px 8px rgba(0,0,0,0.05) !important;
-          }
-
-          .card {
-            background: white;
-            border-radius: 15px;
-            border: none;
-          }
-
-          .card-body {
-            padding: 1.5rem;
-          }
-
-          .table-responsive {
-            background: #f8f9fe;
-            border-radius: 15px;
-            padding: 0.5rem;
-          }
-
-          .modern-table {
-            margin-bottom: 0;
-            width: 100%;
-          }
-
-          .table-header {
-            background: #7950f2;
-            color: white;
-          }
-
-          .modern-table thead th {
-            background: transparent;
-            border: none;
-            padding: 15px 20px;
-            font-weight: 600;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: white;
-          }
-
-          .modern-table tbody tr {
-            background: white;
-            margin-bottom: 5px;
-            border-radius: 8px;
-          }
-
-          .modern-table tbody tr:not(:last-child) {
-            border-bottom: 8px solid #f8f9fe;
-          }
-
-          .modern-table tbody td {
-            padding: 15px 20px;
-            border: none;
-            background: white;
-            vertical-align: middle;
-            font-size: 14px;
-            color: #666;
-          }
-
-          .modern-table tbody tr:first-child td:first-child {
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
-          }
-
-          .modern-table tbody tr:first-child td:last-child {
-            border-top-right-radius: 8px;
-            border-bottom-right-radius: 8px;
-          }
-
-          .status-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            margin-right: 8px;
-          }
-
-          .status-dot.active {
-            background-color: #2ecc71;
-          }
-        `}
-      </style>
     </Layout>
   );
 };

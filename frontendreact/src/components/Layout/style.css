@@ -25,6 +25,17 @@
   justify-content: center;
 }
 
+.logout-btn {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #f87171;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+}
+
 .layout-logo-icon-mobile {
   background: #1e6bed;
   border-radius: 8px;
@@ -68,6 +79,7 @@
   margin-bottom: 2px;
   transition: background 0.2s, color 0.2s;
 }
+
 .layout-menu-link.active {
   color: #111;
   background: #f3f4f6;
@@ -155,7 +167,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  box-shadow: 2px 0 8px rgba(0,0,0,0.08);
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.08);
 }
 
 .layout-offcanvas .layout-logo-box {
@@ -211,6 +223,7 @@
   .layout-sidebar-desktop {
     display: none !important;
   }
+
   .layout-main {
     padding: 10px !important;
     padding-top: 70px !important;
@@ -218,9 +231,11 @@
     min-width: 0 !important;
   }
 }
+
 @media (min-width: 768px) {
+
   .layout-topbar-mobile,
   .layout-offcanvas-bg {
     display: none !important;
   }
-} 
+}
