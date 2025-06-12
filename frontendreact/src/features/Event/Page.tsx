@@ -8,7 +8,7 @@ import Preloader from '../../components/Preloader';
 import { EventTypes, EventFormData, EventTableData } from './types/eventTypes';
 import ViewEventModal from './View';
 import { useEvents } from '../../hooks/useEvent';
-import { createEvent, deleteEvent, finalizeEvent } from '../../services/eventService';
+import { createEvent, deleteEvent, finalizeEvent, fetchEventsByPeriod } from '../../services/eventService';
 import { CarOption, DriverOption } from './types/eventOptions';
 import { fetchFleets } from '../../services/fleetService';
 import { fetchDrivers } from '../../services/driverService';
@@ -35,18 +35,32 @@ const EventPage: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<EventTypes | null>(null);
 
+  // Filtro por período
+  const [showPeriodFilter, setShowPeriodFilter] = useState(false);
+  const [periodStart, setPeriodStart] = useState('');
+  const [periodEnd, setPeriodEnd] = useState('');
+  const [periodLoading, setPeriodLoading] = useState(false);
+  const [periodFilteredEvents, setPeriodFilteredEvents] = useState<EventTypes[] | null>(null);
+
   const statusLabel = (status: string) => {
     if (status === 'ENTRY') return 'ENTRADA';
     if (status === 'EXIT') return 'SAÍDA';
     return status;
   };
 
-  const filteredEvents = events
-    .filter(event => showInactive ? event.status !== 'EXIT' : event.status === 'EXIT')
-    .filter(event =>
+  const eventsToShow = periodFilteredEvents !== null ? periodFilteredEvents : events;
+
+  const filteredEvents = periodFilteredEvents !== null
+    ? eventsToShow.filter(event =>
       event.carId.toLowerCase().includes(search.toLowerCase()) ||
       event.driverId.toLowerCase().includes(search.toLowerCase())
-    );
+    )
+    : eventsToShow
+      .filter(event => showInactive ? event.status !== 'EXIT' : event.status === 'EXIT')
+      .filter(event =>
+        event.carId.toLowerCase().includes(search.toLowerCase()) ||
+        event.driverId.toLowerCase().includes(search.toLowerCase())
+      );
 
   const eventsData: EventTableData[] = filteredEvents.map(event => ({
     id: event.id,
@@ -54,7 +68,7 @@ const EventPage: React.FC = () => {
     driverId: event.driver ? `${event.driver.firstName} ${event.driver.lastName}` : event.driverId,
     managerId: event.managerId,
     odometer: event.odometer.toString(),
-    status: statusLabel(event.status), // <-- aqui!
+    status: statusLabel(event.status),
     startAt: event.startAt ? format(new Date(event.startAt), 'dd/MM/yyyy') : '',
     endAt: event.endAt ? format(new Date(event.endAt), 'dd/MM/yyyy') : '',
     createdAt: event.createdAt,
@@ -168,10 +182,6 @@ const EventPage: React.FC = () => {
     setCurrentEvent(null);
   };
 
-  const canFinishEvent = (event: EventTableData) => {
-    return event.status !== 'ENTRY';
-  };
-
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (!(event.target as Element).closest('.dropdown')) {
@@ -207,6 +217,44 @@ const EventPage: React.FC = () => {
       );
     });
   }, []);
+
+
+  // Função para limpar filtro de período
+  const clearPeriodFilter = () => {
+    setPeriodFilteredEvents(null);
+    setPeriodStart('');
+    setPeriodEnd('');
+    setShowPeriodFilter(false);
+  };
+
+  const today = new Date().toISOString().split('T')[0];
+
+  const handlePeriodFilter = async () => {
+    if (!periodStart || !periodEnd) {
+      showAlertMessage('Selecione o período.');
+      return;
+    }
+    if (periodEnd > today) {
+      showAlertMessage('A data final não pode ser maior que hoje.');
+      return;
+    }
+    if (periodEnd < periodStart) {
+      showAlertMessage('A data final não pode ser menor que a data inicial.');
+      return;
+    }
+    setPeriodLoading(true);
+    setShowAlert(false);
+    try {
+      const filtered = await fetchEventsByPeriod(periodStart, periodEnd);
+      setPeriodFilteredEvents(filtered);
+      if (!filtered.length) showAlertMessage('Nenhum evento encontrado no período.');
+    } catch (err: any) {
+      setPeriodFilteredEvents([]);
+      const apiError = err?.response?.data?.message || 'Erro ao buscar eventos por período.';
+      showAlertMessage(apiError);
+    }
+    setPeriodLoading(false);
+  };
 
   const columns = [
     { label: 'PLACA / MODELO', field: 'carId' },
@@ -252,20 +300,80 @@ const EventPage: React.FC = () => {
               style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
             />
           </div>
-          <button
-            className={`btn ${showInactive ? 'btn-outline-primary' : 'btn-primary'} ms-md-3 mt-2 mt-md-0`}
-            style={{
-              minWidth: 170,
-              borderRadius: 8,
-              background: 'linear-gradient(90deg, #ff763b 0%, #ffc480 100%)',
-              border: 'none'
-            }} onClick={() => setShowInactive(!showInactive)}
-          >
-            {showInactive ? 'Mostrar Ativos' : 'Mostrar Finalizados'}
-          </button>
+          <div className="d-flex flex-column flex-md-row gap-2 ms-md-3 mt-2 mt-md-0">
+            <button
+              className={`btn ${showInactive ? 'btn-outline-primary' : 'btn-primary'} ms-md-3 mt-2 mt-md-0`}
+              style={{
+                minWidth: 170,
+                borderRadius: 8,
+                background: 'linear-gradient(90deg, #ff763b 0%, #ff763b 100%)',
+                border: 'none'
+              }}
+              onClick={() => setShowInactive(!showInactive)}
+            >
+              {showInactive ? 'Mostrar Ativos' : 'Mostrar Finalizados'}
+            </button>
+            <button
+              className={`btn ${showInactive ? 'btn-outline-primary' : 'btn-primary'} ms-md-3 mt-2 mt-md-0`}
+              style={{
+                minWidth: 170,
+                borderRadius: 8,
+                background: 'linear-gradient(90deg, #ff763b 0%, #ff763b 100%)',
+                border: 'none'
+              }}
+              onClick={() => setShowPeriodFilter(v => !v)}
+            >
+              Filtrar Evento
+            </button>
+          </div>
         </div>
       </div>
-      
+
+      {showPeriodFilter && (
+        <div className="d-flex justify-content-center">
+          <div className="card shadow-sm mb-4" style={{ borderRadius: 12 }}>
+            <div className="card-body d-flex flex-row align-items-end gap-2 flex-nowrap">
+              <input
+                type="date"
+                className="form-control"
+                value={periodStart}
+                onChange={e => setPeriodStart(e.target.value)}
+                style={{ maxWidth: 180 }}
+              />
+              <input
+                type="date"
+                className="form-control"
+                value={periodEnd}
+                onChange={e => setPeriodEnd(e.target.value)}
+                style={{ maxWidth: 180 }}
+                max={today}
+              />
+              <button
+                className="btn btn-primary"
+                style={{
+                  minWidth: 120, background: 'linear-gradient(90deg, #ff763b 0%, #ff763b 100%)',
+                }}
+                onClick={handlePeriodFilter}
+                disabled={periodLoading || !periodStart || !periodEnd}
+              >
+                {periodLoading ? 'Filtrando...' : 'Filtrar'}
+              </button>
+              {periodFilteredEvents !== null && (
+                <button
+                  className="btn btn-outline-secondary"
+                  style={{
+                    minWidth: 120, background: 'linear-gradient(90deg, #ff763b 0%, #ff763b 100%), color: #fff;',
+                  }}
+                  onClick={clearPeriodFilter}
+                >
+                  Limpar Filtro
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
       {eventsData.length === 0 && !loading ? (
         <div className="text-center my-4">Nenhum evento encontrado.</div>
       ) : (
