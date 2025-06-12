@@ -13,6 +13,7 @@ export class CarPresenter {
       odometer: car.odometer,
       status: car.status,
       renavam: car.renavam.toValue(),
+      isActive: car.isActive,
       createdAt: car.createdAt,
       updatedAt: car.updatedAt,
     }

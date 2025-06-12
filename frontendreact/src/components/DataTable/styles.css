@@ -1,0 +1,82 @@
+.table-responsive {
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-responsive th {
+  background-color: #4a90e2;
+  padding: 1rem;
+  text-align: center;
+  font-weight: 600;
+  color: white;
+  border-bottom: 2px solid #357abd;
+}
+
+.table-responsive td {
+  padding: 1rem;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.table-responsive tr:hover {
+  background-color: #f8f9fa;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6c757d;
+  transition: all 0.3s ease;
+}
+
+.btn-icon:hover {
+  color: #495057;
+  transform: scale(1.1);
+}
+
+.btn-icon:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-icon.text-danger:hover {
+  color: #dc3545;
+}
+
+.btn-icon.text-success:hover {
+  color: #28a745;
+}
+
+.badge {
+  padding: 0.5rem 1rem;
+  border-radius: 50px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.badge-success {
+  background-color: #d4edda;
+  color: #155724;
+}
+
+.badge-danger {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+
+.badge-warning {
+  background-color: #fff3cd;
+  color: #856404;
+} 

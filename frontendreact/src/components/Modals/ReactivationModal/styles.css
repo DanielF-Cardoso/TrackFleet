@@ -1,0 +1,75 @@
+.modal-header {
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0.5rem;
+    background: linear-gradient(to right, #40c057, #51cf66);
+    border-radius: 1rem 1rem 0 0;
+    color: white;
+}
+
+.modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.btn-close:hover {
+    opacity: 1;
+}
+
+.modal-body {
+    padding: 2rem 1.5rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.modal-footer {
+    border-top: none;
+    padding: 1rem 1.5rem 1.5rem;
+}
+
+.reactivation-modal .btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.reactivation-modal .btn-secondary {
+    background-color: #e9ecef;
+    border: none;
+    color: #495057;
+}
+
+.reactivation-modal .btn-secondary:hover {
+    background-color: #dee2e6;
+}
+
+.reactivation-modal .btn-success {
+    background: linear-gradient(to right, #40c057, #51cf66);
+    border: none;
+}
+
+.reactivation-modal .btn-success:hover {
+    background: linear-gradient(to right, #37b24d, #40c057);
+    transform: translateY(-1px);
+}
+
+.warning-icon {
+    font-size: 3rem;
+    color: #40c057;
+    margin-bottom: 1rem;
+}
+
+.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: scale(1);
+} 

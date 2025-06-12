@@ -16,7 +16,7 @@ import { ResourceNotFoundError } from '@/core/errors/resource-not-found.error'
 import { DriverHasActiveEventError } from '@/domain/driver/application/services/errors/driver-has-active-event.error'
 import { InactivateDriverDocs } from '@/infra/docs/drivers/inactivate-driver.doc'
 
-@ApiTags('Motoristas')
+@ApiTags('Motorista')
 @Controller('drivers')
 export class InactivateDriverController {
   constructor(

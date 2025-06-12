@@ -69,7 +69,7 @@ export class UpdateOtherManagerProfileService {
     }
 
     let newEmail = manager.email
-    if (email) {
+    if (email && email !== manager.email.toValue()) {
       const emailValueObject = new Email(email)
       const existingWithSameEmail = await this.managerRepository.findByEmail(
         emailValueObject.toValue(),
@@ -88,7 +88,7 @@ export class UpdateOtherManagerProfileService {
     }
 
     let newPhone = manager.phone
-    if (phone) {
+    if (phone && phone !== manager.phone.toValue()) {
       const phoneValueObject = new Phone(phone)
       const existingWithSamePhone = await this.managerRepository.findByPhone(
         phoneValueObject.toValue(),

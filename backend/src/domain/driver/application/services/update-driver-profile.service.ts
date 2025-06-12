@@ -81,7 +81,7 @@ export class UpdateDriverProfileService {
     }
 
     let newEmail = driver.email
-    if (email) {
+    if (email && email !== driver.email.toValue()) {
       const emailValueObject = new Email(email)
 
       if (driver.email.equals(emailValueObject)) {
@@ -114,7 +114,7 @@ export class UpdateDriverProfileService {
     }
 
     let newCnh = driver.cnh
-    if (cnh) {
+    if (cnh && cnh !== driver.cnh.toValue()) {
       const cnhValueObject = new Cnh(cnh)
 
       if (driver.cnh.equals(cnhValueObject)) {
@@ -145,7 +145,7 @@ export class UpdateDriverProfileService {
     }
 
     let newPhone = driver.phone
-    if (phone) {
+    if (phone && phone !== driver.phone.toValue()) {
       const phoneValueObject = new Phone(phone)
 
       if (driver.phone && driver.phone.equals(phoneValueObject)) {

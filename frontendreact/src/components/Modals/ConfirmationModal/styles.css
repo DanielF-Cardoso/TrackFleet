@@ -1,0 +1,81 @@
+.confirmation-modal .modal-content {
+    border: none;
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+.confirmation-modal .modal-header {
+    border-bottom: none;
+    padding: 1.5rem 1.5rem 0.5rem;
+    background: linear-gradient(to right, #ff6b6b, #ff8787);
+    border-radius: 1rem 1rem 0 0;
+    color: white;
+}
+
+.confirmation-modal .modal-title {
+    font-weight: 600;
+    font-size: 1.25rem;
+}
+
+.confirmation-modal .btn-close {
+    filter: brightness(0) invert(1);
+    opacity: 0.8;
+    transition: opacity 0.2s;
+}
+
+.confirmation-modal .btn-close:hover {
+    opacity: 1;
+}
+
+.confirmation-modal .modal-body {
+    padding: 2rem 1.5rem;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+.confirmation-modal .modal-footer {
+    border-top: none;
+    padding: 1rem 1.5rem 1.5rem;
+}
+
+.confirmation-modal .btn {
+    padding: 0.6rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.confirmation-modal .btn-secondary {
+    background-color: #e9ecef;
+    border: none;
+    color: #495057;
+}
+
+.confirmation-modal .btn-secondary:hover {
+    background-color: #dee2e6;
+}
+
+.confirmation-modal .btn-danger {
+    background: linear-gradient(to right, #ff6b6b, #ff8787);
+    border: none;
+}
+
+.confirmation-modal .btn-danger:hover {
+    background: linear-gradient(to right, #fa5252, #ff6b6b);
+    transform: translateY(-1px);
+}
+
+.confirmation-modal .warning-icon {
+    font-size: 3rem;
+    color: #ff6b6b;
+    margin-bottom: 1rem;
+}
+
+.confirmation-modal.modal.fade .modal-dialog {
+    transform: scale(0.95);
+    transition: transform 0.2s ease-out;
+}
+
+.confirmation-modal.modal.show .modal-dialog {
+    transform: scale(1);
+} 
