@@ -46,7 +46,9 @@ export class ListUsedCarsByPeriodController {
     }
 
     return {
-      events: result.value.events.map(EventPresenter.toHTTP),
+      events: result.value.events.map((e) =>
+        EventPresenter.toHTTPWithDetails(e.event, e.car, e.driver),
+      ),
     }
   }
 }
