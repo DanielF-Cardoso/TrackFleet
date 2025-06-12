@@ -8,7 +8,7 @@ import Preloader from '../../components/Preloader';
 import { EventTypes, EventFormData, EventTableData } from './types/eventTypes';
 import ViewEventModal from './View';
 import { useEvents } from '../../hooks/useEvent';
-import { createEvent, deleteEvent, finalizeEvent, fetchEventsByPeriod } from '../../services/eventService';
+import { createEvent, deleteEvent, finalizeEvent, fetchEventsByPeriod, fetchCarsByDriverAndPeriod } from '../../services/eventService';
 import { CarOption, DriverOption } from './types/eventOptions';
 import { fetchFleets } from '../../services/fleetService';
 import { fetchDrivers } from '../../services/driverService';
@@ -35,12 +35,21 @@ const EventPage: React.FC = () => {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [eventToDelete, setEventToDelete] = useState<EventTypes | null>(null);
 
-  // Filtro por período
   const [showPeriodFilter, setShowPeriodFilter] = useState(false);
   const [periodStart, setPeriodStart] = useState('');
   const [periodEnd, setPeriodEnd] = useState('');
   const [periodLoading, setPeriodLoading] = useState(false);
   const [periodFilteredEvents, setPeriodFilteredEvents] = useState<EventTypes[] | null>(null);
+
+  const [showDriverFilter, setShowDriverFilter] = useState(false);
+  const [driverFilterId, setDriverFilterId] = useState('');
+  const [driverPeriodStart, setDriverPeriodStart] = useState('');
+  const [driverPeriodEnd, setDriverPeriodEnd] = useState('');
+  const [driverLoading, setDriverLoading] = useState(false);
+  const [driverFilteredEvents, setDriverFilteredEvents] = useState<EventTypes[] | null>(null);
+
+
+  const [filteredCarsByDriver, setFilteredCarsByDriver] = useState<CarOption[] | null>(null);
 
   const statusLabel = (status: string) => {
     if (status === 'ENTRY') return 'ENTRADA';
@@ -48,7 +57,12 @@ const EventPage: React.FC = () => {
     return status;
   };
 
-  const eventsToShow = periodFilteredEvents !== null ? periodFilteredEvents : events;
+  const eventsToShow =
+    driverFilteredEvents !== null
+      ? driverFilteredEvents
+      : periodFilteredEvents !== null
+        ? periodFilteredEvents
+        : events;
 
   const filteredEvents = periodFilteredEvents !== null
     ? eventsToShow.filter(event =>
@@ -91,6 +105,32 @@ const EventPage: React.FC = () => {
       ...prev,
       [id]: value
     }));
+  };
+
+  const handleDriverFilter = async () => {
+    if (!driverFilterId || !driverPeriodStart || !driverPeriodEnd) {
+      showAlertMessage('Selecione motorista e período.');
+      return;
+    }
+    setDriverLoading(true);
+    try {
+      const cars = await fetchCarsByDriverAndPeriod(driverFilterId, driverPeriodStart, driverPeriodEnd);
+      setFilteredCarsByDriver(cars);
+      if (!cars.length) showAlertMessage('Nenhum carro encontrado para o motorista no período.');
+    } catch (err: any) {
+      setFilteredCarsByDriver([]);
+      const apiError = err?.response?.data?.message || 'Erro ao buscar carros do motorista.';
+      showAlertMessage(apiError);
+    }
+    setDriverLoading(false);
+  };
+
+  const clearDriverFilter = () => {
+    setDriverFilterId('');
+    setDriverPeriodStart('');
+    setDriverPeriodEnd('');
+    setFilteredCarsByDriver(null);
+    setShowDriverFilter(false);
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -219,7 +259,6 @@ const EventPage: React.FC = () => {
   }, []);
 
 
-  // Função para limpar filtro de período
   const clearPeriodFilter = () => {
     setPeriodFilteredEvents(null);
     setPeriodStart('');
@@ -325,6 +364,18 @@ const EventPage: React.FC = () => {
             >
               Filtrar Evento
             </button>
+            <button
+              className="btn btn-primary ms-md-3 mt-2 mt-md-0"
+              style={{
+                minWidth: 170,
+                borderRadius: 8,
+                background: 'linear-gradient(90deg, #ff763b 0%, #ff763b 100%)',
+                border: 'none'
+              }}
+              onClick={() => setShowDriverFilter(v => !v)}
+            >
+              Filtrar Motorista
+            </button>
           </div>
         </div>
       </div>
@@ -372,6 +423,79 @@ const EventPage: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showDriverFilter && (
+        <div className="d-flex justify-content-center">
+          <div className="card shadow-sm mb-4" style={{ borderRadius: 12 }}>
+            <div className="card-body d-flex flex-row align-items-end gap-2 flex-nowrap">
+              <select
+                className="form-select"
+                style={{ maxWidth: 220 }}
+                value={driverFilterId}
+                onChange={e => setDriverFilterId(e.target.value)}
+              >
+                <option value="">Selecione o motorista</option>
+                {drivers.map(driver => (
+                  <option key={driver.id} value={driver.id}>
+                    {driver.label}
+                  </option>
+                ))}
+              </select>
+              <input
+                type="date"
+                className="form-control"
+                value={driverPeriodStart}
+                onChange={e => setDriverPeriodStart(e.target.value)}
+                style={{ maxWidth: 180 }}
+                max={today}
+              />
+              <input
+                type="date"
+                className="form-control"
+                value={driverPeriodEnd}
+                onChange={e => setDriverPeriodEnd(e.target.value)}
+                style={{ maxWidth: 180 }}
+                max={today}
+              />
+              <button
+                className="btn btn-warning"
+                style={{ minWidth: 150 }}
+                onClick={handleDriverFilter}
+                disabled={!driverFilterId || !driverPeriodStart || !driverPeriodEnd || driverLoading}
+              >
+                {driverLoading ? 'Filtrando...' : 'Filtrar Motorista'}
+              </button>
+              {filteredCarsByDriver !== null && (
+                <button
+                  className="btn btn-outline-secondary"
+                  style={{
+                    minWidth: 120,
+                    background: 'linear-gradient(90deg, #ff763b 0%, #ff763b 100%)',
+                    color: '#fff',
+                  }}
+                  onClick={clearDriverFilter}
+                >
+                  Limpar Filtro
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {filteredCarsByDriver && (
+        <DataTable
+          columns={[
+            { label: 'PLACA', field: 'licensePlate' },
+            { label: 'MODELO', field: 'model' },
+            { label: 'MARCA', field: 'brand' },
+            { label: 'COR', field: 'color' },
+            { label: 'STATUS', field: 'status' },
+          ]}
+          data={filteredCarsByDriver}
+          headerGradient={{ start: '#7b5cff', end: '#5a3fff' }} 
+        />
       )}
 
       {eventsData.length === 0 && !loading ? (
