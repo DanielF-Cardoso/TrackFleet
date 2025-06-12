@@ -20,11 +20,11 @@ async function bootstrap() {
   app.useLogger(logger)
 
   app.enableCors({
-    origin: "http://localhost:3000",
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
-  });
+  })
 
   const port = envService.get('PORT')
   const nodeEnv = envService.get('NODE_ENV')

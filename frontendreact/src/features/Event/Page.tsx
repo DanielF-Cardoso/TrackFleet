@@ -88,6 +88,17 @@ const EventPage: React.FC = () => {
     createdAt: event.createdAt,
   }));
 
+  const carsData = filteredCarsByDriver
+    ? filteredCarsByDriver.map(car => ({
+      id: car.id,
+      licensePlate: car.licensePlate,
+      model: car.model,
+      brand: car.brand,
+      color: car.color,
+      status: statusCarLabel(car.status),
+    }))
+    : [];
+
   const [formData, setFormData] = useState<EventFormData>({
     carId: '',
     driverId: '',
@@ -150,6 +161,12 @@ const EventPage: React.FC = () => {
       showAlertMessage(apiError);
     }
   };
+
+  function statusCarLabel(status: string) {
+    if (status === 'AVAILABLE') return 'DISPONÍVEL';
+    if (status === 'IN_USE') return 'EM USO';
+    return status;
+  }
 
   const handleOpenDeleteModal = (eventTable: EventTableData) => {
     const event = events.find(e => e.id === eventTable.id);
@@ -493,8 +510,8 @@ const EventPage: React.FC = () => {
             { label: 'COR', field: 'color' },
             { label: 'STATUS', field: 'status' },
           ]}
-          data={filteredCarsByDriver}
-          headerGradient={{ start: '#7b5cff', end: '#5a3fff' }} 
+          data={carsData}
+          headerGradient={{ start: '#ff763b', end: '#ffc480' }}
         />
       )}
 

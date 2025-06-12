@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   InternalServerErrorException,
+  Param,
   Post,
 } from '@nestjs/common'
 import { ResetManagerPasswordService } from '@/domain/manager/application/services/reset-manager-password.service'
@@ -20,11 +21,14 @@ export class ResetPasswordController {
     private i18n: I18nService,
   ) {}
 
-  @Post('reset-password')
+  @Post('reset-password/:token')
   @ResetPasswordDocs()
-  async handle(@Body() body: ResetPasswordDTO) {
+  async handle(
+    @Param('token') token: string,
+    @Body() body: Pick<ResetPasswordDTO, 'password'>,
+  ) {
     const result = await this.resetManagerPasswordService.execute({
-      token: body.token,
+      token,
       password: body.password,
     })
 
