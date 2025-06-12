@@ -1,6 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { ListEventsService } from './list-events.service'
 import { InMemoryEventRepository } from 'test/repositories/in-memory-event.repository'
+import { InMemoryCarRepository } from 'test/repositories/in-memory-car.repository'
+import { InMemoryDriverRepository } from 'test/repositories/in-memory-driver.repository'
 import { makeEvent } from 'test/factories/event/make-event'
 import { makeCar } from 'test/factories/car/make-car'
 import { makeDriver } from 'test/factories/driver/make-driver'
@@ -11,25 +13,40 @@ import { FakeLogger } from 'test/fake/logs-mocks'
 
 let sut: ListEventsService
 let eventRepository: InMemoryEventRepository
+let carRepository: InMemoryCarRepository
+let driverRepository: InMemoryDriverRepository
 let i18n: I18nService
 let logger: FakeLogger
 
 beforeEach(() => {
   eventRepository = new InMemoryEventRepository()
+  carRepository = new InMemoryCarRepository()
+  driverRepository = new InMemoryDriverRepository()
   logger = new FakeLogger()
   i18n = {
     translate: vi.fn(),
   } as unknown as I18nService
-  sut = new ListEventsService(eventRepository, i18n, logger)
+  sut = new ListEventsService(
+    eventRepository,
+    carRepository,
+    driverRepository,
+    i18n,
+    logger,
+  )
 })
 
 describe('ListEventsService', () => {
-  it('should be able to list all events', async () => {
+  it('should be able to list all events with car and driver details', async () => {
     const car1 = makeCar()
     const car2 = makeCar()
     const driver1 = makeDriver()
     const driver2 = makeDriver()
     const managerId = 'manager-1'
+
+    await carRepository.create(car1)
+    await carRepository.create(car2)
+    await driverRepository.create(driver1)
+    await driverRepository.create(driver2)
 
     const event1 = makeEvent({
       carId: car1.id,
@@ -60,18 +77,40 @@ describe('ListEventsService', () => {
       expect(events).toEqual(
         expect.arrayContaining([
           expect.objectContaining({
-            id: event1.id,
-            carId: car1.id,
-            driverId: driver1.id,
-            odometer: 1000,
-            status: 'EXIT',
+            event: expect.objectContaining({
+              id: event1.id,
+              carId: car1.id,
+              driverId: driver1.id,
+              odometer: 1000,
+              status: 'EXIT',
+            }),
+            car: expect.objectContaining({
+              id: car1.id,
+              licensePlate: car1.licensePlate,
+              model: car1.model,
+              brand: car1.brand,
+            }),
+            driver: expect.objectContaining({
+              id: driver1.id,
+            }),
           }),
           expect.objectContaining({
-            id: event2.id,
-            carId: car2.id,
-            driverId: driver2.id,
-            odometer: 2000,
-            status: 'ENTRY',
+            event: expect.objectContaining({
+              id: event2.id,
+              carId: car2.id,
+              driverId: driver2.id,
+              odometer: 2000,
+              status: 'ENTRY',
+            }),
+            car: expect.objectContaining({
+              id: car2.id,
+              licensePlate: car2.licensePlate,
+              model: car2.model,
+              brand: car2.brand,
+            }),
+            driver: expect.objectContaining({
+              id: driver2.id,
+            }),
           }),
         ]),
       )

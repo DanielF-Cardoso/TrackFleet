@@ -54,7 +54,7 @@ export class UpdateCarDTO {
     example: 10000,
   })
   @IsOptional()
-  @IsString({ message: i18nValidationMessage('validation.isNotString') })
+  @IsNumber({}, { message: i18nValidationMessage('validation.isNotNumber') })
   odometer?: number
 
   @ApiProperty({

@@ -8,7 +8,7 @@ export interface FleetTypes {
   color: string;
   renavam: string;
   odometer: number;
-  isActive: boolean;
+  isActive?: boolean;
   status: 'AVAILABLE' | 'IN_USE' | 'IN_MAINTENANCE';
 }
 

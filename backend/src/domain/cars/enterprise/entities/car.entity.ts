@@ -105,19 +105,19 @@ export class Car extends Entity<CarProps> {
     color?: string
     odometer?: number
   }) {
-    if (datails.brand) {
+    if (datails.brand !== undefined) {
       this.props.brand = datails.brand
     }
-    if (datails.model) {
+    if (datails.model !== undefined) {
       this.props.model = datails.model
     }
-    if (datails.year) {
+    if (datails.year !== undefined) {
       this.props.year = datails.year
     }
-    if (datails.color) {
+    if (datails.color !== undefined) {
       this.props.color = datails.color
     }
-    if (datails.odometer) {
+    if (datails.odometer !== undefined) {
       this.props.odometer = datails.odometer
     }
     this.touch()

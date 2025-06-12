@@ -328,15 +328,21 @@ const Driver: React.FC = () => {
           resetForm();
           setShowModal(true);
         }}
-        gradientStart="#0e4cfd"
-        gradientEnd="#6a8eff"
+        gradientStart="#843cf6"
+        gradientEnd="#759bff"
       />
       {loading && <Preloader />}
       {error && <div>{error}</div>}
       <div className="card shadow-sm mb-4" style={{ borderRadius: 12 }}>
         <div className="card-body d-flex flex-column flex-md-row align-items-center justify-content-between">
           <div className="input-group w-100 w-md-50 mb-2 mb-md-0">
-            <span className="input-group-text bg-primary text-white border-0 rounded-start">
+            <span
+              className="input-group-text text-white border-0 rounded-start"
+              style={{
+                background: 'linear-gradient(90deg, #843cf6 0%, #759bff 100%)',
+                border: 'none'
+              }}
+            >
               <i className="bi bi-search"></i>
             </span>
             <input
@@ -350,8 +356,12 @@ const Driver: React.FC = () => {
           </div>
           <button
             className={`btn ${showInactive ? 'btn-outline-primary' : 'btn-primary'} ms-md-3 mt-2 mt-md-0`}
-            style={{ minWidth: 170, borderRadius: 8 }}
-            onClick={() => setShowInactive(!showInactive)}
+            style={{
+              minWidth: 170,
+              borderRadius: 8,
+              background: 'linear-gradient(90deg, #843cf6 0%, #759bff 100%)',
+              border: 'none'
+            }} onClick={() => setShowInactive(!showInactive)}
           >
             {showInactive ? 'Mostrar Ativos' : 'Mostrar Inativos'}
           </button>
@@ -395,7 +405,7 @@ const Driver: React.FC = () => {
               badgeClass: 'badge-danger'
             }
           }}
-          headerGradient={{ start: '#0e4cfd', end: '#6a8eff' }}
+          headerGradient={{ start: '#843cf6', end: '#759bff' }}
         />
       )}
 

@@ -1,66 +1,77 @@
-import React, { useState, ChangeEvent, FormEvent } from 'react';
+import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react';
 import Layout from '../../components/Layout';
 import Modal from '../../components/Modals/Modal';
 import EventForm from './Form';
-import ConfirmationModal from '../../components/Modals/ConfirmationModal';
 import TopBar from '../../components/TopBar';
 import DataTable from '../../components/DataTable';
-import { faBan } from '@fortawesome/free-solid-svg-icons';
+import Preloader from '../../components/Preloader';
+import { EventTypes, EventFormData, EventTableData } from './types/eventTypes';
+import ViewEventModal from './View';
+import { useEvents } from '../../hooks/useEvent';
+import { createEvent, deleteEvent, finalizeEvent } from '../../services/eventService';
+import { CarOption, DriverOption } from './types/eventOptions';
+import { fetchFleets } from '../../services/fleetService';
+import { fetchDrivers } from '../../services/driverService';
+import { format } from 'date-fns'
+import FinishEventModal from './Finalize';
+import ConfirmationModal from '../../components/Modals/ConfirmationModal';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-interface Evento {
-  id: number;
-  motorista: string;
-  veiculo: string;
-  tipo: string;
-  status: string;
-  dataInicio: string;
-  dataFim: string | null;
-  kmInicial: string;
-  kmFinal: string | null;
-  destino: string;
-  observacoes: string;
-}
-
-const Event: React.FC = () => {
+const EventPage: React.FC = () => {
+  const { events = [], loading, error, refetch } = useEvents();
   const [showModal, setShowModal] = useState<boolean>(false);
   const [showConfirmModal, setShowConfirmModal] = useState<boolean>(false);
-  const [eventoToToggle, setEventoToToggle] = useState<Evento | null>(null);
-  const [eventos, setEventos] = useState<Evento[]>([
-    // Dados de exemplo
-    {
-      id: 1,
-      motorista: 'João Silva',
-      veiculo: 'ABC1D23',
-      tipo: 'Entrega',
-      status: 'Em andamento',
-      dataInicio: '2024-03-20',
-      dataFim: null,
-      kmInicial: '10000',
-      kmFinal: null,
-      destino: 'São Paulo, SP',
-      observacoes: 'Entrega urgente'
-    }
-  ]);
-  const [currentEvento, setCurrentEvento] = useState<Evento | null>(null);
+  const [eventToToggle, setEventToToggle] = useState<EventTypes | null>(null);
+  const [currentEvent, setCurrentEvent] = useState<EventTypes | null>(null);
   const [showAlert, setShowAlert] = useState<boolean>(false);
   const [alertMessage, setAlertMessage] = useState<string>('');
+  const [search, setSearch] = useState('');
+  const [showInactive, setShowInactive] = useState(false);
+  const [finishOdometer, setFinishOdometer] = useState('');
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [viewEvent, setViewEvent] = useState<EventTypes | null>(null);
+  const [cars, setCars] = useState<CarOption[]>([]);
+  const [drivers, setDrivers] = useState<DriverOption[]>([]);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [eventToDelete, setEventToDelete] = useState<EventTypes | null>(null);
 
-  const [formData, setFormData] = useState<Partial<Evento>>({
-    motorista: '',
-    veiculo: '',
-    tipo: '',
-    dataInicio: '',
-    dataFim: '',
-    kmInicial: '',
-    kmFinal: '',
-    destino: '',
-    observacoes: '',
-    status: 'Em andamento'
+  const statusLabel = (status: string) => {
+    if (status === 'ENTRY') return 'ENTRADA';
+    if (status === 'EXIT') return 'SAÍDA';
+    return status;
+  };
+
+  const filteredEvents = events
+    .filter(event => showInactive ? event.status !== 'EXIT' : event.status === 'EXIT')
+    .filter(event =>
+      event.carId.toLowerCase().includes(search.toLowerCase()) ||
+      event.driverId.toLowerCase().includes(search.toLowerCase())
+    );
+
+  const eventsData: EventTableData[] = filteredEvents.map(event => ({
+    id: event.id,
+    carId: event.car ? `${event.car.licensePlate} - ${event.car.model}` : event.carId,
+    driverId: event.driver ? `${event.driver.firstName} ${event.driver.lastName}` : event.driverId,
+    managerId: event.managerId,
+    odometer: event.odometer.toString(),
+    status: statusLabel(event.status), // <-- aqui!
+    startAt: event.startAt ? format(new Date(event.startAt), 'dd/MM/yyyy') : '',
+    endAt: event.endAt ? format(new Date(event.endAt), 'dd/MM/yyyy') : '',
+    createdAt: event.createdAt,
+  }));
+
+  const [formData, setFormData] = useState<EventFormData>({
+    carId: '',
+    driverId: '',
+    managerId: '',
+    odometer: '',
+    status: 'EXIT',
+    startAt: '',
   });
 
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -68,78 +79,75 @@ const Event: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (currentEvento) {
-      // Editando evento existente
-      const updatedEventos = eventos.map(evento =>
-        evento.id === currentEvento.id ? { ...evento, ...formData } as Evento : evento
-      );
-      setEventos(updatedEventos);
-      showAlertMessage('Evento atualizado com sucesso!');
-    } else {
-      // Adicionando novo evento
-      const newEvento: Evento = {
-        id: eventos.length + 1,
-        ...formData
-      } as Evento;
-      setEventos(prev => [...prev, newEvento]);
+    try {
+      await createEvent({
+        ...formData,
+        odometer: Number(formData.odometer),
+        managerId: formData.managerId,
+      });
       showAlertMessage('Evento adicionado com sucesso!');
-    }
-
-    setShowModal(false);
-    resetForm();
-  };
-
-  const handleDelete = (id: number) => {
-    if (window.confirm('Tem certeza que deseja remover este evento?')) {
-      setEventos(prev => prev.filter(evento => evento.id !== id));
-      showAlertMessage('Evento removido com sucesso!');
+      setShowModal(false);
+      resetForm();
+      refetch();
+    } catch (err: any) {
+      const apiError = err?.response?.data?.message || 'Erro ao adicionar evento!';
+      showAlertMessage(apiError);
     }
   };
 
-  const handleEdit = (evento: Evento) => {
-    setCurrentEvento(evento);
-    setFormData(evento);
-    setShowModal(true);
+  const handleOpenDeleteModal = (eventTable: EventTableData) => {
+    const event = events.find(e => e.id === eventTable.id);
+    if (!event) return;
+    setEventToDelete(event);
+    setShowDeleteModal(true);
   };
 
-  const handleDropdownClick = (id: number) => {
-    setActiveDropdown(activeDropdown === id ? null : id);
-  };
-
-  const handleViewProfile = (evento: Evento) => {
-    // Implementar visualização do perfil
-    console.log('Visualizar perfil:', evento);
-    setActiveDropdown(null);
-  };
-
-  const handleToggleStatus = (evento: Evento) => {
-    if (evento.status === 'Em andamento') {
-      setEventoToToggle(evento);
-      setShowConfirmModal(true);
-    } else {
-      // Se estiver finalizado, não permite reabrir
-      showAlertMessage('Não é possível reabrir um evento finalizado.');
+  const handleDeleteEvent = async () => {
+    if (!eventToDelete) return;
+    try {
+      await deleteEvent(eventToDelete.id);
+      showAlertMessage('Evento deletado com sucesso!');
+      setShowDeleteModal(false);
+      setEventToDelete(null);
+      refetch();
+    } catch (err: any) {
+      const apiError = err?.response?.data?.message || 'Erro ao deletar evento!';
+      showAlertMessage(apiError);
     }
   };
 
-  const updateEventoStatus = (evento: Evento) => {
-    const updatedEventos = eventos.map(e => {
-      if (e.id === evento.id) {
-        return {
-          ...e,
-          status: 'Finalizado',
-          dataFim: new Date().toISOString().split('T')[0]
-        };
-      }
-      return e;
-    });
-    setEventos(updatedEventos);
-    showAlertMessage('Evento finalizado com sucesso!');
-    setShowConfirmModal(false);
-    setEventoToToggle(null);
+  const handleView = (eventTable: EventTableData) => {
+    const event = events.find(e => e.id === eventTable.id);
+    if (!event) return;
+    setViewEvent(event);
+    setShowViewModal(true);
+  };
+
+  const handleFinishEvent = async (event: EventTypes) => {
+    try {
+      await finalizeEvent(event.id, {
+        odometer: Number(finishOdometer),
+        endAt: new Date().toISOString(),
+      });
+      showAlertMessage('Evento finalizado com sucesso!');
+      setShowConfirmModal(false);
+      setEventToToggle(null);
+      setFinishOdometer('');
+      refetch();
+    } catch (err: any) {
+      const apiError = err?.response?.data?.message || 'Erro ao finalizar evento!';
+      showAlertMessage(apiError);
+    }
+  };
+
+  const handleOpenFinishModal = (eventTable: EventTableData) => {
+    const event = events.find(e => e.id === eventTable.id);
+    if (!event) return;
+    setEventToToggle(event);
+    setShowConfirmModal(true);
+    setFinishOdometer('');
   };
 
   const showAlertMessage = (message: string) => {
@@ -150,49 +158,68 @@ const Event: React.FC = () => {
 
   const resetForm = () => {
     setFormData({
-      motorista: '',
-      veiculo: '',
-      tipo: '',
-      dataInicio: '',
-      dataFim: '',
-      kmInicial: '',
-      kmFinal: '',
-      destino: '',
-      observacoes: '',
-      status: 'Em andamento'
+      carId: '',
+      driverId: '',
+      managerId: '',
+      odometer: '',
+      status: 'EXIT',
+      startAt: '',
     });
-    setCurrentEvento(null);
+    setCurrentEvent(null);
   };
 
-  // Fecha o dropdown quando clicar fora
-  React.useEffect(() => {
+  const canFinishEvent = (event: EventTableData) => {
+    return event.status !== 'ENTRY';
+  };
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (!(event.target as HTMLElement).closest('.dropdown')) {
+      if (!(event.target as Element).closest('.dropdown')) {
         setActiveDropdown(null);
       }
     };
-
     document.addEventListener('click', handleClickOutside);
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
 
+  useEffect(() => {
+    fetchFleets().then(fleets => {
+      setCars(
+        fleets
+          .filter(fleet => Boolean(fleet.isActive) && fleet.status === 'AVAILABLE')
+          .map(fleet => ({
+            id: fleet.id,
+            label: `${fleet.licensePlate} - ${fleet.model}`
+          }))
+      );
+    });
+
+    fetchDrivers().then(drivers => {
+      setDrivers(
+        drivers
+          .filter(driver => String(driver.isActive) === 'true')
+          .map(driver => ({
+            id: driver.id,
+            label: `${driver.firstName} ${driver.lastName}`
+          }))
+      );
+    });
+  }, []);
+
   const columns = [
-    { label: 'MOTORISTA', field: 'motorista' },
-    { label: 'VEÍCULO', field: 'veiculo' },
-    { label: 'TIPO', field: 'tipo' },
-    { label: 'DESTINO', field: 'destino' },
-    { label: 'DATA INÍCIO', field: 'dataInicio' },
-    { label: 'DATA FIM', field: 'dataFim' },
-    { label: 'KM INICIAL', field: 'kmInicial' },
-    { label: 'KM FINAL', field: 'kmFinal' },
-    { label: 'STATUS', field: 'status' }
+    { label: 'PLACA / MODELO', field: 'carId' },
+    { label: 'MOTORISTA', field: 'driverId' },
+    { label: 'ODÔMETRO', field: 'odometer' },
+    { label: 'STATUS', field: 'status' },
+    { label: 'INÍCIO', field: 'startAt' },
+    { label: 'FIM', field: 'endAt' },
   ];
 
   return (
     <Layout>
-      <TopBar 
+      <TopBar
         title="Controle de Eventos"
         buttonText="Adicionar Evento"
         onButtonClick={() => {
@@ -202,51 +229,116 @@ const Event: React.FC = () => {
         gradientStart="#ff763b"
         gradientEnd="#ffc480"
       />
-      <DataTable
-        columns={columns}
-        data={eventos}
-        onView={handleViewProfile}
-        onEdit={handleEdit}
-        onToggleStatus={handleToggleStatus}
-        statusConfig={{
-          active: {
-            value: 'Em andamento',
-            badgeClass: 'badge-warning'
-          },
-          inactive: {
-            value: 'Finalizado',
-            badgeClass: 'badge-success'
+      {loading && <Preloader />}
+      {error && <div>{error}</div>}
+      <div className="card shadow-sm mb-4" style={{ borderRadius: 12 }}>
+        <div className="card-body d-flex flex-column flex-md-row align-items-center justify-content-between">
+          <div className="input-group w-100 w-md-50 mb-2 mb-md-0">
+            <span
+              className="input-group-text text-white border-0 rounded-start"
+              style={{
+                background: 'linear-gradient(90deg, #ff763b 0%, #ffc480 100%)',
+                border: 'none'
+              }}
+            >
+              <i className="bi bi-search"></i>
+            </span>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Pesquisar por carro ou motorista..."
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
+            />
+          </div>
+          <button
+            className={`btn ${showInactive ? 'btn-outline-primary' : 'btn-primary'} ms-md-3 mt-2 mt-md-0`}
+            style={{
+              minWidth: 170,
+              borderRadius: 8,
+              background: 'linear-gradient(90deg, #ff763b 0%, #ffc480 100%)',
+              border: 'none'
+            }} onClick={() => setShowInactive(!showInactive)}
+          >
+            {showInactive ? 'Mostrar Ativos' : 'Mostrar Finalizados'}
+          </button>
+        </div>
+      </div>
+      
+      {eventsData.length === 0 && !loading ? (
+        <div className="text-center my-4">Nenhum evento encontrado.</div>
+      ) : (
+        <DataTable
+          columns={columns}
+          data={eventsData}
+          onView={handleView}
+          onDelete={handleOpenDeleteModal}
+          onToggleStatus={
+            eventsData.every(event => event.status === 'ENTRY')
+              ? undefined
+              : handleOpenFinishModal
           }
-        }}
-        headerGradient={{ start: '#ff9800', end: '#f57c00' }}
-      />
-
+          statusConfig={{
+            active: {
+              value: 'Ativo',
+              badgeClass: 'badge-success'
+            },
+            inactive: {
+              value: 'Inativo',
+              badgeClass: 'badge-danger'
+            }
+          }}
+          headerGradient={{ start: '#ff763b', end: '#ffc480' }}
+        />
+      )}
       <Modal
         isOpen={showModal}
         onClose={() => setShowModal(false)}
-        title={currentEvento ? 'Editar Evento' : 'Adicionar Evento'}
+        title={currentEvent ? 'Editar Evento' : 'Adicionar Evento'}
         size="xl"
       >
         <EventForm
           formData={formData}
           handleInputChange={handleInputChange}
           handleSubmit={handleSubmit}
+          cars={cars || []}
+          drivers={drivers || []}
         />
       </Modal>
 
+      <ViewEventModal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        event={viewEvent}
+      />
+
       <ConfirmationModal
+        isOpen={showDeleteModal}
+        onClose={() => {
+          setShowDeleteModal(false);
+          setEventToDelete(null);
+        }}
+        onConfirm={handleDeleteEvent}
+        title="Excluir Evento"
+        message="Tem certeza que deseja excluir este evento?"
+        subMessage="Esta ação não poderá ser desfeita."
+        confirmText="Excluir"
+        cancelText="Cancelar"
+        confirmIcon={faTrash}
+      />
+
+      <FinishEventModal
         isOpen={showConfirmModal}
         onClose={() => {
           setShowConfirmModal(false);
-          setEventoToToggle(null);
+          setEventToToggle(null);
+          setFinishOdometer('');
         }}
-        onConfirm={() => eventoToToggle && updateEventoStatus(eventoToToggle)}
-        title="Finalizar Evento"
-        message="Tem certeza que deseja finalizar este evento?"
-        subMessage="Esta ação não poderá ser desfeita."
-        confirmText="Finalizar"
-        cancelText="Cancelar"
-        confirmIcon={faBan}
+        finishOdometer={finishOdometer}
+        setFinishOdometer={setFinishOdometer}
+        eventToToggle={eventToToggle}
+        handleFinishEvent={handleFinishEvent}
       />
 
       {showAlert && (
@@ -258,4 +350,4 @@ const Event: React.FC = () => {
   );
 };
 
-export default Event; 
+export default EventPage;

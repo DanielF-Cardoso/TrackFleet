@@ -11,6 +11,7 @@ export interface Fleet {
   odometer: number;
   status: 'AVAILABLE' | 'IN_USE' | 'IN_MAINTENANCE';
   renavam: string;
+  isActive?: boolean;
   createdAt: string;
   updatedAt: string;
 }
