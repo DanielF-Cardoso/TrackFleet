@@ -20,7 +20,11 @@ async function bootstrap() {
   app.useLogger(logger)
 
   app.enableCors({
-    origin: 'http://localhost:3000',
+    origin: [
+      'http://localhost:3000',
+      'http://192.168.1.6:19000',
+      'exp://192.168.1.6:8081',
+    ],
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
     credentials: true,
