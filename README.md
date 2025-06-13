@@ -21,13 +21,7 @@ Sistema completo para gestão de frotas
   - Gerenciamento de gestores, motoristas, veículos e eventos
   - Recuperação de senha por e-mail
   - Logs e tratamento global de erros
-  - Documentação automática com Swagger (em dev)
-- **Pastas principais:**
-  - `src/domain/` — Entidades e regras de negócio (DDD)
-  - `src/application/` — Casos de uso e serviços de aplicação
-  - `src/infra/` — Controllers, repositórios, providers, módulos de infraestrutura
-  - `prisma/` — Migrations e schema do banco de dados
-  - `test/` — Testes unitários e E2E
+  - Documentação com Swagger
 
 ---
 
